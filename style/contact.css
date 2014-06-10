@@ -1,0 +1,27 @@
+div.commentaires {
+	margin: 2% 1% 2% 2%;
+	padding: 1%;
+}
+
+	div.commentaires div.commentaire {
+		background-color: #F0F0F0;
+		padding: 1%;
+		margin: 1% 0 1% 0%;
+	}
+	
+		div.commentaires div.commentaire span.commentaire_pseudo {
+			font-weight: bold;
+			font-size: 1.1em;
+			font-family: Georgia,'Times New Roman',times,serif;
+		}
+		
+		div.commentaires div.commentaire span.commentaire_date {
+			font-size: 0.9em;
+			color: #999;
+			margin-left: 5%;
+		}
+
+		div.commentaires div.commentaire span.commentaire_improvement {
+			display: block;
+			margin: 1% 0 0 2%;
+		}

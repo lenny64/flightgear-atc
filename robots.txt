@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /dev.php5
+Disallow: /edit_event.php5
+Disallow: /edit_flightplan.php5

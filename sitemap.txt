@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>http://lenny64.free.fr/</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/index.php5</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/lfml_event.php5</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/controlled_area.php5</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/contact.php5</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/edit_event.php5?eventId=58</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/edit_event.php5?eventId=59</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/edit_event.php5?eventId=57</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://lenny64.free.fr/edit_event.php5?eventId=60</loc>
+  <changefreq>daily</changefreq>
+</url>
+</urlset>
