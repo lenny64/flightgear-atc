@@ -148,7 +148,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
       </script>
     
     <div id="palmares">
-		<h4>Most frequent pilots</h4>
+            <h4><img src="./img/scheme_pilot_star.png"/> Most flightplans filed</h4>
 		
 		<ol>
 		<?php
@@ -158,7 +158,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
 		while ($flightplan = mysql_fetch_array($result))
 		{
 			
-			echo "<li><span class='palmaresPilot'>".$flightplan['callsign']."</span> : ".$flightplan['count']." flights</li>";
+			echo "<li><span class='palmaresPilot'>".$flightplan['callsign']."</span> : ".$flightplan['count']." flightplans</li>";
 			
 		}
 		?>

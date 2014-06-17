@@ -11,17 +11,20 @@
     <?php if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))
     {
         ?>
-		<div class="menu_entry">
-			<form action="./index.php5#newSession" method="get" class="submenu_quick_atc">
-				<input type="hidden" name="form_newSession"/>
-				<input type="text" id="dateTimePicker" name="date" size="8" value="<?php echo date('Y-m-d');?>"/>
-				<input type="submit" id="submenu_dateTimePicker_submit" value=" » Create ATC event"/>
-			</form>
-		</div>
-		<?php
+            <div class="menu_entry">
+                    <form action="./index.php5#newSession" method="get" class="submenu_quick_atc">
+                            <input type="hidden" name="form_newSession"/>
+                            <input type="text" id="dateTimePicker" name="date" size="8" value="<?php echo date('Y-m-d');?>"/>
+                            <input type="submit" id="submenu_dateTimePicker_submit" value=" » Create ATC event"/>
+                    </form>
+            </div>
+            <?php
     }
     ?>
 </div>
+
+<?php include('./include/log.php5'); ?>
+
 
 <!-- ///////////// -->
 <?php if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))

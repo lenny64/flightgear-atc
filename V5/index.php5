@@ -123,12 +123,14 @@ elseif (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPF
             <?php for ($fillSpace = 0; $fillSpace <= 12; $fillSpace++) { echo "<td colspan='8'>&nbsp;</td>"; } ?>
         </tr>
         <tr class="line">
-            <td rowspan="<?php echo $nbEventsInDay+1;?>">
+            <td rowspan="1">
                 <span class="nextATCEvents_date dayInWeek"><?php echo $humanReadableDayInWeek[0]; ?></span>
                 <span class="nextATCEvents_date month"><?php echo $humanReadableMonth; ?></span>
                 <span class="nextATCEvents_date day"><?php echo $humanReadableDay; ?></span>
             </td>
             <?php
+            
+            $posDuration = Array();
             
             for ($iEvents = 0; $iEvents < sizeof($events); $iEvents++)
             {
@@ -138,24 +140,24 @@ elseif (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPF
                     $Event->selectById($events[$iEvents]['Id']);
                     $posBegin = $Event->beginTime*2;
                     $posEnd = $Event->endTime*2;
-                    $posDuration = ($posEnd - $posBegin)*2;
-                }
-                else
-                {
-                    $posDuration = 0;
+                    $posDuration[$Event->id] = $posEnd - $posBegin;
                 }
             }
             
             
-            
-            for ($i = 0; $i <= 47; $i++)
+            $i = 0;
+            while ($i <= 47)
             {
                 if ($i == $posBegin AND $nbEventsInDay != 0)
                 {
-                        echo "<td colspan='$posDuration'>B".$nbEventsInDay."</td>";
-                        $i = $i+($posDuration)/2;
+                        echo "<td colspan='".($posDuration[$Event->id]*2)."'>".$Event->id."</td>";
+                        $i = $i+($posDuration[$Event->id])-1;
                 }
-                echo "<td class='td_empty' colspan='2'>&nbsp;</td>";
+                else
+                {
+                    echo "<td class='td_empty' colspan='2'>&nbsp;</td>";
+                }
+                $i++;
             }
         ?>
         </tr>

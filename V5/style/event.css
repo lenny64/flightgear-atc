@@ -62,5 +62,5 @@ table.nextATCEvents { }
 	table.nextATCEvents tr { }
 	table.nextATCEvents tr.rule { font-size: 3px; padding: 0; margin: 0; height: 3px; line-height: 10%; }
 	table.nextATCEvents tr.rule td { background-color: #fff; font-size: 3px; border-left: solid 1px #ccc; height: 3px; }
-	table.nextATCEvents td { width: 5px; font-size: 12px; text-align: left; border: solid 1px #ccc;}
+	table.nextATCEvents td { width: 5px; font-size: 12px; text-align: left;}
 	table.nextATCEvents td.td_empty { background-color: #e0e0e0; }
