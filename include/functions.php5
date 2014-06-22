@@ -46,6 +46,7 @@ function returnEvents($date = NULL)
     return $events;
 }
 
+
 function isAirportControlled($ICAO,$date,$time)
 {
     
@@ -91,6 +92,7 @@ function flightplanToXML($Flightplan)
 		
 	$XMLflightplan->addChild('flightplanId',$Flightplan->id);
 	$XMLflightplan->addChild('callsign',$Flightplan->callsign);
+	$XMLflightplan->addChild('airline',$Flightplan->airline);
 	$XMLflightplan->addChild('flightNumber',$Flightplan->flightNumber);
 	$XMLflightplan->addChild('airportFrom',$Flightplan->departureAirport);
 	$XMLflightplan->addChild('airportTo',$Flightplan->arrivalAirport);
@@ -109,19 +111,25 @@ function flightplanToXML($Flightplan)
 	$XMLflightplan->addChild('category',$Flightplan->category);
 	
 	$XMLflightplanComments = $XMLflightplan->addChild('comments');
-	foreach ($Flightplan->comments as $comments)
+	if (isset($Flightplan->comments) AND $Flightplan->comments != NULL)
 	{
-		$XMLcomment = $XMLflightplanComments->addChild('comment');
-		$XMLcomment->addChild('user',$comments['pseudo']);
-		$XMLcomment->addChild('message',$comments['comment']);
+		foreach ($Flightplan->comments as $comments)
+		{
+			$XMLcomment = $XMLflightplanComments->addChild('comment');
+			$XMLcomment->addChild('user',$comments['pseudo']);
+			$XMLcomment->addChild('message',$comments['comment']);
+		}
 	}
 	$XMLflightplan->addChild('status',$Flightplan->status);
 	
 	$XMLflightplanInfo = $XMLflightplan->addChild('additionalInformation');
 	
-	foreach($Flightplan->history as $variable => $info)
+	if (isset($Flightplan->history) AND $Flightplan->history != NULL)
 	{
-		$XMLflightplanInfo->addChild($variable,$info['value']);
+		foreach($Flightplan->history as $variable => $info)
+		{
+			$XMLflightplanInfo->addChild($variable,$info['value']);
+		}
 	}
 	$XMLflightplan->addChild('lastUpdated',$Flightplan->lastUpdated);
 	
@@ -144,6 +152,7 @@ function flightplansToXML($flightplans_list)
 		
 		$XMLflightplan->addChild('flightplanId',$Flightplan->id);
 		$XMLflightplan->addChild('callsign',$Flightplan->callsign);
+		$XMLflightplan->addChild('airline',$Flightplan->airline);
 		$XMLflightplan->addChild('flightNumber',$Flightplan->flightNumber);
 		$XMLflightplan->addChild('airportFrom',$Flightplan->departureAirport);
 		$XMLflightplan->addChild('airportTo',$Flightplan->arrivalAirport);

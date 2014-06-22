@@ -73,9 +73,15 @@ if (isset($_GET['newSession']))
     // Is it okay to create a new session ?
     if ($permissionToCreate == true)
     {
-		// We create a user in charge of the session
-        $User = new User();
-        $User->create($Mail, $Password, $_SERVER['REMOTE_ADDR']);
+		// We create an user in charge of the session
+		
+		// We first check if he's connected
+        if (!isset($User->id))
+        {
+			// If not we actually create the user
+			$User = new User();
+			$User->create($Mail, $Password, $_SERVER['REMOTE_ADDR']);
+		}
         // We create the airport (if exists, won't be added again)
         $Airport = new Airport();
         $Airport->create($AirportName, $AirportICAO);
@@ -85,7 +91,7 @@ if (isset($_GET['newSession']))
         // Here we want to be sure the event has been created by classes.php5
 		if ($Event->eventCreated == true)
 		{
-			echo "<div class='warning'>The new session has been created at ".$Event->airportICAO."</div><br/><br/>";
+			echo "<div class='information'>The new session has been created at ".$Event->airportICAO."</div><br/><br/>";
 			$highlightEvent = $Event->id;
 		}
 		// If the event could not have been created
@@ -104,6 +110,8 @@ if (isset($_GET['newSession']))
 		}
     }
 }
+
+
 
 // Information to print the new session form
 if (isset($_GET['form_newSession']) AND isset($_GET['date']))
@@ -140,26 +148,16 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
     ?>
         <?php
         
-        $User = new User();
-        //$User->searchUserCookie();
-        
         // If the user is already connected, we won't ask him to ident
-        if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected') {?>
-        <input type="hidden" name="<?php echo $requiredFields[0];?>" value="<?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>"/>
-        <input type="hidden" name="<?php echo $requiredFields[1];?>" value="<?php echo getInfo('password', 'users', 'userId', $_SESSION['id']);?>"/>
-        <div class="information"><b>Good news</b> ! You are connected : <?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>.</div>
-        <?php
-        }
-        /*
-        else if ($User->searchUserCookie() != false)
+        if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected')
         {
-		?>
-		<input type="hidden" name="<?php echo $requiredFields[0];?>" value="<?php echo $User->mail;?>"/>
-        <input type="hidden" name="<?php echo $requiredFields[1];?>" value="<?php echo $User->password;?>"/>
-        <div class="warning"><b>Good news</b> ! You are connected : <?php echo $User->mail;?>.</div>
-		<?php
-		}
-		* */
+            ?>
+            <input type="hidden" name="<?php echo $requiredFields[0];?>" value="<?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>"/>
+            <input type="hidden" name="<?php echo $requiredFields[1];?>" value="<?php echo getInfo('password', 'users', 'userId', $_SESSION['id']);?>"/>
+            <div class="information"><b>Good news</b> ! You are connected : <?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>.</div>
+            <?php
+        }
+        
         // Otherwise
         else {
         ?>
@@ -180,76 +178,90 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
         <div>
             <span class="new_event_entry_field">Airport selection : </span>
             <br/>
-			<?php
-			$airports = mysql_query("SELECT * FROM airports ORDER BY ICAO");
-			while ($airport = mysql_fetch_array($airports))
-			{ 
-				$name = $airport['name'];
-				$ICAO = $airport['ICAO'];
-				
-				// We pick the information relevant to the event for the autocompletion
-				// To do that, we only grab the LAST entry (to get updated information) !
-				$autoCompletionEvent = mysql_query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' ORDER BY eventId DESC LIMIT 1") or die(mysql_error());
-				$autoCompletionEvent = mysql_fetch_assoc($autoCompletionEvent);
-				
-				$beginTime = explode(':',$autoCompletionEvent['beginTime']);
-				$endTime = explode(':',$autoCompletionEvent['endTime']);
-				
-				$fgcom = $autoCompletionEvent['fgcom'];
-				$teamspeak = $autoCompletionEvent['teamspeak'];
-				$docsLink = $autoCompletionEvent['docsLink'];
-				
-				$remarks = str_replace("\n","",$autoCompletionEvent['remarks']);?>
-				<span class="airport_selection_button" onclick="
-					document.getElementById('apt_name').value='<?php echo $name; ?>';
-					document.getElementById('apt_name').style.backgroundColor='#33ee33';
-					document.getElementById('apt_icao').value='<?php echo $ICAO; ?>';
-					document.getElementById('apt_icao').style.backgroundColor='#33ee33';
-					document.getElementById('apt_beginHour').value='<?php echo $beginTime[0];?>';
-					document.getElementById('apt_beginHour').style.backgroundColor='#33ee33';
-					document.getElementById('apt_beginMinutes').value='<?php echo $beginTime[1];?>';
-					document.getElementById('apt_beginMinutes').style.backgroundColor='#33ee33';
-					document.getElementById('apt_endHour').value='<?php echo $endTime[0];?>';
-					document.getElementById('apt_endHour').style.backgroundColor='#33ee33';
-					document.getElementById('apt_endMinutes').value='<?php echo $endTime[1];?>';
-					document.getElementById('apt_endMinutes').style.backgroundColor='#33ee33';
-					document.getElementById('apt_fgcom').value='<?php echo $fgcom; ?>';
-					document.getElementById('apt_fgcom').style.backgroundColor='#33ee33';
-					document.getElementById('apt_teamspeak').value='<?php echo $teamspeak; ?>';
-					document.getElementById('apt_teamspeak').style.backgroundColor='#33ee33';
-					document.getElementById('apt_docslink').value='<?php echo $docsLink; ?>';
-					document.getElementById('apt_docslink').style.backgroundColor='#33ee33';
-					document.getElementById('apt_remarks').value='<?php echo str_replace("\r","",$remarks);?>';
-					document.getElementById('apt_remarks').style.backgroundColor='#33ee33';">
-				<?php echo $airport['ICAO'];?> 
-				</span>
-			<?php }
-			?>
-			<br/>
-			<span class="airport_selection_button" onclick="
-					document.getElementById('apt_name').value='';
-					document.getElementById('apt_name').style.backgroundColor='#fff';
-					document.getElementById('apt_icao').value='';
-					document.getElementById('apt_icao').style.backgroundColor='#fff';
-					document.getElementById('apt_beginHour').value='';
-					document.getElementById('apt_beginHour').style.backgroundColor='#fff';
-					document.getElementById('apt_beginMinutes').value='';
-					document.getElementById('apt_beginMinutes').style.backgroundColor='#fff';
-					document.getElementById('apt_endHour').value='';
-					document.getElementById('apt_endHour').style.backgroundColor='#fff';
-					document.getElementById('apt_endMinutes').value='';
-					document.getElementById('apt_endMinutes').style.backgroundColor='#fff';
-					document.getElementById('apt_fgcom').value='';
-					document.getElementById('apt_fgcom').style.backgroundColor='#fff';
-					document.getElementById('apt_teamspeak').value='';
-					document.getElementById('apt_teamspeak').style.backgroundColor='#fff';
-					document.getElementById('apt_docslink').value='';
-					document.getElementById('apt_docslink').style.backgroundColor='#fff';
-					document.getElementById('apt_remarks').value='';
-					document.getElementById('apt_remarks').style.backgroundColor='#fff';">
-			New airport
-			</span>
-			
+                <?php
+                $airports = mysql_query("SELECT * FROM airports ORDER BY ICAO");
+                while ($airport = mysql_fetch_array($airports))
+                {
+                    $name = $airport['name'];
+                    $ICAO = $airport['ICAO'];
+
+                    // We pick the information relevant to the event for the autocompletion
+                    // To do that, we only grab the LAST entry (to get updated information) !
+                    // If the user is connected, we will look for his information
+                    if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected')
+                    {
+                        $autoCompletionEvent = mysql_query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' AND userId = ".$_SESSION['id']." ORDER BY eventId DESC LIMIT 1") or die(mysql_error());
+                    }
+                    // If the user is not connected, we will gather only the last information
+                    else
+                    {
+                        $autoCompletionEvent = mysql_query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' ORDER BY eventId DESC LIMIT 1") or die(mysql_error());
+                    }
+                    $autoCompletionEvent = mysql_fetch_assoc($autoCompletionEvent);
+
+                    $beginTime = explode(':',$autoCompletionEvent['beginTime']);
+                    $endTime = explode(':',$autoCompletionEvent['endTime']);
+
+                    $fgcom = $autoCompletionEvent['fgcom'];
+                    $teamspeak = $autoCompletionEvent['teamspeak'];
+                    $docsLink = $autoCompletionEvent['docsLink'];
+
+                    $remarks = str_replace("\n","",$autoCompletionEvent['remarks']);?>
+                    <span class="airport_selection_button" onclick="
+                            document.getElementById('apt_name').value='<?php echo $name; ?>';
+                            document.getElementById('apt_name').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_icao').value='<?php echo $ICAO; ?>';
+                            document.getElementById('apt_icao').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_beginHour').value='<?php echo $beginTime[0];?>';
+                            document.getElementById('apt_beginHour').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_beginMinutes').value='<?php echo $beginTime[1];?>';
+                            document.getElementById('apt_beginMinutes').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_endHour').value='<?php echo $endTime[0];?>';
+                            document.getElementById('apt_endHour').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_endMinutes').value='<?php echo $endTime[1];?>';
+                            document.getElementById('apt_endMinutes').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_fgcom').value='<?php echo $fgcom; ?>';
+                            document.getElementById('apt_fgcom').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_teamspeak').value='<?php echo $teamspeak; ?>';
+                            document.getElementById('apt_teamspeak').style.backgroundColor='#33ee33';
+                            document.getElementById('apt_docslink').value='<?php echo $docsLink; ?>';
+                            document.getElementById('apt_docslink').style.backgroundColor='#33ee33';
+                            <?php
+                            // If the user is connected we will look for his remarks
+                            if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected')
+                            {    ?>
+                            document.getElementById('apt_remarks').value='<?php echo str_replace("\r","",$remarks);?>';
+                            document.getElementById('apt_remarks').style.backgroundColor='#33ee33';
+                            <?php } // DO NOT FORGET TO CLOSE TAG >>>> ?>">
+                    <?php echo $airport['ICAO'];?> 
+                    </span>
+                <?php }
+                ?>
+                <br/>
+                <span class="airport_selection_button" onclick="
+                            document.getElementById('apt_name').value='';
+                            document.getElementById('apt_name').style.backgroundColor='#fff';
+                            document.getElementById('apt_icao').value='';
+                            document.getElementById('apt_icao').style.backgroundColor='#fff';
+                            document.getElementById('apt_beginHour').value='';
+                            document.getElementById('apt_beginHour').style.backgroundColor='#fff';
+                            document.getElementById('apt_beginMinutes').value='';
+                            document.getElementById('apt_beginMinutes').style.backgroundColor='#fff';
+                            document.getElementById('apt_endHour').value='';
+                            document.getElementById('apt_endHour').style.backgroundColor='#fff';
+                            document.getElementById('apt_endMinutes').value='';
+                            document.getElementById('apt_endMinutes').style.backgroundColor='#fff';
+                            document.getElementById('apt_fgcom').value='';
+                            document.getElementById('apt_fgcom').style.backgroundColor='#fff';
+                            document.getElementById('apt_teamspeak').value='';
+                            document.getElementById('apt_teamspeak').style.backgroundColor='#fff';
+                            document.getElementById('apt_docslink').value='';
+                            document.getElementById('apt_docslink').style.backgroundColor='#fff';
+                            document.getElementById('apt_remarks').value='';
+                            document.getElementById('apt_remarks').style.backgroundColor='#fff';">
+                New airport
+                </span>
+
         </div>
         <br/>
         <span class="new_event_entry_field">Airport name*</span> <input type="text" id="apt_name" name="<?php echo $requiredFields[2];?>"/> <span class="input_example">e.g. Frankfurt/Main</span>
@@ -272,7 +284,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
             <option value="11" <?php if (isset($getMonth) and $getMonth == "11") echo "selected"; ?> >November</option>
             <option value="12" <?php if (isset($getMonth) and $getMonth == "12") echo "selected"; ?> >December</option>
         </select>
-        <input type="text" size="3" name="<?php echo $requiredFields[6];?>" value="<?php if (isset($getDay) and $getDay != NULL) echo $getDay; else { echo "Days"; } ?>" onfocus="this.value='';"/> <span class="input_example">Two digits : e.g. 05</span> 
+        <input type="text" size="3" name="<?php echo $requiredFields[6];?>" value="<?php if (isset($getDay) and $getDay != NULL) echo $getDay; else { echo "Days"; } ?>"/> <span class="input_example">Two digits : e.g. 05</span> 
         
         <img src="./img/scheme_time.png"/> <span class="new_event_entry_field">From*</span> 
         <input type="text" size="2" id="apt_beginHour" name="<?php echo $requiredFields[7];?>" onkeyup="if(this.value.length==2) document.getElementById('apt_beginMinutes').focus();"/>
@@ -288,7 +300,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
         <br/>
         and/or
         <br/>
-        <span class="new_event_entry_field">TeamSpeak server</span> <input type="text" size="15" name="newSessionTeamSpeak" id="apt_teamspeak"/> <span class="input_example">e.g. teamspeak.server.com</span>
+        <span class="new_event_entry_field">Mumble information</span> <input type="text" size="15" name="newSessionTeamSpeak" id="apt_teamspeak"/> <span class="input_example">e.g. teamspeak.server.com</span>
         
         <h2>Additional Information</h2>
         <span class="new_event_entry_field">Link to download the airport's charts</span>

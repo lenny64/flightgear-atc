@@ -32,7 +32,7 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
 
 ?>
 
-<h2>Contact</h2>
+<h3>Contact</h3>
 
 <form action="./contact.php5" method="post">
     <input type="text" name="mail"/> Your email
@@ -44,7 +44,7 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
     <input type="submit" value="Send message"/>
 </form>
 
-<h2>Get involved : what could be improved ?</h2>
+<h3>Get involved : what could be improved ?</h3>
 
 
 <form action="./contact.php5" method="post">

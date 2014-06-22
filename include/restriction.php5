@@ -11,10 +11,6 @@ $userAuthenticated = false;
 // Variable to see if there is a login entered
 $err_noLogin = true;
 
-// We create the user. Now it is empty, but will be filled below
-$User = new User();
-//$User->searchUserCookie();
-
 // If the user wants to log in
 if (isset($_POST['email']) AND isset($_POST['password']) AND $_POST['email'] != NULL AND $_POST['password'] != NULL)
 {
@@ -24,7 +20,7 @@ if (isset($_POST['email']) AND isset($_POST['password']) AND $_POST['email'] != 
     if ($_POST['email'] == getInfo('mail', 'users', 'mail', $_POST['email']) AND $_POST['password'] == getInfo('password', 'users', 'mail', $_POST['email']))
     {
         $userAuthenticated = true;
-        //$User = new User();
+        $User = new User();
         $User->selectById(getInfo('userId', 'users', 'mail', $_POST['email']));
     }
 }
@@ -33,18 +29,7 @@ else if ($_SESSION['mode'] == 'connected')
 {
     $err_noLogin = false;
     $userAuthenticated = true;
-    //$User = new User();
-    $User->selectById($_SESSION['id']);
 }
-// We try to see is the user has a cookie and has been connected with it
-/*
-else if ($User->searchUserCookie() != false)
-{
-	$err_noLogin = false;
-	$userAuthenticated = true;
-	$User->selectById($User->id);
-}
-*/
 
 // Finally, if there is an error during the login
 if ($err_noLogin == true OR $userAuthenticated == false)

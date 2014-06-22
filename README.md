@@ -27,3 +27,8 @@ Main changes :
 Thibault 2014 06 22 10:10 - merging branch "bug/v4" to "master"
 Main changes above
 If other V4 changes are made, they should be on this branch "bug/v4"
+
+Thibault 2014 06 22 15:47 - branch "master"
+Main changes :
+- Making the V4 the "official" version
+- Creation of a "V3" directory that stores the previous version
