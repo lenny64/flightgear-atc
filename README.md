@@ -32,3 +32,7 @@ Thibault 2014 06 22 15:47 - branch "master"
 Main changes :
 - Making the V4 the "official" version
 - Creation of a "V3" directory that stores the previous version
+
+Thibault 2014 07 08 20:31 - branch "bug/v4"
+Main change :
+- include/log.php5 : removing the message to invite rolling back to V3 version
