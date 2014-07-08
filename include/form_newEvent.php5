@@ -116,10 +116,10 @@ if (isset($_GET['newSession']))
 // Information to print the new session form
 if (isset($_GET['form_newSession']) AND isset($_GET['date']))
 {
-	if ($_GET['date'] != NULL)
-	{
-		$getDate = mysql_real_escape_string(htmlspecialchars($_GET['date']));
-	}
+    if ($_GET['date'] != NULL)
+    {
+        $getDate = mysql_real_escape_string(htmlspecialchars($_GET['date']));
+    }
 }
 
 ?>
@@ -205,7 +205,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                     $fgcom = $autoCompletionEvent['fgcom'];
                     $teamspeak = $autoCompletionEvent['teamspeak'];
                     $docsLink = $autoCompletionEvent['docsLink'];
-
+                    
                     $remarks = str_replace("\n","",$autoCompletionEvent['remarks']);?>
                     <span class="airport_selection_button" onclick="
                             document.getElementById('apt_name').value='<?php echo $name; ?>';
