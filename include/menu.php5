@@ -1,5 +1,6 @@
 <div id="menu">
     <div class="menu_entry"><a href="index.php5">Events</a></div>
+    <!--<div class="menu_entry"><a href="school.php5">School</a></div>-->
     <div class="menu_entry"><a href="lfml_event.php5">Elements of phraseology</a></div>
     <div class="menu_entry"><a href="controlled_area.php5">Regularly controlled area</a></div>
     <!--<div class="menu_entry"><a href="flight.php">Flying</a></div>

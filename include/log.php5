@@ -1,13 +1,7 @@
-<?php /* ?>
+<?php //* ?>
 <div class="information">
 	<div class="close_button">x</div>
-	<h3>Mar. 4th - Migratio</h3>
-	<br/>
-	Welcome on the new website. Please <a href="./contact.php5">contact me</a> if you see any bug or if you have a suggestion / improvement to provide.
-	<br/>
-	Thanks again for your comprehension.
-	<br/><br/>
-	Lenny
+        Revert to the previous version <a href="./V3/index.php5">here</a>.
 	
 </div>
 

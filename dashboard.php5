@@ -4,6 +4,31 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
+<?php if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))
+{
+?>
+<div class="submenu">
+		<div class="menu_entry">
+			<form action="./index.php5#newSession" method="get" class="submenu_quick_atc">
+				<input type="hidden" name="form_newSession"/>
+				<input type="text" id="dateTimePicker" name="date" size="8" value="<?php echo date('Y-m-d');?>"/>
+				<input type="submit" value="Create ATC event"/>
+			</form>
+		</div>
+</div>
+<?php
+}
+?>
+
+<script type="text/javascript" language="javascript">
+
+$(document).ready(function() {
+	$('#dateTimePicker').datepicker({ dateFormat:'yy-mm-dd', showOn: 'button', buttonImage: './img/scheme_date.png', buttonImageOnly: true });
+});
+
+</script>
+
+
 <?php
 
 // If the flightplan status will change
@@ -20,45 +45,58 @@ if (isset($_GET['changeFlightplan']) AND isset($_GET['status']))
     }
 }
 
-// If the notifications are changing
-if (isset($_POST['change_notification']))
-{
+// If the notifications or parameters are changing
+if (isset($_POST['change_settings']))
+{	
+	/* Notification part */
     if (isset($_POST['flightplan_notification']) AND $_POST['flightplan_notification'] == "1") { $User->changeNotification(true); }
     else { $User->changeNotification(false); }
+    
+    /* Other parameters part */
+    // FPForm visibility on home screen
+    if (isset($_POST['FPForm_visibility']) AND $_POST['FPForm_visibility'] == "1") { $FPForm_visibility = 'visible'; }
+    else { $FPForm_visibility = 'hidden'; }
+    // We list every parameter into an array that will be inserted into DB
+    $userParameters = ['FPForm_visibility' => $FPForm_visibility];
+    $User->changeParameters($userParameters);
+    
+    // Anyway we show this information
+    echo "<div class='information'>";
+    echo "Your settings have been saved at ".date('H:i:s');
+    echo "</div>";
 }
 
 ?>
 
 <div class="new">
-    
-    <h3>*NEW : Be notified once a flightplan is filled !</h3>
-    
     <form action="./dashboard.php5" method="post">
-        <input type="hidden" name="change_notification"/>
-        <input type="checkbox" name="flightplan_notification" value="1" <?php if ($User->nofitications == true) echo "checked";?>/> I want to be notified once a flightplan is filed (<?php echo $User->mail;?>)
+        <input type="hidden" name="change_settings"/>
+        <input type="checkbox" name="flightplan_notification" value="1" <?php if ($User->notifications == true) echo "checked";?>/> I want to be notified once a flightplan is filed (<?php echo $User->mail;?>)
         <br/>
-        <input type="submit" value="Change my settings"/>
+		<input type="checkbox" name="FPForm_visibility" value="1" <?php if ($User->parameters['FPForm_visibility'] == 'visible') echo "checked";?>/> I want to see the flightplan filling form on the home page
+		<br/>
+        <input type="submit" value="Change settings"/>
     </form>
-    
 </div>
 
-<h2>My dashboard</h2>
-
-<br/>
-
-<?php //include('./include/form_newEvent.php5'); ?>
-
-<!-- Button to plan a new session 
-<b><a href="./dashboard.php5?form_newSession&date=<?php echo $date; ?>#newSession" class="button_new_session">+ Plan a new session</a></b>
-
-<br/>
-<br/>
-<br/>-->
 <?php
+/*
+// If the user opened the scheduled events part
+if (isset($_GET['scheduledEvents']))
+{
+	include('./include/scheduled_events.php5');
+}
+else
+{
+?>
+<div class="new">
+	<a href="./dashboard.php5?scheduledEvents">+ Set up scheduled ATC events</a>
+</div>
+<?php
+}*/
+?>
 
-// We pick the user ID
-$User = new User();
-$User->selectById($_SESSION['id']);
+<?php
 
 // We gather every sessions this user made
 $events = mysql_query("SELECT * FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10") or die(mysql_error());
@@ -77,62 +115,60 @@ while ($event = mysql_fetch_array($events))
     $airport = mysql_fetch_assoc($airports);
     
     ?>
-<a class="event_location" 
-name="event<?php echo $Event->id;?>" 
-href="#event<?php echo $Event->id;?>" 
-<?php //echo 'onclick="document.getElementById(\'file_flightplan'.$event['id'].'\').style.display=\'block\';"';?> >
-<?php echo $airport['name'];?> (<?php echo $airport['ICAO'];?>) <?php echo $Event->date;?>
-</a> <a href="./edit_event.php5?eventId=<?php echo $Event->id;?>">Edit event</a>
-<div class='event_flightplan' style='display:block;'>
-    <h5>Date</h5>
-    <?php echo $Event->date; ?>
+<div class="dashboard_atcSession">
+	<span class="event_location"><?php echo $Event->date;?> at <?php echo $airport['ICAO'];?></span> 
+	<a href="./edit_event.php5?eventId=<?php echo $Event->id;?>">Edit event</a>
+	<div class='event_flightplan' style='display:block;'>
+		<h5>Date</h5>
+		<?php echo $Event->date; ?>
 
-    <h5>Time</h5>
-    From <?php echo $Event->beginTime;?> to <?php echo $Event->endTime;?>
+		<h5>Time</h5>
+		From <?php echo $Event->beginTime;?> to <?php echo $Event->endTime;?>
 
-    <h5>Other information</h5>
-    FGCom : <?php echo $Event->fgcom;?> // Teamspeak : <?php echo $Event->teamspeak; ?>
-    <br/>
-    Documents to download : <a href="<?php echo $Event->docsLink;?>"><?php echo $Event->docsLink;?></a>
-    <br/>
-    Remarks :
-    <br/>
-    <?php echo $Event->remarks; ?>
-</div>
+		<h5>Other information</h5>
+		FGCom : <?php echo $Event->fgcom;?> // Teamspeak : <?php echo $Event->teamspeak; ?>
+		<br/>
+		Documents to download : <a href="<?php echo $Event->docsLink;?>"><?php echo $Event->docsLink;?></a>
+		<br/>
+		Remarks :
+		<br/>
+		<?php echo $Event->remarks; ?>
+	</div>
 
-<ul>
-    
-    <?php 
-    
-    /*
-     * FLIGHTPLANS
-     */
-    
-    // We select all the flightplans relevant to this event
-    $flightplans = mysql_query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
+	<ul>
+		
+		<?php 
+		
+		/*
+		 * FLIGHTPLANS
+		 */
+		
+		// We select all the flightplans relevant to this event
+		$flightplans = mysql_query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
 
-    while ($flightplan = mysql_fetch_array($flightplans))
-    {
-        $Flightplan = new Flightplan();
-        $Flightplan->selectById($flightplan['flightplanId']);
+		while ($flightplan = mysql_fetch_array($flightplans))
+		{
+			$Flightplan = new Flightplan();
+			$Flightplan->selectById($flightplan['flightplanId']);
 
-        if ((isAirportControlled($Event->airportICAO, $Flightplan->dateDeparture, $Flightplan->departureTime) == true 
-                OR isAirportControlled($Event->airportICAO, $Flightplan->dateArrival, $Flightplan->arrivalTime) == true)
-                AND ($Flightplan->departureAirport == $Event->airportICAO OR $Flightplan->arrivalAirport == $Event->airportICAO) 
-                AND ($Flightplan->dateDeparture == $Event->date OR $Flightplan->dateArrival == $Even->date))
-        {
-            // If the flightplan is open
-            if ($Flightplan->status == 'open') echo "<li class='dashboard_flightplan' style='color: #33ee33;'> [OPENED] ";
-            else echo "<li class='dashboard_flightplan'>";
-            echo $Flightplan->callsign . " [" . $Flightplan->departureTime . "] " . $Flightplan->departureAirport . " -> [" . $Flightplan->arrivalTime . "] " . $Flightplan->arrivalAirport . " @" . $Flightplan->cruiseAltitude . " " . $Flightplan->aircraftType . " " . $Flightplan->category;
-            echo "<br/><a href='edit_flightplan.php5?idFlightplan=$Flightplan->id'>Comment</a> | <a href='./dashboard.php5?changeFlightplan=$Flightplan->id&status=open'>Open</a> | <a href='./dashboard.php5?changeFlightplan=$Flightplan->id&status=close'>Close</a>";
-            echo "</li>";
-        }
-    }
+			if ((isAirportControlled($Event->airportICAO, $Flightplan->dateDeparture, $Flightplan->departureTime) == true 
+					OR isAirportControlled($Event->airportICAO, $Flightplan->dateArrival, $Flightplan->arrivalTime) == true)
+					AND ($Flightplan->departureAirport == $Event->airportICAO OR $Flightplan->arrivalAirport == $Event->airportICAO) 
+					AND ($Flightplan->dateDeparture == $Event->date OR $Flightplan->dateArrival == $Event->date))
+			{
+				// If the flightplan is open
+				if ($Flightplan->status == 'open') echo "<li class='dashboard_flightplan' style='color: #33ee33;'> [OPENED] ";
+				else echo "<li class='dashboard_flightplan'>";
+				echo $Flightplan->callsign . " [" . $Flightplan->departureTime . "] " . $Flightplan->departureAirport . " -> [" . $Flightplan->arrivalTime . "] " . $Flightplan->arrivalAirport . " @" . $Flightplan->cruiseAltitude . " " . $Flightplan->aircraftType . " " . $Flightplan->category;
+				echo "<br/><a href='edit_flightplan.php5?idFlightplan=$Flightplan->id'>Comment</a> | <a href='./dashboard.php5?changeFlightplan=$Flightplan->id&status=open'>Open</a> | <a href='./dashboard.php5?changeFlightplan=$Flightplan->id&status=close'>Close</a>";
+				echo "</li>";
+			}
+		}
 
-echo "</ul>";
-echo "<br/>";
-echo "<br/>";
+	echo "</ul>";
+	echo "<br/>";
+	echo "<br/>";
+echo "</div>";
 
     /*
      *  // FLIGHTPLANS

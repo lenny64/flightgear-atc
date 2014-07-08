@@ -1,7 +1,7 @@
 <?php //* ?>
 <div class="information">
 	<div class="close_button">x</div>
-	*New> To all ATCs : the "comments" field is now personal and won't automatically appear if you are not connected (e.g. via the dashboard).
+        Click here to head to <a href="http://flightgear-atc.alwaysdata.net">Flightgear ATC</a>.
 	
 </div>
 

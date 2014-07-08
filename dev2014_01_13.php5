@@ -16,8 +16,8 @@ define("DEV_VERSION","20140526");
 // A little tracker
 mysql_query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
 
-include('./V4/include/classes.php5');
-include('./V4/include/functions.php5');
+include('./include/classes.php5');
+include('./include/functions.php5');
 
 // IS AIRPORT CONTROLLED ?
 if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET['time']))

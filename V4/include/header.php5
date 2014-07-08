@@ -4,30 +4,6 @@
 
 date_default_timezone_set('UTC');
 
-require_once './include/config.php5';
-
-include('./include/classes.php5');
-include('./include/functions.php5');
-
-
-// Let's open the DB
-mysql_connect(SQL_SERVER, SQL_LOGIN, SQL_PWD);
-mysql_select_db(SQL_DB);
-// This will be closed in footer.php
-
-/* SESSION MANAGEMENT */
-session_start();
-
-if ($_SESSION['mode'] != 'connected' OR !isset($_SESSION['mode']) OR isset($_GET['disconnect'])) {
-    $_SESSION['mode'] = 'guest';
-    unset($_SESSION['id']);
-}
-elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset($_SESSION['id']) AND $_SESSION['id'] != NULL)
-{
-	$User = new User();
-	$User->selectById($_SESSION['id']);
-}
-
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -60,11 +36,5 @@ elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset(
     
     <div id="body_container">
     
-    <img src="./img/banniere8.png" alt="Flighgear ATC events"/>
+    <img src="../img/banniere8.png" alt="Flighgear ATC events"/>
     
-    <?php
-        
-    // A little tracker
-    mysql_query("INSERT INTO visits VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
-    
-    ?>

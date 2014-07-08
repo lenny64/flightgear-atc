@@ -3,7 +3,7 @@
 // THIS PAGE IS CALLED BY EVENT.PHP5
 
 // We gather the flightplans
-$flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE dateDeparture >= ".date('Y-m-d')." ORDER BY departureTime");
+$flightplans = mysql_query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
 //TO ADD AGAIIIN !!! WHERE eventId=$Event->id 
 
 // This index will tell us if there is a flightplan for the event
@@ -133,6 +133,7 @@ while ($flightplan = mysql_fetch_array($flightplans))
     $flightplan_num++; }
 }
 ?>
+<!--
 <div class="calendar_event_flightplan" onclick="
                         if(document.getElementById('file_flightplan<?php echo $Event->id;?>').style.display == 'block')
                         {
@@ -142,3 +143,4 @@ while ($flightplan = mysql_fetch_array($flightplans))
     <img src="./img/aircraft_takeoff.png" class="calendar_airportChoice" onclick="document.getElementById('flightplan_filling_form').style.display='block';document.getElementById('file_flightplan2-departureAirport').value = '<?php echo $Event->airportICAO;?>'; document.getElementById('file_flightplan2-date').value = '<?php echo $Event->date;?>'; document.getElementById('file_flightplan2-date').style.backgroundColor = '#33ee33'; document.getElementById('file_flightplan2-departureAirport').style.backgroundColor='#33ee33'; document.getElementById('file_flightplan2-departureTime').value = '<?php echo $Event->beginTime;?>'; document.getElementById('file_flightplan2-departureTime').style.backgroundColor='#33ee33'; document.location+='#flightplan_filling';return false;" /> 
     <img src="./img/aircraft_landing.png" class="calendar_airportChoice" onclick="document.getElementById('flightplan_filling_form').style.display='block';document.getElementById('file_flightplan2-arrivalAirport').value = '<?php echo $Event->airportICAO;?>'; document.getElementById('file_flightplan2-date').value = '<?php echo $Event->date;?>'; document.getElementById('file_flightplan2-date').style.backgroundColor = '#33ee33'; document.getElementById('file_flightplan2-arrivalAirport').style.backgroundColor='#33ee33'; document.getElementById('file_flightplan2-arrivalTime').value = '<?php echo $Event->endTime;?>'; document.getElementById('file_flightplan2-arrivalTime').style.backgroundColor='#33ee33'; document.location+='#flightplan_filling';return false;" /> <?php echo $Event->airportICAO;?>
 </div>
+-->

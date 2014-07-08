@@ -20,7 +20,11 @@ div#body_container {
 	background-color: #fff;
 	margin: 0 auto 0 auto;
 	box-shadow: 0px 0px 15px -7px #000;
+	-moz-box-shadow: 0px 0px 15px -7px #000;
+	-webkit-box-shadow: 0px 0px 15px -7px #000;
 }
+
+p.normal_content { margin: 2% 4%; }
 
 a {
     color: #3C71B2;
@@ -32,6 +36,10 @@ h2 {
     color: #fff;
     padding: 1% 0 1% 20px;
 }
+
+h3 { color: #71c837; font-size: 1.6em; clear: both; margin-left: 4%;}
+
+h4 { margin-left: 4%; color: #333; font-size: 1.1em; }
 
 h5 {
     margin-bottom: 0.5%;
@@ -66,9 +74,10 @@ span.input_example {
 }
 
 #menu {
-    margin-top: 0px;
+    margin-top: -5px;
     margin-bottom: 40px;
-    text-align: center;
+    text-align: left;
+    background-color: #ccc;
 }
 
 #menu div.menu_entry {
@@ -76,21 +85,18 @@ span.input_example {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
     display: inline-block;
-    padding: 3px 1% 3px 1%;
-    margin: 6px 2px 6px 2px;
-    color: #E28D8D;
-    border: solid 1px #C6C6C6;
+    padding: 2px 0.5% 2px 0.5%;
+    margin: 5px 0px 5px 15px;
 }
 
 #menu div.menu_entry:hover {
-    background-color: #D05454;
-    border: solid 1px #fff;
+    background-color: #71c837;
 }
 
 #menu div.menu_entry a {
-	color: #CE6363;
+	color: #666;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 12px;
     font-style: normal;
     text-decoration: none;
     display: inline;
@@ -100,6 +106,29 @@ span.input_example {
 #menu div.menu_entry:hover a {
 	color: #fff;
 } 
+
+
+.submenu {
+    margin-top: -40px;
+    margin-bottom: 40px;
+    text-align: left;
+    background-color: #ededed;
+}
+
+.submenu div.menu_entry { 
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+    display: inline-block;
+    padding: 2px 0.5% 2px 0.5%;
+    margin: 3px 0px 3px 15px;
+}
+
+.submenu div.menu_entry:hover { }
+
+.submenu div.menu_entry a { color: #777; font-style: normal; text-decoration: none; }
+
+.submenu div.menu_entry:hover a { color: #71c837; }
 
 a.button_new_session {
 	display: block;
@@ -138,9 +167,10 @@ form.daySelection {
 .warning {
 	display: block;
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	left: 0;
-    background-color: #6666ee;
+    background-color: #ee3333;
+    text-align: center;
     color: #fff;
     font-size: 0.9em;
     font-weight: bold;
@@ -157,8 +187,9 @@ form.daySelection {
     font-size: 0.9em;
     font-weight: bold;
     padding: 1%;
+    text-align: center;
     width: 600px;
-    margin: 1% auto 1% auto;
+    margin: 0% auto 2% auto;
     -moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
