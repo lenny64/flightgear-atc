@@ -1,4 +1,9 @@
 
+form.dashboard_connectionForm { width: 250px; margin: auto; background-color: #e0e0e0; padding: 3%; }
+    form.dashboard_connectionForm label { color: #666; display: block; font-size: 15px; font-weight: bold; margin-top: 4%; margin-bottom: 2%; }
+    form.dashboard_connectionForm input { color: #333; font-size: 18px; margin: 0; padding: 3%; border: solid 1px #ccc; }
+    form.dashboard_connectionForm input#dashboard_connectionSubmit { width: 100%; margin-top: 6%; text-align: center; background-color: #71c837; color: white; }
+
 div.dashboard_atcSession { background-color: #ccc; margin: 1% 0%; padding: 2%; color: #333; }
 
 div.dashboard_atcSession span.event_location { font-size: 1.2em; font-weight: bold; color: #6DC235; }

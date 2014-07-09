@@ -35,6 +35,8 @@ div.calendar_day { position: relative; top: 0; display: inline-block; width: 104
 			div.calendar_event_location span.calendar_event_location_name { color: #C76161; font-size: 12px; }
 		/* Event time */
 		div.calendar_event_time { display: inline-block; margin: 0 0px 0 0px; padding: 0px 0px 5px 3px; color: #FF2B2B; font-size: 12px; }
+                /* Event ATC name */
+                div.calendar_event_atcName { font-size: 10px; font-weight: normal; color: #C76161; width: 92px; margin: 3px 0; }
 			/* Histogram */
 			div.calendar_histogram_background { display: block; position: relative; width: 96px; height: 7px; background-color: #F9F9F9; top: 10px; margin: 0px 0 2px 0px; border: solid 1px #E3E3E3; z-index: 60; }
 				div.calendar_histogram_background div.calendar_histogram { background-color: #EE8383; position: relative; height: 7px; z-index: 70; }
