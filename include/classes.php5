@@ -3,12 +3,14 @@
 class User
 {
     public $ip;
+    public $connected;
     public $mail;
     public $password;
     public $id;
     public $nofitications;
     public $hasCookie = false;
     public $userCookieId;
+    public $name;
     private $requestNewUser = true;
     
     public function associateCookieToUser()
@@ -99,6 +101,7 @@ class User
                     
                     $_SESSION['id'] = $this->id;
                     $_SESSION['mode'] = 'connected';
+                    $this->connected = true;
                     //$this->associateCookieToUser();
                     
                     // We tell there is no need to create another user
@@ -108,6 +111,7 @@ class User
                 {
                     echo "<div class='warning'>Password not correct</div>";
                     $_SESSION['mode'] = 'disconnected';
+                    $this->connected = false;
                     
                     // We tell there is no need to create another user
                     $this->requestNewUser = false;
@@ -125,6 +129,7 @@ class User
             $_SESSION['mode'] = 'connected';
             $_SESSION['id'] = getInfo('userId', 'users', 'mail', $Mail);
             $this->id = $_SESSION['id'];
+            $this->connected = true;
             //$this->associateCookieToUser();
         }
     }
@@ -149,10 +154,28 @@ class User
                 $this->notifications = $users['notifications'];
                 $this->parameters = json_decode($users['userParameters'],true);
                 
-                $_SESSION['id'] = $this->id;
-                $_SESSION['mode'] = "connected";
+                $users_names_list = mysql_query("SELECT * FROM users_names WHERE userId = '$id' ORDER BY userNameId DESC LIMIT 0,1");
+                $users_names = mysql_fetch_array($users_names_list);
+                $this->name = $users_names['userName'];
             }
         }
+    }
+    
+    /* Function to handle connection
+     */
+    public function connect($id)
+    {
+        $_SESSION['id'] = $id;
+        $_SESSION['mode'] = "connected";
+        $this->connected = true;
+    }
+    
+    /* Function to handle disconnection
+     */
+    public function disconnect($id)
+    {
+        $_SESSION['mode'] = 'guest';
+        unset($_SESSION['id']);
     }
     
     /* Function to change the way an user wants to receive or not
@@ -168,9 +191,19 @@ class User
      */
     public function changeParameters($parameters)
     {
-		$jsonUserParameters = json_encode($parameters);
+	$jsonUserParameters = json_encode($parameters);
         mysql_query("UPDATE users SET userParameters='$jsonUserParameters' WHERE userId='".$this->id."';");
         $this->parameters = $parameters;
+    }
+    
+    /* Function to add/change the name of the ATC
+     * it would appear when a session is shown on the main page
+     * /!\ Requires the "users_names" table
+     */
+    public function changeName($name)
+    {
+        mysql_query("INSERT INTO users_names VALUES ('','$this->id','$name')");
+        $this->name = $name;
     }
     
 }

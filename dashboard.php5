@@ -48,9 +48,16 @@ if (isset($_GET['changeFlightplan']) AND isset($_GET['status']))
 // If the notifications or parameters are changing
 if (isset($_POST['change_settings']))
 {	
-	/* Notification part */
+    /* Notification part */
     if (isset($_POST['flightplan_notification']) AND $_POST['flightplan_notification'] == "1") { $User->changeNotification(true); }
     else { $User->changeNotification(false); }
+    
+    /* Name part /!\ Requires the "users_names" table */
+    if (isset($_POST['atcName']))
+    {
+        $atcName = mysql_real_escape_string(htmlspecialchars($_POST['atcName']));
+        $User->changeName($atcName);
+    }
     
     /* Other parameters part */
     // FPForm visibility on home screen
@@ -73,8 +80,10 @@ if (isset($_POST['change_settings']))
         <input type="hidden" name="change_settings"/>
         <input type="checkbox" name="flightplan_notification" value="1" <?php if ($User->notifications == true) echo "checked";?>/> I want to be notified once a flightplan is filed (<?php echo $User->mail;?>)
         <br/>
-		<input type="checkbox" name="FPForm_visibility" value="1" <?php if ($User->parameters['FPForm_visibility'] == 'visible') echo "checked";?>/> I want to see the flightplan filling form on the home page
-		<br/>
+        <input type="checkbox" name="FPForm_visibility" value="1" <?php if ($User->parameters['FPForm_visibility'] == 'visible') echo "checked";?>/> I want to see the flightplan filling form on the home page
+        <br/>
+        My pseudo : <input type="text" name="atcName" size="8" value="<?php if(isset($User->name) AND $User->name != NULL) echo $User->name; ?>" /> (blank = your pseudo won't appear in your ATC events)
+        <br/>
         <input type="submit" value="Change settings"/>
     </form>
 </div>

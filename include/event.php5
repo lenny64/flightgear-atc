@@ -22,6 +22,19 @@ $Event->selectById($events[$eventCounter]['Id']);
 	<br/>
 	<?php $airportName = str_split(getInfo('name', 'airports', 'icao', $Event->airportICAO),12); ?>
 	<span class="calendar_event_location_name"><?php echo $airportName[0];?>...</span>
+        <?php
+        /* New feature : showing the ATC name
+         */
+        // We select the user responsible of the Event
+        $User = new User();
+        $User->selectById($Event->userId);
+        // If the user name is not empty we print it
+        if (isset($User->name) AND $User->name != NULL)
+        {?>
+            <div class="calendar_event_atcName">ATC : <?php echo $User->name; ?></div>
+        <?php
+        }
+        ?>
 </div>
 
 <!-- TIME -->
@@ -64,6 +77,9 @@ $Event->selectById($events[$eventCounter]['Id']);
     <br/>
     <span class="calendar_event_information_type">End time</span>
     <span class="calendar_event_information_content"><?php echo $Event->endTime;?></span>
+    <br/>
+    <span class="calendar_event_information_type">ATC Name</span>
+    <span class="calendar_event_information_content"><?php echo $User->name;?></span>
     <br/>
     <span class="calendar_event_information_type">FGCom frequency</span>
     <span class="calendar_event_information_content"><?php echo $Event->fgcom;?></span>

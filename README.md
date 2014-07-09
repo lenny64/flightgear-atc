@@ -36,3 +36,9 @@ Main changes :
 Thibault 2014 07 08 20:31 - branch "bug/v4"
 Main change :
 - include/log.php5 : removing the message to invite rolling back to V3 version
+
+Thibault 2014 07 09 19:15 - branch "feat/atc-name"
+Main changes :
+- ATCs can now set a name in their Dashboard, which will appear on their ATC events
+- include/classes.php5 : class User -> creating "connect" and "disconnect" functions
+- Relooking the dashboard login page

@@ -24,8 +24,9 @@ if ($_SESSION['mode'] != 'connected' OR !isset($_SESSION['mode']) OR isset($_GET
 }
 elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset($_SESSION['id']) AND $_SESSION['id'] != NULL)
 {
-	$User = new User();
-	$User->selectById($_SESSION['id']);
+    $User = new User();
+    $User->selectById($_SESSION['id']);
+    $User->connect($User->id);
 }
 
 ?>
