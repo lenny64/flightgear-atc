@@ -7,7 +7,7 @@ div.submenu input#submenu_dateTimePicker_submit { background-color: #89a02c; col
 	div.submenu input#submenu_dateTimePicker_submit:hover { color: #424D15; }
 
 /* Test calendar disposition */
-div.calendar { background-color: #eee; }
+div.calendar { background-color: #eee; margin-top: 3%; }
 /* Header with month and days in week */
 div.calendar_header { margin: 10px 0 0px 0px; width: 900px; padding: 5px 0px 0px 0px; background-color: #ddd; }
 	div.calendar_month { width: 852px; margin: 2px 0 0px 0; color: #333; font-weight: bold; text-align: center; text-transform: uppercase; }
@@ -92,15 +92,10 @@ span.airportChoice { padding: 2px 4px 2px 4px; margin: 0 0% 0 1%; background-col
 
 form.edit_event label { display: block; padding: 5px; background-color: #efefef; margin: 5px; font-weight: bold; width: 300px; }
 
-/* Flightplan filling original
-div.file_flightplan2 { display: block; position: absolute; top: 540px; right: 10px; height: 100%; width: 12%; padding: 3% 2% 2% 2%; background-color: #f5f5f5; color: #666; }
-div.file_flightplan2 input, div.file_flightplan2 select { font-size: 16px; color: #666; padding: 5px 5px 5px 35px; background-color: #f6f6f6; border: solid 2px #e0e0e0; margin: 1%; }
-*/
-
-h3#flightplanFillingTitle { padding-top: 2%; font-size: 1.1em; }
+h3#flightplanFillingTitle { padding-top: 0%; font-size: 1.1em; }
 
 /* Flightplan filling original */
-form.file_flightplan2 { display: block; width: 90%; margin: auto; margin-bottom: 10%; padding: 0% 1% 1% 1%; color: #666; clear: both; }
+form.file_flightplan2 { display: block; width: 90%; margin: auto; margin-bottom: 2%; padding: 0% 1% 1% 1%; color: #666; clear: both; }
 	form.file_flightplan2 h3 span { font-size: 12px; padding-left: 2%; font-weight: normal; color: #3C71B2; cursor: pointer; text-transform: uppercase; }
 	form.file_flightplan2 span.new_flightplan_entry { display: inline-block; width: 150px; font-weight: bold; color: #999; }
 	form.file_flightplan2 input, form.file_flightplan2 select { font-size: 16px; color: #666; padding: 5px 5px 5px 35px; background-color: #f6f6f6; border: solid 2px #e0e0e0; margin: 1%; }
@@ -112,7 +107,7 @@ form.file_flightplan2 { display: block; width: 90%; margin: auto; margin-bottom:
 	form.file_flightplan2 div.file_flightplan2-formError { display: none; color: #cc6666; padding: 1% 0; font-weight: bold; font-size: 1.1em;}
 
 /* Sortable Flightplan filling V3 */
-div.flightplanSortable { margin: 1% 1% 1% 0; padding: 0% 0% 0% 0%; border: dashed 2px #ccc; font-weight: bold; font-size: 1.2em; list-style-type: none; float: left; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; background-color: #e0e0e0; color: #999; text-align: center; }
+div.flightplanSortable { margin: 1% 1% 1% 0; padding: 0% 0% 0% 0%; border: dashed 2px #ccc; font-weight: bold; font-size: 1.4em; list-style-type: none; float: left; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; background-color: #e0e0e0; color: #999; text-align: center; }
 	div.flightplanSortable:hover { background-color: #D0E2C3; }
 	div.flightplanSortable.static { border: solid 2px #71c837; }
 		div.flightplanSortable.static input { color: #71c837; }
@@ -123,19 +118,8 @@ div.flightplanSortable { margin: 1% 1% 1% 0; padding: 0% 0% 0% 0%; border: dashe
 		div.flightplanSortable input:focus { background-color: #999; border: 0; color: #333; text-align: center; }
 	div.flightplanSelected { color: #fff; box-shadow: 0px 0px 10px 0px #347734; -moz-box-shadow: 0px 0px 10px 0px #347734; -webkit-box-shadow: 0px 0px 10px 0px #347734; border: solid 2px #fff; }
 		div.flightplanSelected input { color: #fff; }
-.ui-draggable-helper { padding: 2px; list-style-type: none; font-size: 0.7em; color: #fff; }
-	.ui-draggable-helper span.dragHiddenInformation { display: none; }
-	.ui-draggable-helper span.dragTime { display: none; }
-	.ui-draggable-helper div.additionalInformation { display: none; }
 
-/* Next ATC sessions */
-ul#nextATCSessions { margin: 0; padding: 0; }
-	ul#nextATCSessions div.nextATCSessionsDay { clear: both; font-size: 0.9em; margin: 3% 0 1.5% 0; padding: 0.5% 1%; width: 98%; background-color: #ddd; color: #333; font-weight: bold;}
-	ul#nextATCSessions li.nextATCSessionsSession { position: relative; float: left; top: 0; left: 0; background-color: #B7BABE; padding: 1% 2%; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; color: #fff; font-size: 0.8em; margin: 0% 1% 2% 0%; cursor: move; list-style-type: none;}
-		ul#nextATCSessions li.nextATCSessionsSession img.eventHandle { margin-right: 5px; }
-		ul#nextATCSessions li.nextATCSessionsSession span.dragHiddenInformation { display: none; }
-
-div.fileFPv3 { margin: 4% 0 1% 0; padding: 1%; background-color: #fff; clear: both; }
+div.fileFPv3 { margin: 0% 0 2% 0; padding: 1%; background-color: #fff; clear: both; }
 	div.fileFPv3 span.nextATCSessionsAction { display: inline; margin: 1%; padding: 0; cursor: pointer; }
 
 /* List of flightplans at the end of index.php */
@@ -149,8 +133,35 @@ div.flightplans_list {}
 		span.flightplans_list_flightplanArrival_time { display: inline-block; width: 70px; color: #e0e0e0; }
 		span.flightplans_list_flightplanInfo { display: block; color: #d0d0d0; margin-top: 10px; font-weight: bold; }
 
-div#map { float: left; }
+div#suggested_routes { float: left; width: 490px; padding: 0px; }
+    div.suggested_routes_day { float: left; width: 159px; padding: 5px 0px; margin: 2px; text-align: center; background-color: #f3f3f3; }
+        div.suggested_routes_title { font-size: 0.8em; text-transform: uppercase; color: #999; }
+        div.suggested_routes_hidden { display: none; }
+        div.suggested_routes_airport { clear: both; width: 145px; padding: 3px 2px; margin: 5px 5px; background-color: #ddd; color: #333; text-align: center; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; cursor: default;}
+            span.airportICAO { display: block; font-weight: bold; }
+            span.airportName { display: block; font-size: 0.8em; color: #999; margin-top: 0px; }
+            span.beginTime { font-size: 0.8em; font-weight: bold; color: #666; }
+            span.endTime { font-size: 0.8em; font-weight: bold; color: #666; }
+        
+        div.buttonFromTo { font-weight: bold; font-size: 8px; color: #3C71B2; background-color: #eaeaea; padding: 2px 0px 0px 0px; margin-bottom: 5px; width: 50px; margin-top: -5px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; -moz-border-radius-bottomleft: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-left-radius: 3px; -webkit-border-bottom-right-radius: 3px; cursor: pointer; }
+        div.buttonFromTo:hover { background-color: #3C71B2; color: white; }
+        div#buttonFrom { float: left; margin-left: 22px; }
+        div#buttonTo { float: right; margin-right: 22px; }
 
+        span.suggested_route_seeAllButton { display: block; clear: both; width: 75px; margin: 30px auto 10px auto; font-weight: bold; padding: 2px 10px; background-color: #347734; color: #fff; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; cursor: pointer; }
+            span.suggested_route_seeAllButton:hover { background-color: #ccc; color: #347734; }
+
+div.suggested_routes { clear: both; font-size: 0.8em; margin-top: 30px; }
+    div.suggested_routes div.route_title { width: 145px; padding: 2px 0; margin: 0 auto; color: #71c837; text-align: left; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; cursor: default;}
+        div.suggested_routes span.route_counter { font-weight: bold; background-color: #71c837; padding: 3px 5px; color: #fff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+        div.suggested_routes div.suggested_routes_extended { display: none; padding-top: 5px; margin-top: 0px; color: #333; }
+            .route_title:hover .suggested_routes_extended { display: block; }
+            div.suggested_routes_extended div.route_suggestion_entry { color: #666; padding: 2px 4px; margin: 3px 0; cursor: pointer; }
+                div.suggested_routes_extended div.route_suggestion_entry:hover { color: #fff; background-color: #3C71B2; }
+            div.route_suggestion_entry_extended { display: none; margin-top: -20px; margin-left: 140px; width: 150px; padding: 5px;}
+            div.route_suggestion_entry:hover div.route_suggestion_entry_extended { display: block; position: absolute; background-color: #3C71B2; }
+                div.route_suggestion_entry_extended a { color: #fff; text-decoration: underline; }
+            
 div#palmares { float: left; width: 230px; padding: 1% 0 0 30px; }
 	div#palmares ol { padding: 0; line-height: 170%; list-style-type: none; color: #999; }
 		div#palmares ol span.palmaresPilot { font-weight: bold; }

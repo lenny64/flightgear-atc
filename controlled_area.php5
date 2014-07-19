@@ -49,6 +49,9 @@
 			- For more info please visit : <a href="http://forum.flightgear.org/viewtopic.php?f=10&t=21959" target="_blank">the Flightgear official topic</a> and <a href="https://plus.google.com/113151232487920064268/about" target="_blank">the Google+ page</a>
 		<li><b>PANC Ted Stevens Anchorage (Alaska, USA)</b></li>
 			- Controlled on Saturdays and Sundays
+                <li><b>KLSV Nellis Air Force Base (Nevada, USA)</b></li>
+                    - Controlled on wednesday evenings
+                    - For more info visit : <a href="http://www.nellis.af.mil" target="_blank">www.nellis.af.mil</a>
 	</ul>
 </p>
 

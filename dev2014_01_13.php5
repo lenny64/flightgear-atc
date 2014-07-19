@@ -11,7 +11,7 @@ require_once './include/config.php5';
 mysql_connect(SQL_SERVER, SQL_LOGIN, SQL_PWD);
 mysql_select_db(SQL_DB);
 
-define("DEV_VERSION","20140526");
+define("DEV_VERSION","20140717");
 
 // A little tracker
 mysql_query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");

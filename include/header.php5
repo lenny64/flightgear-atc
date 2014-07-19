@@ -54,7 +54,6 @@ elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset(
     
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="./include/jquery-ui-1.10.4.custom.min.js"></script>
-    <script type="text/javascript" src="./include/OpenLayers.js"></script>
 </head>
 
 <body>
