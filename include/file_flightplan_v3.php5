@@ -193,7 +193,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             // Suggested routes that will contain an associative array of two eventId
             $suggestedRoutes = Array();
             // If there are more than 3 sessions to display, this variable will be set to TRUE
-            $activateSeeAll = false;
+            $activateSeeAll = 0;
             
             // Title of the day
             if ($eventDate == date('Y-m-d')) echo "<div class='suggested_routes_day'><div class='suggested_routes_title'>Today</div>";
@@ -225,7 +225,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
                 for ($i = 0; $i < sizeof($eventsArray); $i++)
                 {
                 ?>
-                    <div class='suggested_routes_container<?php if ($i >= 3) { echo " suggested_routes_hidden"; $activateSeeAll = true; } ?>'>
+                    <div class='suggested_routes_container<?php if ($i >= 3) { echo " suggested_routes_hidden"; $activateSeeAll = $i-2; } ?>'>
                         <div class='suggested_routes_airport'>
                             <span class='airportICAO'><?php echo $eventsArray[$i]["ICAO"];?></span>
                             <span class='airportName'><?php echo $eventsArray[$i]["Name"];?></span>
@@ -252,10 +252,10 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             
             
             // If there are more than 3 sessions to display, we print this "See all" feature
-            if (isset($activateSeeAll) AND $activateSeeAll != false)
+            if (isset($activateSeeAll) AND $activateSeeAll != 0)
             {
             ?>
-                <span class='suggested_route_seeAllButton' onclick='this.style.display="none"; var elements = document.getElementsByClassName("suggested_routes_hidden"); for (var i = 0; i < elements.length; i++) { var item = elements[i]; item.style.display="block"; }'>&downarrow; See all &downarrow;</span>
+                <span class='suggested_route_seeAllButton' onclick='this.style.display="none"; var elements = document.getElementsByClassName("suggested_routes_hidden"); for (var i = 0; i < elements.length; i++) { var item = elements[i]; item.style.display="block"; }'>&downarrow; <?php echo $activateSeeAll; ?> more &downarrow;</span>
             <?php
             }
             
