@@ -29,6 +29,15 @@ elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset(
     $User->connect($User->id);
 }
 
+/* COOKIE MANAGEMENT */
+if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
+{
+    if ($_POST['createCookie'] != NULL)
+    {
+        //setcookie($_POST['createCookie'],$_POST['cookieValue'], time()+3600*24*36);
+        setcookie($_POST['createCookie'],$_POST['cookieValue'], time()+30);
+    }
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -38,7 +47,7 @@ elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset(
     
 <head>
 
-	<title>Flightgear ATC Sessions -- lenny64</title>
+	<title>Flightgear ATC Sessions</title>
 
 	<!-- STYLES -->
 	<link rel="stylesheet" type="text/css" href="./style/general.css"/>
@@ -52,15 +61,16 @@ elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset(
         
     <link rel="shortcut icon" href="http://lenny64.free.fr/img/favicon.ico" />
     
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="./include/jquery-ui-1.10.4.custom.min.js"></script>
+    <!--<script type="text/javascript" src="./include/jquery.validate.min.js"></script>-->
 </head>
 
 <body>
     
     <div id="body_container">
     
-    <img src="./img/banniere8.png" alt="Flighgear ATC events"/>
+    <img src="./img/banniere9.png" alt="Flightgear ATC events"/>
     
     <?php
         

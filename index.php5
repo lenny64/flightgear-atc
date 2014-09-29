@@ -7,7 +7,6 @@
 <div class="submenu">
     <div class="menu_entry"><a href="index.php5#flightplan_filling">File a flightplan</a></div>
     <div class="menu_entry"><a href="index.php5#calendar_anchor">ATC calendar</a></div>
-    <div class="menu_entry"><a href="index.php5#scheduled_flights">Flights</a></div>
     <?php if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))
     {
         ?>
@@ -61,7 +60,7 @@
 
 
 // If we receive how many days one wants to see
-if (!isset($_GET['daysToShow']) OR $_GET['daysToShow'] < 1 OR $_GET['daysToShow'] > 200) $daysToShow = 35;
+if (!isset($_GET['daysToShow']) OR $_GET['daysToShow'] < 1 OR $_GET['daysToShow'] > 200) $daysToShow = 37;
 else $daysToShow = mysql_real_escape_string(htmlspecialchars($_GET['daysToShow']));
 
 // We include the form to create an event. It will be hidden at the top of the page
@@ -69,6 +68,9 @@ include('./include/form_newEvent.php5');
 
 // I am first looking for every event
 $events = returnEvents();
+
+// New specialEvents feature
+include('./include/specialEvents.php5');
 
 // If the user is not connected or wants to see the FP area
 if (!isset($User->parameters['FPForm_visibility']) OR (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPForm_visibility'] == "visible"))
@@ -164,55 +166,6 @@ echo "</div>";
 
 ?>
 
-<a name="scheduled_flights"></a>
-<h2>Next scheduled flights</h2>
-
-<div class="flightplans_list">
-<?php
-
-$today = date('Y-m-d');
-
-// We gather the flightplans
-$flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE dateDeparture>='$today' ORDER BY dateDeparture, departureTime") or die(mysql_error());
-
-// We list the flightplans
-while ($flightplan = mysql_fetch_array($flightplans))
-{
-	$Flightplan = new Flightplan();
-	$Flightplan->selectById($flightplan['flightplanId']);
-?>
-
-	<div class="flightplans_list_flightplan">
-		<span class="flightplans_list_flightplanCallsign"><?php echo $Flightplan->callsign; ?> [flightplan <?php echo $Flightplan->status; ?>]</span>
-		<span class="flightplans_list_flightplanDate"><?php echo $Flightplan->dateDeparture ;?></span>
-		<span class="flightplans_list_flightplanDeparture_airport"><?php echo $Flightplan->departureAirport; ?></span>
-		<span class="flightplans_list_flightplanArrival_airport"><?php echo $Flightplan->arrivalAirport; ?></span>
-		<br/>
-		<span class="flightplans_list_flightplanDeparture_time"><?php echo $Flightplan->departureTime; ?></span>
-		<span class="flightplans_list_flightplanArrival_time"><?php echo $Flightplan->arrivalTime; ?></span>
-		<br/>
-		<?php
-		if ($Flightplan->lastUpdated != 0)
-		{
-			?>
-			<span class="flightplans_list_flightplanInfo">Flightplan updated on <?php echo $Flightplan->lastUpdated;?>
-			<br/>
-			<?php
-			foreach($Flightplan->history as $variable => $info)
-			{
-				echo $variable." = ".$info['value']."<br/>";
-			}
-		}
-		?>
-		</span>
-	</div>
-
-<?php
-}
-
-?>
-
-</div>
 
 <br/>
 <br/>

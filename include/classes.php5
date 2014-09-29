@@ -422,9 +422,66 @@ class Event
     }
 }
 
+class SpecialEvent
+{
+    public $id;
+    public $creatorId;
+    public $title;
+    public $description;
+    public $url;
+    public $dateTimeCreation;
+    public $eventsList = Array();
+    public $pilotsList = Array();
+    
+    public function addPilot($callsign, $participation)
+    {
+        if (isset($callsign) AND isset($participation))
+        {
+            if ($callsign != NULL AND $participation != NULL)
+            {
+                mysql_query("INSERT INTO specialEvents_pilots VALUES('','$this->id','$callsign','$participation',NOW());");
+                $this->pilotsList = Array();
+                $this->selectById($this->id);
+            }
+        }
+    }
+    
+    public function selectById($id)
+    {
+        if (isset($id))
+        {
+            if ($id != NULL)
+            {
+                $specialEvents_list = mysql_query("SELECT * FROM specialEvents_events WHERE specialEventsId = $id") or die(mysql_error());
+                $specialEvent = mysql_fetch_array($specialEvents_list);
+                $this->id = $specialEvent['specialEventsId'];
+                $this->creatorId = $specialEvent['userId'];
+                $this->title = $specialEvent['title'];
+                $this->description = $specialEvent['description'];
+                $this->url = $specialEvent['url'];
+                $this->dateTimeCreation = $specialEvent['dateTime'];
+                
+                $specialEventsEvents_list = mysql_query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsid = $id AND specialEvents_airports.eventId = events.eventId ORDER BY events.date, events.beginTime");
+                $this->eventsList = Array();
+                while ($specialEventsEvent = mysql_fetch_array($specialEventsEvents_list))
+                {
+                    $this->eventsList[] = $specialEventsEvent;
+                }
+                
+                $specialEventPilots_list = mysql_query("SELECT * FROM specialEvents_pilots WHERE specialEventsId = $id");
+                $this->pilotsList = Array();
+                while ($specialEventsPilot = mysql_fetch_array($specialEventPilots_list))
+                {
+                    $this->pilotsList[] = $specialEventsPilot;
+                }
+            }
+        }
+    }
+    
+}
+
 class Flightplan
 {
-    public $associatedEvent;
     public $departureAirport;
     public $arrivalAirport;
     public $alternateDestination;
@@ -443,6 +500,8 @@ class Flightplan
     public $soulsOnBoard;
     public $fuelTime;
     public $pilotName;
+    public $email;
+    public $privateKey;
     public $comments;
     public $status;
     public $history;
@@ -669,20 +728,27 @@ class Flightplan
                 $this->history = array();
                 while ($history = mysql_fetch_array($history_list))
                 {
-					// We select the variable and value
-					$variable = $history['variable'];
-					$value = $history['value'];
-					$date = $history['dateTime'];
-					// If the variable has not been stored into the history array
-					if (!array_key_exists($variable,$this->history))
-					{
-						// We put the variable to the value
-						$this->history[$variable] = array('value' => $value, 'dateTime' => $date);
-						//echo $variable." = ".$value." at ".$date."<br/>";
-					}
-					
-					if ($this->lastUpdated == 0) $this->lastUpdated = $date;
-				}
+                    // We select the variable and value
+                    $variable = $history['variable'];
+                    $value = $history['value'];
+                    $date = $history['dateTime'];
+                    // If the variable has not been stored into the history array
+                    if (!array_key_exists($variable,$this->history))
+                    {
+                        // We put the variable to the value
+                        $this->history[$variable] = array('value' => $value, 'dateTime' => $date);
+                        //echo $variable." = ".$value." at ".$date."<br/>";
+                    }
+
+                    if ($this->lastUpdated == 0) $this->lastUpdated = $date;
+                }
+                
+                // E M A I L   A N D   P R I V A T E   K E Y
+                // We retrieve the email address
+                $email_list = mysql_query("SELECT * FROM flightplan_emails WHERE flightplanId = $id ORDER BY flightplanEmailId DESC LIMIT 1");
+                $email = mysql_fetch_assoc($email_list);
+                $this->email = $email['email'];
+                $this->privateKey = $email['privateKey'];
                 
             }
         }
@@ -707,9 +773,9 @@ class Flightplan
         {
             if ($userId != NULL AND $flightplanId != NULL AND $status != NULL)
             {
-				$dateTime = date("Y-m-d H:i:s");
-				$this->lastUpdated = $dateTime;
-				$this->status = $status;
+                $dateTime = date("Y-m-d H:i:s");
+                $this->lastUpdated = $dateTime;
+                $this->status = $status;
                 mysql_query("INSERT INTO flightplan_status VALUES('','$userId','$flightplanId','$status','$dateTime');") or die(mysql_error());
             }
         }
@@ -717,17 +783,31 @@ class Flightplan
     
     public function changeFlightplanInfo($userId,$flightplanId,$variable,$value)
     {
-		if (isset($userId) AND isset($flightplanId) AND isset($variable) AND isset($value))
+	if (isset($userId) AND isset($flightplanId) AND isset($variable) AND isset($value))
         {
             if ($userId != NULL AND $flightplanId != NULL AND $variable != NULL AND $value != NULL)
             {
-				$dateTime = date("Y-m-d H:i:s");
-				$this->lastUpdated = $dateTime;
-				$this->history[$variable] = array('value' => $value, 'dateTime' => $dateTime);
+                $dateTime = date("Y-m-d H:i:s");
+                $this->lastUpdated = $dateTime;
+                $this->history[$variable] = array('value' => $value, 'dateTime' => $dateTime);
                 mysql_query("INSERT INTO flightplan_history VALUES('','$flightplanId','$userId','$variable','$value','$dateTime');") or die(mysql_error());
             }
         }
-	}
+    }
+    
+    public function createEmail($email)
+    {
+        if(isset($email))
+        {
+            if ($email != NULL)
+            {
+                $this->email = mysql_real_escape_string(htmlspecialchars($email));
+                $this->privateKey = substr(md5($email.$this->id),0,6);
+                mysql_query("INSERT INTO flightplan_emails VALUES('','$this->id','$this->email','$this->privateKey',NOW());");
+                mail($this->email, $this->callsign.' : Your key to modify the flightplan '.$this->id, 'Good day ! To modify your flightplan, this is the key you will need : '.$this->privateKey);
+            }
+        }
+    }
     
 }
 
