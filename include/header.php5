@@ -34,8 +34,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 {
     if ($_POST['createCookie'] != NULL)
     {
-        //setcookie($_POST['createCookie'],$_POST['cookieValue'], time()+3600*24*36);
-        setcookie($_POST['createCookie'],$_POST['cookieValue'], time()+30);
+        setcookie($_POST['createCookie'],$_POST['cookieValue'], time()+3600*24*36);
     }
 }
 ?>

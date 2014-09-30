@@ -430,6 +430,7 @@ class SpecialEvent
     public $description;
     public $url;
     public $dateTimeCreation;
+    public $valid = TRUE;
     public $eventsList = Array();
     public $pilotsList = Array();
     
@@ -461,12 +462,13 @@ class SpecialEvent
                 $this->url = $specialEvent['url'];
                 $this->dateTimeCreation = $specialEvent['dateTime'];
                 
-                $specialEventsEvents_list = mysql_query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsid = $id AND specialEvents_airports.eventId = events.eventId ORDER BY events.date, events.beginTime");
+                $specialEventsEvents_list = mysql_query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsid = $id AND specialEvents_airports.eventId = events.eventId AND events.date >= CURDATE() ORDER BY events.date, events.beginTime");
                 $this->eventsList = Array();
                 while ($specialEventsEvent = mysql_fetch_array($specialEventsEvents_list))
                 {
                     $this->eventsList[] = $specialEventsEvent;
                 }
+                if (empty($this->eventsList)) $this->valid = FALSE;
                 
                 $specialEventPilots_list = mysql_query("SELECT * FROM specialEvents_pilots WHERE specialEventsId = $id");
                 $this->pilotsList = Array();
