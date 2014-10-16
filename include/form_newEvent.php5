@@ -118,7 +118,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
 {
     if ($_GET['date'] != NULL)
     {
-        $getDate = mysql_real_escape_string(htmlspecialchars($_GET['date']));
+        $getDate = $_GET['date'];
     }
 }
 
@@ -131,19 +131,19 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
     {
         if ($_GET['date'] != NULL)
         {
-            $getDate = mysql_real_escape_string(htmlspecialchars($_GET['date']));
+            $getDate = $_GET['date'];
             $inputDate = true;
             $getYear = date("Y",strtotime($getDate));
             $getMonth = date("m", strtotime($getDate));
             $getDay = date("d", strtotime($getDate));
             
-            echo '<div id="div_newSession'.$date.'">';
+            echo '<div id="div_newSession'.$getDate.'">';
         }
     }
     // Otherwise, by default we don't show the form
     else
     {
-        echo '<div id="div_newSession'.$date.'" style="display: none;">';
+        echo '<div id="div_newSession'.$getDate.'" style="display: none;">';
     }
     ?>
         <?php
@@ -179,8 +179,8 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
             <span class="new_event_entry_field">Airport selection : </span>
             <br/>
                 <?php
-                $airports = mysql_query("SELECT * FROM airports ORDER BY ICAO");
-                while ($airport = mysql_fetch_array($airports))
+                $airports = $db->query("SELECT * FROM airports ORDER BY ICAO");
+                foreach ($airports as $airport)
                 {
                     $name = $airport['name'];
                     $ICAO = $airport['ICAO'];
@@ -190,15 +190,15 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                     // If the user is connected, we will look for his information
                     if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected')
                     {
-                        $autoCompletionEvent = mysql_query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' AND userId = ".$_SESSION['id']." ORDER BY eventId DESC LIMIT 1") or die(mysql_error());
+                        $autoCompletionEvent_result = $db->query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' AND userId = ".$_SESSION['id']." ORDER BY eventId DESC LIMIT 1");
                     }
                     // If the user is not connected, we will gather only the last information
                     else
                     {
-                        $autoCompletionEvent = mysql_query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' ORDER BY eventId DESC LIMIT 1") or die(mysql_error());
+                        $autoCompletionEvent_result = $db->query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND remarks != 'openradar' ORDER BY eventId DESC LIMIT 1");
                     }
-                    $autoCompletionEvent = mysql_fetch_assoc($autoCompletionEvent);
-
+                    $autoCompletionEvent = $autoCompletionEvent_result->fetch(PDO::FETCH_ASSOC);
+                    
                     $beginTime = explode(':',$autoCompletionEvent['beginTime']);
                     $endTime = explode(':',$autoCompletionEvent['endTime']);
 

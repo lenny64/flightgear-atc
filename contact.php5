@@ -9,9 +9,9 @@ if (isset($_POST['mail']) AND isset($_POST['subject']) AND isset($_POST['content
 {
     if ($_POST['mail'] != NULL AND $_POST['subject'] != NULL AND $_POST['content'] != NULL)
     {
-        $mail = mysql_real_escape_string(htmlspecialchars($_POST['mail']));
-        $subject = mysql_real_escape_string(htmlspecialchars($_POST['subject']));
-        $content = mysql_real_escape_string(htmlspecialchars($_POST['content']));
+        $mail = $_POST['mail'];
+        $subject = $_POST['subject'];
+        $content = $_POST['content'];
         
         mail('lenny64@free.fr', $subject, 'Mail de '.$mail.' : '.$content);
     }
@@ -21,12 +21,12 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
 {
 	if ($_POST['pseudo'] != NULL)
 	{
-		$pseudo = mysql_real_escape_string(htmlspecialchars($_POST['pseudo']));
+		$pseudo = $_POST['pseudo'];
 		$note = $_POST['note'];
-		$improvements = mysql_real_escape_string(htmlspecialchars($_POST['improvements']));
+		$improvements = $_POST['improvements'];
 		
-		mysql_query("INSERT INTO improvements VALUES('',NOW(),'$pseudo','$note','$improvements')") or die(mysql_error());
-		
+		$statement = $db->prepare("INSERT INTO improvements VALUES('',NOW(),:pseudo,:note,:improvements)");
+		$statement->execute(array(':pseudo' => $pseudo, ':note' => $note, ':improvements' => $improvements));
 	}
 }
 
@@ -76,9 +76,9 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
 	
 	<?php
 
-	$liste_commentaires = mysql_query("SELECT * FROM improvements ORDER BY improvement_id DESC LIMIT 0,20");
+	$liste_commentaires = $db->query("SELECT * FROM improvements ORDER BY improvement_id DESC LIMIT 0,20");
 
-	while ($commentaire = mysql_fetch_array($liste_commentaires))
+	foreach ($liste_commentaires as $commentaire)
 	{?>
 		<div class="commentaire">
 		<span class="commentaire_pseudo"><?php echo $commentaire['pseudo'];?></span>

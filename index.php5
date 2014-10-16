@@ -91,82 +91,89 @@ elseif (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPF
 
 // We open the calendar DIV, master
 echo "<a name='calendar_anchor'> </a>";
-echo "<div class='calendar'>";
 
-// We initialize the day index at 0
-$day = 0;
-while ($day < $daysToShow)
+for ($monthNumber = 0; $monthNumber < 2; $monthNumber++)
 {
-    $humanReadableDate = date('M d - l', mktime(0, 0, 0, date('m'), date('d')+$day, date('Y')));  // HUMAN READABLE date
-		$humanReadableMonth = date('M',mktime(0, 0, 0, date('m'), date('d')+$day, date('Y')));		// MONTH
-		$humanReadableDay = date('d',mktime(0, 0, 0, date('m'), date('d')+$day, date('Y')));		// DAY
-		$humanReadableDayInWeek = date('l',mktime(0, 0, 0, date('m'), date('d')+$day, date('Y')));	// DAY IN WEEK
-    $date = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')+$day, date('Y')));                 // FUNCTION PURPOSES date
-    
-    $daysInWeek = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday');
-    
-    if ($humanReadableDay == "01" OR $day == 0)
-    {
-		echo "<div class='calendar_header'><div class='calendar_month'>".date('F',strtotime($date))."</div>";
-		for ($dayInWeekCounter = 0; $dayInWeekCounter < 7; $dayInWeekCounter++)
-		{
-			$dayIW = str_split($daysInWeek[$dayInWeekCounter],1);
-			echo "<span class='calendar_dayInWeek'>".$dayIW[0]."</span>";
-		}
-		echo "</div>";
-		
-		$dayInWeekCounter = 0;
-		while ($humanReadableDayInWeek != $daysInWeek[$dayInWeekCounter])
-		{
-			echo "<div class='calendar_day_empty'></div>";
-			$dayInWeekCounter++;
-		}
-	}
-	
-	if ($humanReadableDayInWeek == "Monday")
-	{
-		echo "<div class='calendar_header'>";
-		for ($dayInWeekCounter = 0; $dayInWeekCounter < 7; $dayInWeekCounter++)
-		{
-			$dayIW = str_split($daysInWeek[$dayInWeekCounter],1);
-			echo "<span class='calendar_dayInWeek'>".$dayIW[0]."</span>";
-		}
-		echo "</div>";
-	}
-	
+    $today = date('Y-m-d');
+    $dayCursor = date('Y-m-d',strtotime('+'.$monthNumber.' month'));
+    $firstDayCurrentMonth = date('Y-m-01',strtotime($dayCursor));
+    $lastDayCurrentMonth = date('Y-m-t',strtotime($dayCursor));
+    $totalDaysCurrentMonth = date('t',strtotime($dayCursor));
+
     ?>
-    <a name="calendar_day<?php echo $date;?>"></a>
-    <div class="calendar_day">
-		<span class="calendar_dayNumber"><?php echo $humanReadableDay; ?></span><a href="./index.php5?form_newSession&date=<?php echo $date;?>#newSession" class="calendar_button_new_session">+ Event</a>
-		
-		<?php
-		$eventCounter = 0;
-		
-		while ($eventCounter < sizeof($events))
-		{
-			if ($events[$eventCounter]["date"] == $date) include('./include/event.php5');
-			
-			$eventCounter++;
-		}
-		
-		if ($eventCounter == 0) echo "";
-	
-		?>
 
-    </div>
+    <table class='calendar'>
+        <tr class="calendarHeader">
+            <td colspan="7"><?php echo date('F',strtotime($dayCursor)); ?></td>
+        </tr>
+        <tr class="calendarHeader">
+            <td>Mon</td>
+            <td>Tue</td>
+            <td>Wed</td>
+            <td>Thu</td>
+            <td>Fri</td>
+            <td>Sat</td>
+            <td>Sun</td>
+        </tr>
 
-	<?php
-    
-	$previousDay = $date;
-    $day++;
-}
+    <?php
+
+    // We initialize the day index at 0
+    $dayCounter = $firstDayCurrentMonth;
+    $firstWeek = TRUE;
+
+    // We go through all the days in the month
+    while ($dayCounter <= $lastDayCurrentMonth)
+    {
+        // We open the week on monday ?
+        if (date('w',strtotime($dayCounter)) == 1) echo "<tr>";
+        // If it's the first week
+        if ($firstWeek == TRUE)
+        {
+            // We create as much TD as required
+            for ($i = 1; $i < date('N',strtotime($dayCounter)); $i++)
+            {
+                echo "<td></td>";
+            }
+            // And of course we are not in the first week anymore
+            $firstWeek = FALSE;
+        }
+        
+        // CELL DAY GENERATION
+        // Is this date in the past ?
+        if ($dayCounter < $today) { echo "<td class='pastDate'>"; }
+        // Is this date today ?
+        elseif ($dayCounter == $today) { echo "<td class='today'>"; }
+        // Otherwise it's in the future
+        else { echo "<td>"; }
+        
+        // CELL CONTENT GENERATION
+        // Inside the cell we print the day number
+        echo date('d',strtotime($dayCounter));
+        // We get all the events for this particular day
+        $events[$dayCounter] = returnEvents($dayCounter);
+        // If there are no events for this day we don't show anything
+        if (sizeof($events[$dayCounter]) < 1) { echo "<br/>&nbsp;"; }
+        // Otherwise we show the number of events occuring this day
+        else { echo "<br/><span class='number_events'>".sizeof($events[$dayCounter])." events</span>"; }
+        
+        // WE CLOSE THE CELL DAY
+        echo "</td>";
+
+        // We close the week on sunday
+        if (date('w',strtotime($dayCounter)) == 0) echo "</tr>";
+        
+        // We increment the day counter by one day
+        $dayCounter = date('Y-m-d',strtotime($dayCounter." +1 day"));
+    }
 
 // We close the calendar display
-echo "</div>";
+    echo "</table>";
+}
 
 ?>
 
-
+<br style="clear:both;"/>
 <br/>
 <br/>
 <?php include('./include/footer.php5'); ?>

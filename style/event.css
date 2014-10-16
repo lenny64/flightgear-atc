@@ -62,64 +62,18 @@ form.file_flightplan { clear: both; display: none; position: fixed; top: 6px; le
     form.file_flightplan table.grouped_categories { display: none; width: 100%; }
         table.grouped_categories td { vertical-align: top; }
 
-
-/* Test calendar disposition */
-div.calendar { background-color: #eee; margin-top: 3%; }
-/* Header with month and days in week */
-div.calendar_header { margin: 10px 0 0px 0px; width: 900px; padding: 5px 0px 0px 0px; background-color: #ddd; }
-	div.calendar_month { width: 852px; margin: 2px 0 0px 0; color: #333; font-weight: bold; text-align: center; text-transform: uppercase; }
-	span.calendar_dayInWeek { display: inline-block; width: 104px; margin: 0px 9px 0px 9px; color: #999; font-size: 0.8em; text-align: center; font-weight: bold;}
-
-/* Display a day */
-div.calendar_day_empty { position: relative; top: 0; display: inline-block; width: 104px; padding: 2px; margin: 10px 7px 10px 7px; background-color: #eee; }
-div.calendar_day { position: relative; top: 0; display: inline-block; width: 104px; padding: 2px; margin: 10px 7px 10px 7px; background-color: #ccc; border-bottom: solid 2px #aaa; border-radius: 3px; -moz-border-radius: 3px;}
-	span.calendar_dayNumber { display: inline-block; font-size: 0.9em; width: 30px; font-weight: bold; color: #000; padding: 2px 0 2px 10px; }
-	
-	/* Button new session inside the day */
-	a.calendar_button_new_session { display: inline; font-size: 0.9em; color: #FF6060; font-weight: bold; padding: 2px 5px 2px 5px; -moz-border-radius: 2px; border-radius: 2px; } 
-	a.calendar_button_new_session:hover { background-color: #ff4444; color: #fff; } 
-	
-	/* Event inside the day */
-	div.calendar_event { margin-top: 15px; background-color: #ddd;}
-	div.calendar_event:hover { background-color: #efefef;}
-	/* Highlight the event that has just been created */
-	div.calendar_event.calendar_event_highlight { background-color: #FFA500; }
-	div.calendar_event.calendar_event_highlight:hover { background-color: #FFFF00; }
-		/* Event location */
-		div.calendar_event_location { display: block; font-weight: bold; ; padding: 2px 0px 0px 3px; margin: 0 0px -7px 0px; cursor: pointer; }
-			div.calendar_event_location img.calendar_event_location_point { display: inline; padding-top: 0px; }
-			div.calendar_event_location span.calendar_event_location_icao { display: inline; font-size: 15px; color: #A52A2A; font-weight: bold; padding-left: 10px; }
-			div.calendar_event_location span.calendar_event_location_name { color: #C76161; font-size: 12px; }
-		/* Event time */
-		div.calendar_event_time { display: inline-block; margin: 0 0px 0 0px; padding: 0px 0px 5px 3px; color: #FF2B2B; font-size: 12px; }
-                /* Event ATC name */
-                div.calendar_event_atcName { font-size: 10px; font-weight: normal; color: #C76161; width: 92px; margin: 3px 0; }
-			/* Histogram */
-			div.calendar_histogram_background { display: block; position: relative; width: 96px; height: 7px; background-color: #F9F9F9; top: 10px; margin: 0px 0 2px 0px; border: solid 1px #E3E3E3; z-index: 60; }
-				div.calendar_histogram_background div.calendar_histogram { background-color: #EE8383; position: relative; height: 7px; z-index: 70; }
-				div.calendar_histogram_background div.calendar_histogram_infos { display: none; position: absolute; left: 0px; top: 7px; font-size: 0.8em; background-color: #ff6666; z-index:80; color: white; padding: 15px 10px 3px 10px; }
-		/* Event additional infos */
-		div.calendar_event_infos { display: none; position: absolute; margin: 0px 0px 0px 0px; padding: 0px 20px 10px 20px; background-color: #3C71B2; color: white; width: 300px; z-index: 80; }
-		div.calendar_event_infos a { color: #d0d0d0; }
-		div.calendar_event_infos em.calendar_blue_arrow { display: block; position: relative; width: 9px; height: 4px; top: -4px; margin-left: 10px; background: white url('../img/fleche_bleue_haut.png') repeat top left; }
-			/* Additional info -> Category of information */
-			div.calendar_event_infos span.calendar_event_information_type { display: block; font-weight: bold; padding: 2% 0 0 0; }
-
-		/* Flightplans in event */
-		/* -> Text with airport from/to */
-		div.calendar_event_flightplan { margin: 0px 0px 0px 0px; padding: 5px 5px 0 5px; font-size: 0.8em; color: #666; }
-			div.calendar_event_flightplan img.calendar_airportChoice { margin: 0; padding: 0; cursor: pointer; }
-		/* -> Summary */
-		div.calendar_event_flightplan_summary { padding: 0px 5px 0px 5px; margin: 5px 0px 2px 0px; color: #3C71B2; font-size: 0.8em; font-weight: bold; }
-			div.calendar_event_flightplan_summary img { margin-right: 10px; }
-		/* -> Pop-up */
-		div.calendar_event_flightplan_infos { padding: 20px 20px 5px 20px; display: none; background-color: #3C71B2; position: relative; top: 0px; left: 0; color: #fff; width: 300px; z-index: 90;}
-			div.calendar_event_flightplan_infos em.calendar_blue_arrow { display: block; position: relative; width: 9px; height: 4px; top: -24px; margin-left: 10px; background: white url('../img/fleche_bleue_haut.png') repeat top left; }
-			div.calendar_event_flightplan_infos span.calendar_event_flightplan_infos_category { display: inline-block; color: #ccc; min-width: 100px; padding-right: 20px; text-align: right; }
-			div.calendar_event_flightplan_infos span.calendar_event_flightplan_infos_value { color: #fff; font-size: 0.9em; font-weight: bold; }
-			a.calendar_event_flightplan_add_comment { color: #ccc; font-size: 0.9em; padding-left: 10px;	}
-			span.calendar_event_flightplan_callsign { cursor: pointer; }
-			
+/* CALENDAR */
+table.calendar { margin-left: 0; padding: 5px 35px;}
+table.calendar tr.calendarHeader { font-weight: bold; font-size: 1.0em;}
+    table.calendar tr.calendarHeader td { background-color: #fff; color: #333; height: 30px; }
+table.calendar td { width: 50px; height: 40px; text-align: center; background-color: #ddd; font-size: 0.8em; }
+    table.calendar td:hover { background-color: #fff; cursor: pointer; }
+    table.calendar td span.number_events { font-size: 0.9em; color: #ff6060;}
+table.calendar td.pastDate { color: #999; }
+    table.calendar td.pastDate:hover { background-color: #ddd; cursor: default;}
+    td.pastDate span.number_events { color: #ff6060 !important; }
+table.calendar td.today { font-weight: bold; border-top: solid 3px #ff2a2a; }
+    td.today span.number_events { color: #ff2c2c !important; }
 	
 
 /* Event creation */

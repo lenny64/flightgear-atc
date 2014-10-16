@@ -1,19 +1,17 @@
 <?php
 
-//error_reporting(E_ALL); ini_set("display_errors", 1);
+error_reporting(E_ALL); ini_set("display_errors", 1);
 
 date_default_timezone_set('UTC');
 
 require_once './include/config.php5';
 
+// Let's open the DB
+$db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+// This will be closed in footer.php
+
 include('./include/classes.php5');
 include('./include/functions.php5');
-
-
-// Let's open the DB
-mysql_connect(SQL_SERVER, SQL_LOGIN, SQL_PWD);
-mysql_select_db(SQL_DB);
-// This will be closed in footer.php
 
 /* SESSION MANAGEMENT */
 session_start();
@@ -46,7 +44,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
     
 <head>
 
-	<title>Flightgear ATC Sessions</title>
+	<title>Flightgear ATC Events</title>
 
 	<!-- STYLES -->
 	<link rel="stylesheet" type="text/css" href="./style/general.css"/>
@@ -74,6 +72,6 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
     <?php
         
     // A little tracker
-    mysql_query("INSERT INTO visits VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
+    $db->query("INSERT INTO visits VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
     
     ?>

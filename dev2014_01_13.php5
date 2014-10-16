@@ -11,7 +11,7 @@ require_once './include/config.php5';
 mysql_connect(SQL_SERVER, SQL_LOGIN, SQL_PWD);
 mysql_select_db(SQL_DB);
 
-define("DEV_VERSION","20140717");
+define("DEV_VERSION","20141016");
 
 // A little tracker
 mysql_query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
@@ -40,6 +40,30 @@ if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET
         $XMLairport->addChild('isControlled',$controlled);
         header('Content-type: application/xml');
         echo $XMLairport->asXML();
+    }
+}
+
+// GET FLIGHTPLANS OF A CALLSIGN AT A GIVEN PLACE AND A GIVEN DATE
+else if (isset($_GET['getFlightplans']) AND isset($_GET['airport']) AND isset($_GET['date']) AND isset($_GET['callsign']))
+{
+    if ($_GET['airport'] != NULL AND $_GET['date'] != NULL AND $_GET['callsign'] != NULL)
+    {
+        
+        $ICAO = mysql_real_escape_string(htmlspecialchars($_GET['airport']));
+        $date = mysql_real_escape_string(htmlspecialchars($_GET['date']));
+        $callsign = mysql_real_escape_string(htmlspecialchars($_GET['callsign']));
+        
+        // If no airports is selected
+        if ($ICAO == '*')
+        {
+            $flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE dateDeparture = '$date' AND callsign = '$callsign'");
+        }
+        else
+        {
+            $flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE (airportICAOFrom = '$ICAO' OR airportICAOTo = '$ICAO') AND dateDeparture = '$date' AND callsign = '$callsign'");
+        }
+        
+        flightplansToXML($flightplans);
     }
 }
 
@@ -72,21 +96,6 @@ else if (isset($_GET['getFlightplans']) AND isset($_GET['callsign']))
 	}
 }
 
-// GET FLIGHTPLANS OF A CALLSIGN AT A GIVEN PLACE AND A GIVEN DATE
-else if (isset($_GET['getFlightplans']) AND isset($_GET['airport']) AND isset($_GET['date']) AND isset($_GET['callsign']))
-{
-    if ($_GET['airport'] != NULL AND $_GET['date'] != NULL AND $_GET['callsign'] != NULL)
-    {
-        
-        $ICAO = mysql_real_escape_string(htmlspecialchars($_GET['airport']));
-        $date = mysql_real_escape_string(htmlspecialchars($_GET['date']));
-        $callsign = mysql_real_escape_string(htmlspecialchars($_GET['callsign']));
-        
-        $flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE (airportICAOFrom = '$ICAO' OR airportICAOTo = '$ICAO') AND dateDeparture = '$date' AND callsign = '$callsign'");
-        
-        flightplansToXML($flightplans);
-    }
-}
 
 // GET ATC SESSIONS
 else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))

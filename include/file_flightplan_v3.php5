@@ -59,7 +59,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     {
         $currentDate = date('Y-m-d',strtotime(date('Y-m-d')." +".$flightplanDay." days"));
         // We gather all FP for this date
-        $flightplans_query = mysql_query("SELECT * FROM flightplans20140113 WHERE dateDeparture='$currentDate' ORDER BY dateDeparture, departureTime");
+        $flightplans_query = $db->query("SELECT * FROM flightplans20140113 WHERE dateDeparture='$currentDate' ORDER BY dateDeparture, departureTime");
         ?>
         
     <div class="flightplan_day">
@@ -69,7 +69,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
         // FP counter
         $nbFlightplans = 0;
         // We list all FP for this date
-        while ($flightplan = mysql_fetch_array($flightplans_query))
+        foreach ($flightplans_query as $flightplan)
         {
             $nbFlightplans++;
             $Flightplan = new Flightplan();

@@ -21,9 +21,9 @@
     }
     
     // In any case we select all the special events
-    $specialEvents_list = mysql_query("SELECT * FROM specialEvents_events");
+    $specialEvents_list = $db->query("SELECT * FROM specialEvents_events");
     // We go through them
-    while ($specialEvents = mysql_fetch_array($specialEvents_list))
+    foreach ($specialEvents_list as $specialEvents)
     {
         // We select the specialEvent
         $SpecialEvent->selectById($specialEvents['specialEventsId']);

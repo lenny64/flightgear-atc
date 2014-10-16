@@ -11,34 +11,51 @@
  */
 function getInfo($wantedInfo,$table,$col,$value)
 {
-    $result = mysql_query("SELECT $wantedInfo FROM $table WHERE $col = '$value'") or die(mysql_error());
+    $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
     
-    $info = mysql_fetch_row($result);
-    return $info[0];
+    $query = $db->query("SELECT $wantedInfo FROM $table WHERE $col = '$value'");
+    
+    foreach($query as $info)
+    {
+        $result = $info[0];
+    }
+    
+    // In case there is no result from the query
+    if (!isset($result) OR $result == NULL)
+    {
+        return false;
+    }
+    // If everything is fine, we return the result
+    else
+    {
+        return $result;
+    }
 }
 
 function returnEvents($date = NULL)
 {
+    $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+    
     $events = array();
-    if (isset($date) AND $date != NULL) $events_list = mysql_query("SELECT * FROM events WHERE date = '$date' ORDER BY beginTime");   
-    else $events_list = mysql_query("SELECT * FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime"); 
+    if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT * FROM events WHERE date = '$date' ORDER BY beginTime");   
+    else $events_list = $db->query("SELECT * FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime"); 
     $i = 0;
     
-    while ($event = mysql_fetch_array($events_list))
+    foreach ($events_list as $row)
     {
-        if ($event["airportICAO"] != NULL)
+        if ($row["airportICAO"] != NULL)
         {
-            $events[$i]["Id"] = $event['eventId'];
-            $events[$i]["ICAO"] = $event['airportICAO'];
-            $events[$i]["ATCId"] = $event['userId'];
-            $events[$i]["Name"] = getInfo('name','airports','ICAO',$event['airportICAO']);
-            $events[$i]["date"] = $event['date'];
-            $events[$i]["beginTime"] = $event['beginTime'];
-            $events[$i]["endTime"] = $event['endTime'];
-            $events[$i]["fgcom"] = $event['fgcom'];
-            $events[$i]["teamspeak"] = $event['teamspeak'];
-            $events[$i]["docsLink"] = $event['docsLink'];
-            $events[$i]["remarks"] = $event['remarks'];
+            $events[$i]["Id"] = $row['eventId'];
+            $events[$i]["ICAO"] = $row['airportICAO'];
+            $events[$i]["ATCId"] = $row['userId'];
+            $events[$i]["Name"] = getInfo('name','airports','ICAO',$row['airportICAO']);
+            $events[$i]["date"] = $row['date'];
+            $events[$i]["beginTime"] = $row['beginTime'];
+            $events[$i]["endTime"] = $row['endTime'];
+            $events[$i]["fgcom"] = $row['fgcom'];
+            $events[$i]["teamspeak"] = $row['teamspeak'];
+            $events[$i]["docsLink"] = $row['docsLink'];
+            $events[$i]["remarks"] = $row['remarks'];
         }
         $i++;
     }

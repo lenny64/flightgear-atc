@@ -144,8 +144,10 @@ class User
         {
             if ($id != NULL)
             {
-                $users_list = mysql_query("SELECT * FROM users WHERE userId = $id");
-                $users = mysql_fetch_array($users_list);
+                $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+                
+                $users_list = $db->query("SELECT * FROM users WHERE userId = $id");
+                $users = $users_list->fetch(PDO::FETCH_ASSOC);
                 
                 $this->ip = $users['ip'];
                 $this->mail = $users['mail'];
@@ -154,8 +156,8 @@ class User
                 $this->notifications = $users['notifications'];
                 $this->parameters = json_decode($users['userParameters'],true);
                 
-                $users_names_list = mysql_query("SELECT * FROM users_names WHERE userId = '$id' ORDER BY userNameId DESC LIMIT 0,1");
-                $users_names = mysql_fetch_array($users_names_list);
+                $users_names_list = $db->query("SELECT * FROM users_names WHERE userId = '$id' ORDER BY userNameId DESC LIMIT 0,1");
+                $users_names = $users_names_list->fetch(PDO::FETCH_ASSOC);
                 $this->name = $users_names['userName'];
             }
         }
@@ -311,11 +313,11 @@ class Event
         }
         
         // We get the list of events
-        $events_list = mysql_query("SELECT * FROM events");
+        $events_list = $db->query("SELECT * FROM events");
         
         
         // We see
-        while ($event = mysql_fetch_array($events_list))
+        foreach ($events_list as $event)
         {
             /* A V O I D   T W O   A T C S   A T   T H E    S A M E    T I M E */
             // if there is an airport with that name
@@ -453,8 +455,11 @@ class SpecialEvent
         {
             if ($id != NULL)
             {
-                $specialEvents_list = mysql_query("SELECT * FROM specialEvents_events WHERE specialEventsId = $id") or die(mysql_error());
-                $specialEvent = mysql_fetch_array($specialEvents_list);
+                
+                $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+    
+                $specialEvents_list = $db->query("SELECT * FROM specialEvents_events WHERE specialEventsId = $id");
+                $specialEvent = $specialEvents_list->fetch(PDO::FETCH_ASSOC);
                 $this->id = $specialEvent['specialEventsId'];
                 $this->creatorId = $specialEvent['userId'];
                 $this->title = $specialEvent['title'];
@@ -462,17 +467,17 @@ class SpecialEvent
                 $this->url = $specialEvent['url'];
                 $this->dateTimeCreation = $specialEvent['dateTime'];
                 
-                $specialEventsEvents_list = mysql_query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsid = $id AND specialEvents_airports.eventId = events.eventId AND events.date >= CURDATE() ORDER BY events.date, events.beginTime");
+                $specialEventsEvents_list = $db->query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsid = $id AND specialEvents_airports.eventId = events.eventId AND events.date >= CURDATE() ORDER BY events.date, events.beginTime");
                 $this->eventsList = Array();
-                while ($specialEventsEvent = mysql_fetch_array($specialEventsEvents_list))
+                foreach ($specialEventsEvents_list as $specialEventsEvent)
                 {
                     $this->eventsList[] = $specialEventsEvent;
                 }
                 if (empty($this->eventsList)) $this->valid = FALSE;
                 
-                $specialEventPilots_list = mysql_query("SELECT * FROM specialEvents_pilots WHERE specialEventsId = $id");
+                $specialEventPilots_list = $db->query("SELECT * FROM specialEvents_pilots WHERE specialEventsId = $id");
                 $this->pilotsList = Array();
-                while ($specialEventsPilot = mysql_fetch_array($specialEventPilots_list))
+                foreach ($specialEventPilots_list as $specialEventsPilot)
                 {
                     $this->pilotsList[] = $specialEventsPilot;
                 }

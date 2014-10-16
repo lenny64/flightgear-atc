@@ -36,8 +36,8 @@ if (isset($_GET['changeFlightplan']) AND isset($_GET['status']))
 {
     if ($_GET['changeFlightplan'] != NULL AND $_GET['status'] != NULL)
     {
-        $changeFlightplan = mysql_real_escape_string(htmlspecialchars($_GET['changeFlightplan']));
-        $status = mysql_real_escape_string(htmlspecialchars($_GET['status']));
+        $changeFlightplan = $_GET['changeFlightplan'];
+        $status = $_GET['status'];
         
         $FlightplanToChange = new Flightplan();
         $FlightplanToChange->selectById($changeFlightplan);
@@ -55,7 +55,7 @@ if (isset($_POST['change_settings']))
     /* Name part /!\ Requires the "users_names" table */
     if (isset($_POST['atcName']))
     {
-        $atcName = mysql_real_escape_string(htmlspecialchars($_POST['atcName']));
+        $atcName = $_POST['atcName'];
         $User->changeName($atcName);
     }
     
@@ -89,28 +89,11 @@ if (isset($_POST['change_settings']))
 </div>
 
 <?php
-/*
-// If the user opened the scheduled events part
-if (isset($_GET['scheduledEvents']))
-{
-	include('./include/scheduled_events.php5');
-}
-else
-{
-?>
-<div class="new">
-	<a href="./dashboard.php5?scheduledEvents">+ Set up scheduled ATC events</a>
-</div>
-<?php
-}*/
-?>
-
-<?php
 
 // We gather every sessions this user made
-$events = mysql_query("SELECT * FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10") or die(mysql_error());
+$events = $db->query("SELECT * FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10") or die(mysql_error());
 
-while ($event = mysql_fetch_array($events))
+foreach ($events as $event)
 { 
     // We pick the event
     $Event = new Event();
@@ -119,9 +102,9 @@ while ($event = mysql_fetch_array($events))
     // We pick the airport ID to ident it
     $airportId = getInfo('airportId', 'airports', 'ICAO', $event['airportICAO']);
     // We list the airport which is concerned
-    $airports = mysql_query("SELECT * FROM airports WHERE airportId = $airportId");
+    $airports = $db->query("SELECT * FROM airports WHERE airportId = $airportId");
     // We gather the information
-    $airport = mysql_fetch_assoc($airports);
+    $airport = $airports->fetch(PDO::FETCH_ASSOC);
     
     ?>
 <div class="dashboard_atcSession">
@@ -153,9 +136,9 @@ while ($event = mysql_fetch_array($events))
 		 */
 		
 		// We select all the flightplans relevant to this event
-		$flightplans = mysql_query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
+		$flightplans = $db->query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
 
-		while ($flightplan = mysql_fetch_array($flightplans))
+		foreach ($flightplans as $flightplan)
 		{
 			$Flightplan = new Flightplan();
 			$Flightplan->selectById($flightplan['flightplanId']);
