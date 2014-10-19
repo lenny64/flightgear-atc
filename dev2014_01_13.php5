@@ -8,13 +8,12 @@ date_default_timezone_set('UTC');
 require_once './include/config.php5';
 
 // Let's open the DB
-mysql_connect(SQL_SERVER, SQL_LOGIN, SQL_PWD);
-mysql_select_db(SQL_DB);
+$db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
 define("DEV_VERSION","20141016");
 
 // A little tracker
-mysql_query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
+$db->query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
 
 include('./include/classes.php5');
 include('./include/functions.php5');
@@ -24,9 +23,9 @@ if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET
 {
     if ($_GET['isAirportControlled'] != NULL AND $_GET['date'] != NULL AND $_GET['time'] != NULL)
     {
-        $ICAO = mysql_real_escape_string(htmlspecialchars($_GET['isAirportControlled']));
-        $date = mysql_real_escape_string(htmlspecialchars($_GET['date']));
-        $time = mysql_real_escape_string(htmlspecialchars($_GET['time']));
+        $ICAO = $_GET['isAirportControlled'];
+        $date = $_GET['date'];
+        $time = $_GET['time'];
         
         if (isAirportControlled($ICAO, $date, $time) == true) $controlled = 1;
         else if (isAirportControlled($ICAO, $date, $time) == false) $controlled = 0;
@@ -43,59 +42,47 @@ if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET
     }
 }
 
-// GET FLIGHTPLANS OF A CALLSIGN AT A GIVEN PLACE AND A GIVEN DATE
-else if (isset($_GET['getFlightplans']) AND isset($_GET['airport']) AND isset($_GET['date']) AND isset($_GET['callsign']))
+/* MASTER FLIGHTPLAN SEARCH !!!!
+ * BEWARE IT WILL ROCK !
+ * Yes
+ */
+else if (isset($_GET['getFlightplans']))
 {
-    if ($_GET['airport'] != NULL AND $_GET['date'] != NULL AND $_GET['callsign'] != NULL)
+    if (isset($_GET['callsign']) AND $_GET['callsign'] != NULL)
     {
-        
-        $ICAO = mysql_real_escape_string(htmlspecialchars($_GET['airport']));
-        $date = mysql_real_escape_string(htmlspecialchars($_GET['date']));
-        $callsign = mysql_real_escape_string(htmlspecialchars($_GET['callsign']));
-        
-        // If no airports is selected
-        if ($ICAO == '*')
-        {
-            $flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE dateDeparture = '$date' AND callsign = '$callsign'");
-        }
-        else
-        {
-            $flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE (airportICAOFrom = '$ICAO' OR airportICAOTo = '$ICAO') AND dateDeparture = '$date' AND callsign = '$callsign'");
-        }
-        
-        flightplansToXML($flightplans);
+        $callsign = $_GET['callsign'];
+        $queryCallsign = "callsign = '$callsign'";
     }
-}
-
-// GET FLIGHTPLANS
-else if (isset($_GET['getFlightplans']) AND isset($_GET['airport']) AND isset($_GET['date']))
-{
-    if ($_GET['airport'] != NULL AND $_GET['date'] != NULL)
+    else
     {
-        
-        $ICAO = mysql_real_escape_string(htmlspecialchars($_GET['airport']));
-        $date = mysql_real_escape_string(htmlspecialchars($_GET['date']));
-        
-        $flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE (airportICAOFrom = '$ICAO' OR airportICAOTo = '$ICAO') AND dateDeparture = '$date'");
-        
-        flightplansToXML($flightplans);
+        $queryCallsign = "callsign LIKE '%'";
     }
+    if (isset($_GET['date']) AND $_GET['date'] != NULL)
+    {
+        $date = $_GET['date'];
+        $queryDate = "dateDeparture = '$date'";
+    }
+    else
+    {
+        $queryDate = "dateDeparture LIKE '%'";
+    }
+    if (isset($_GET['airport']) AND $_GET['airport'] != NULL)
+    {
+        $ICAO = $_GET['airport'];
+        $queryICAO = "(airportICAOFrom = '$ICAO' OR airportICAOTo = '$ICAO')";
+    }
+    else
+    {
+        $queryICAO = "(airportICAOFrom LIKE '%' OR airportICAOTo LIKE '%')";
+    }
+    $query = "SELECT * FROM flightplans20140113 WHERE $queryCallsign AND $queryDate AND $queryICAO ;";
+    
+    $queryPrepare = $db->prepare($query);
+    $queryPrepare->execute();
+    $flightplans = $queryPrepare->fetchAll();
+    
+    flightplansToXML($flightplans);
 }
-
-// GET FLIGHTPLANS OF A CALLSIGN
-else if (isset($_GET['getFlightplans']) AND isset($_GET['callsign']))
-{
-	if (isset($_GET['callsign']) != NULL)
-	{
-		$callsign = mysql_real_escape_string(htmlspecialchars($_GET['callsign']));
-		
-		$flightplans = mysql_query("SELECT * FROM flightplans20140113 WHERE callsign = '$callsign';");
-		
-		flightplansToXML($flightplans);
-		
-	}
-}
-
 
 // GET ATC SESSIONS
 else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
@@ -103,15 +90,15 @@ else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
     if ($_GET['limitDate'] != NULL)
     {
         // We get the date
-        $date = mysql_real_escape_string(htmlspecialchars($_GET['limitDate']));
+        $date = $_GET['limitDate'];
         $today = date('Y-m-d');
         
-        $events = mysql_query("SELECT * FROM events WHERE date >= '$today' AND date <= '$date'");
+        $events = $db->query("SELECT * FROM events WHERE date >= '$today' AND date <= '$date'");
         
         $XMLEvents = new SimpleXMLElement("<events></events>");
         $XMLEvents->addAttribute('version',DEV_VERSION);
         
-        while ($event = mysql_fetch_array($events))
+        foreach ($events as $event)
         {
             $Event = new Event();
             $Event->selectById($event['eventId']);
@@ -140,7 +127,7 @@ else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
 else if (isset($_GET['request_auth']) AND isset($_POST['mail']))
 {
     // We gather the mail
-    $mail = mysql_real_escape_string(htmlspecialchars($_POST['mail']));
+    $mail = $_POST['mail'];
     
     // We check if there is an information
     $userInfo = "";
@@ -148,14 +135,14 @@ else if (isset($_GET['request_auth']) AND isset($_POST['mail']))
     {
         foreach ($_POST['userInfo'] as $info)
         {
-            $info_ = mysql_real_escape_string(htmlspecialchars($info));
-            $userInfo .= $info_.",";
+            $userInfo .= $info;
         }
     }
     
     $md5_mail = substr(md5($mail.$userInfo),0,8);
     
-    mysql_query("INSERT INTO request_users VALUES('','$mail','$md5_mail','$userInfo');");
+    $statement = $db->prepare("INSERT INTO request_users VALUES('',:mail,:md5_mail,:userInfo);");
+    $statement->execute(array(":mail"=>$mail,":md5_mail"=>$md5_mail,":userInfo"=>$userInfo));
     
     echo '<h3>Congratulations, your mail is <b>'.$mail.'</b>, your <b>IDENT</b> : '.$md5_mail.'</h3>
         <br/>
@@ -164,63 +151,65 @@ else if (isset($_GET['request_auth']) AND isset($_POST['mail']))
         <br/><br/>
         The syntax is :
         <br/>
-        http://lenny64.free.fr/dev2014_01_13.php5?fileFlightplan&ident=<b>'.$md5_mail.'</b>&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=
+        http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?fileFlightplan&ident=<b>'.$md5_mail.'</b>&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=
         <br/><br/>
         <a href="./dev2014_01_13.php5">Go back to the dev page</a>';
-    mail('lenny64@free.fr','Your ident to file flightplans','Hello, you can now file flightplans using this URL : http://lenny64.free.fr/dev2014_01_13.php5?fileFlightplan&ident='.$md5_mail.'&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=');
-    mail($mail,'Your ident to file flightplans','Hello, you can now file flightplans using this URL : http://lenny64.free.fr/dev2014_01_13.php5?fileFlightplan&ident='.$md5_mail.'&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=');
+    mail('lenny64@free.fr','Your ident to file flightplans','Hello, you can now file flightplans using this URL : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?fileFlightplan&ident='.$md5_mail.'&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=');
+    mail($mail,'Your ident to file flightplans','Hello, you can now file flightplans using this URL : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?fileFlightplan&ident='.$md5_mail.'&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=');
     
 }
 
 // NEW LIVE ATC SESSION FROM OPENRADAR
 else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET['date']) AND isset($_GET['time']) AND isset($_GET['airportICAO']))
 {
-	if ($_GET['ident'] != NULL AND $_GET['date'] != NULL AND $_GET['time'] != NULL AND $_GET['airportICAO'] != NULL)
-	{
-		$inject_ident = mysql_real_escape_string(htmlspecialchars($_GET['ident']));
-		$inject_date = mysql_real_escape_string(htmlspecialchars($_GET['date']));
-			$inject_year = date("Y",strtotime($inject_date));
-			$inject_month = date("m",strtotime($inject_date));
-			$inject_day = date("d",strtotime($inject_date));
-		$inject_time = mysql_real_escape_string(htmlspecialchars($_GET['time']));
-			$inject_hour = date("H",strtotime($inject_time));
-			$inject_minute = date("i",strtotime($inject_time));
-		$inject_airportICAO = mysql_real_escape_string(htmlspecialchars($_GET['airportICAO']));
-		
-		// We check if it is a registered user
-        $ident_infos_list = mysql_query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = mysql_fetch_assoc($ident_infos_list);
+    if ($_GET['ident'] != NULL AND $_GET['date'] != NULL AND $_GET['time'] != NULL AND $_GET['airportICAO'] != NULL)
+    {
+        $inject_ident = $_GET['ident'];
+        $inject_date = $_GET['date'];
+            $inject_year = date("Y",strtotime($inject_date));
+            $inject_month = date("m",strtotime($inject_date));
+            $inject_day = date("d",strtotime($inject_date));
+        $inject_time = $_GET['time'];
+            $inject_hour = date("H",strtotime($inject_time));
+            $inject_minute = date("i",strtotime($inject_time));
+        $inject_airportICAO = $_GET['airportICAO'];
+
+        // We check if it is a registered user
+        $ident_infos_list = $db->prepare("SELECT * FROM request_users WHERE ident = :inject_ident LIMIT 1");
+        $ident_infos_list->execute(array(":inject_ident"=>$inject_ident));
+        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
+        
         $wrong_ident = false;
         if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) $wrong_ident = true;
-        
+
         if ($wrong_ident != true)
         {
             $Event = new Event();
             $Event->create($inject_year,$inject_month,$inject_day,$inject_hour,$inject_minute,'23','59',$inject_airportICAO,'','','','openradar');
-            
+
             $XMLEvents = new SimpleXMLElement("<events></events>");
-			$XMLEvents->addAttribute('version',DEV_VERSION);
-			
-			$XMLEvent = $XMLEvents->addChild('event');
-			$XMLEvent->addChild('eventId',$Event->id);
-			$XMLEvent->addChild('airportICAO',$Event->airportICAO);
-			$XMLEvent->addChild('date',$Event->date);
-			$XMLEvent->addChild('beginTime',$Event->beginTime);
-			$XMLEvent->addChild('endTime',$Event->endTime);
-			$XMLEvent->addChild('fgcom',$Event->fgcom);
-			$XMLEvent->addChild('teamspeak',$Event->teamspeak);
-			$XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
-			$XMLEvent->addChild('runways',$Event->runways);
-			$XMLEvent->addChild('ILS',$Event->ils);
-			$XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
-			$XMLEvent->addChild('remarks',$Event->remarks);
-			
-			header('Content-type: application/xml');
-			echo $XMLEvents->asXML();
-			
+                $XMLEvents->addAttribute('version',DEV_VERSION);
+
+                $XMLEvent = $XMLEvents->addChild('event');
+                $XMLEvent->addChild('eventId',$Event->id);
+                $XMLEvent->addChild('airportICAO',$Event->airportICAO);
+                $XMLEvent->addChild('date',$Event->date);
+                $XMLEvent->addChild('beginTime',$Event->beginTime);
+                $XMLEvent->addChild('endTime',$Event->endTime);
+                $XMLEvent->addChild('fgcom',$Event->fgcom);
+                $XMLEvent->addChild('teamspeak',$Event->teamspeak);
+                $XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
+                $XMLEvent->addChild('runways',$Event->runways);
+                $XMLEvent->addChild('ILS',$Event->ils);
+                $XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
+                $XMLEvent->addChild('remarks',$Event->remarks);
+
+                header('Content-type: application/xml');
+                echo $XMLEvents->asXML();
+
         }
-        
-	}
+
+    }
 }
 
 // FILE A FLIGHTPLAN
@@ -228,29 +217,29 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
 {
     if ($_GET['ident'] != NULL AND $_GET['callsign'] != NULL AND $_GET['dateDeparture'] != NULL AND $_GET['departureAirport'] != NULL AND $_GET['departureTime'] != NULL AND $_GET['arrivalAirport'] != NULL AND $_GET['arrivalTime'] != NULL)
     {
-        $inject_ident = mysql_real_escape_string(htmlspecialchars($_GET['ident']));
-        $inject_callsign = mysql_real_escape_string(htmlspecialchars($_GET['callsign']));
-        $inject_airline = mysql_real_escape_string(htmlspecialchars($_GET['airline']));
-        $inject_flightNumber = mysql_real_escape_string(htmlspecialchars($_GET['flightNumber']));
-        $inject_departureAirport = mysql_real_escape_string(htmlspecialchars($_GET['departureAirport']));
-        $inject_arrivalAirport = mysql_real_escape_string(htmlspecialchars($_GET['arrivalAirport']));
-        $inject_alternateDestination = mysql_real_escape_string(htmlspecialchars($_GET['alternateDestination']));
-        $inject_cruiseAltitude = mysql_real_escape_string(htmlspecialchars($_GET['cruiseAltitude']));
-        $inject_trueAirspeed = mysql_real_escape_string(htmlspecialchars($_GET['trueAirspeed']));
-        $inject_dateDeparture = mysql_real_escape_string(htmlspecialchars($_GET['dateDeparture']));
-        $inject_departureTime = mysql_real_escape_string(htmlspecialchars($_GET['departureTime']));
-        $inject_arrivalTime = mysql_real_escape_string(htmlspecialchars($_GET['arrivalTime']));
-        $inject_aircraftType = mysql_real_escape_string(htmlspecialchars($_GET['aircraft']));
-        $inject_soulsOnBoard = mysql_real_escape_string(htmlspecialchars($_GET['soulsOnBoard']));
-        $inject_fuelTime = mysql_real_escape_string(htmlspecialchars($_GET['fuelTime']));
-        $inject_pilotName = mysql_real_escape_string(htmlspecialchars($_GET['pilotName']));
-        $inject_waypoints = mysql_real_escape_string(htmlspecialchars($_GET['waypoints']));
-        $inject_category = mysql_real_escape_string(htmlspecialchars($_GET['category']));
-        $inject_comments = mysql_real_escape_string(htmlspecialchars($_GET['comments']));
+        $inject_ident = $_GET['ident'];
+        $inject_callsign = $_GET['callsign'];
+        $inject_airline = $_GET['airline'];
+        $inject_flightNumber = $_GET['flightNumber'];
+        $inject_departureAirport = $_GET['departureAirport'];
+        $inject_arrivalAirport = $_GET['arrivalAirport'];
+        $inject_alternateDestination = $_GET['alternateDestination'];
+        $inject_cruiseAltitude = $_GET['cruiseAltitude'];
+        $inject_trueAirspeed = $_GET['trueAirspeed'];
+        $inject_dateDeparture = $_GET['dateDeparture'];
+        $inject_departureTime = $_GET['departureTime'];
+        $inject_arrivalTime = $_GET['arrivalTime'];
+        $inject_aircraftType = $_GET['aircraft'];
+        $inject_soulsOnBoard = $_GET['soulsOnBoard'];
+        $inject_fuelTime = $_GET['fuelTime'];
+        $inject_pilotName = $_GET['pilotName'];
+        $inject_waypoints = $_GET['waypoints'];
+        $inject_category = $_GET['category'];
+        $inject_comments = $_GET['comments'];
         
         // We check if it is a registered user
-        $ident_infos_list = mysql_query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = mysql_fetch_assoc($ident_infos_list);
+        $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
+        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
         $wrong_ident = false;
         if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) { $wrong_ident = true; }
         
@@ -259,7 +248,7 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
             $injectFlightplan = new Flightplan();
             $injectFlightplan->create($inject_dateDeparture, $inject_departureAirport, $inject_arrivalAirport, $inject_alternateDestination, $inject_cruiseAltitude, $inject_trueAirspeed, $inject_callsign, $inject_pilotName, $inject_airline, $inject_flightNumber, $inject_category, $inject_aircraftType, $inject_departureTime, $inject_arrivalTime, $inject_waypoints, $inject_soulsOnBoard, $inject_fuelTime, $inject_comments);
             
-			flightplanToXML($injectFlightplan);
+            flightplanToXML($injectFlightplan);
 			
         }
         
@@ -271,12 +260,12 @@ else if ((isset($_GET['openFlightplan']) OR isset($_GET['closeFlightplan'])) AND
 {
     if ($_GET['ident'] != NULL AND $_GET['flightplanId'] != NULL)
     {
-        $inject_ident = mysql_real_escape_string(htmlspecialchars($_GET['ident']));
-        $inject_flightplanId = mysql_real_escape_string(htmlspecialchars($_GET['flightplanId']));
+        $inject_ident = $_GET['ident'];
+        $inject_flightplanId = $_GET['flightplanId'];
         
         // We check if it is a registered user
-        $ident_infos_list = mysql_query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = mysql_fetch_assoc($ident_infos_list);
+        $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
+        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
         $wrong_ident = false;
         if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) $wrong_ident = true;
         
@@ -301,14 +290,14 @@ else if (isset($_GET['changeFlightplan']) AND isset($_GET['ident']) AND isset($_
 {
     if ($_GET['ident'] != NULL AND $_GET['flightplanId'] != NULL AND $_GET['variable'] != NULL AND $_GET['value'] != NULL)
     {
-        $inject_ident = mysql_real_escape_string(htmlspecialchars($_GET['ident']));
-        $inject_flightplanId = mysql_real_escape_string(htmlspecialchars($_GET['flightplanId']));
-        $variable = mysql_real_escape_string(htmlspecialchars(urldecode($_GET['variable'])));
-        $value = mysql_real_escape_string(htmlspecialchars(urldecode($_GET['value'])));
+        $inject_ident = $_GET['ident'];
+        $inject_flightplanId = $_GET['flightplanId'];
+        $variable = urldecode($_GET['variable']);
+        $value = urldecode($_GET['value']);
         
         // We check if it is a registered user
-        $ident_infos_list = mysql_query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = mysql_fetch_assoc($ident_infos_list);
+        $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
+        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
         $wrong_ident = false;
         if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) $wrong_ident = true;
                 
@@ -422,6 +411,6 @@ else
 <?php }
 
 // We close the session
-mysql_close();
+$db = null;
 
 ?>

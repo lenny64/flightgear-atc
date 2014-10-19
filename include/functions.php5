@@ -11,7 +11,7 @@
  */
 function getInfo($wantedInfo,$table,$col,$value)
 {
-    $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+    global $db;
     
     $query = $db->query("SELECT $wantedInfo FROM $table WHERE $col = '$value'");
     
@@ -34,7 +34,7 @@ function getInfo($wantedInfo,$table,$col,$value)
 
 function returnEvents($date = NULL)
 {
-    $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+    global $db;
     
     $events = array();
     if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT * FROM events WHERE date = '$date' ORDER BY beginTime");   
@@ -66,13 +66,14 @@ function returnEvents($date = NULL)
 
 function isAirportControlled($ICAO,$date,$time)
 {
+    global $db;
     
     // The value to return at the end of the function
     $airportControlled = false;
     
-    $requestAirports = mysql_query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND date = '$date'") or die(mysql_error());
+    $requestAirports = $db->query("SELECT * FROM events WHERE airportICAO = '$ICAO' AND date = '$date'");
     
-    while ($requestAirport = mysql_fetch_array($requestAirports))
+    foreach ($requestAirports as $requestAirport)
     {
         $beginTime = $requestAirport['beginTime'];
         $endTime = $requestAirport['endTime'];
@@ -159,14 +160,12 @@ function flightplansToXML($flightplans_list)
 	$XMLflightplans = new SimpleXMLElement("<flightplans></flightplans>");
 	$XMLflightplans->addAttribute('version',DEV_VERSION);
 	
-	while ($flightplan = mysql_fetch_array($flightplans_list))
+	foreach ($flightplans_list as $flightplan)
 	{
-		
 		$Flightplan = new Flightplan();
 		$Flightplan->selectById($flightplan['flightplanId']);
-		
 		$XMLflightplan = $XMLflightplans->addChild('flightplan');
-		
+                
 		$XMLflightplan->addChild('flightplanId',$Flightplan->id);
 		$XMLflightplan->addChild('callsign',$Flightplan->callsign);
 		$XMLflightplan->addChild('airline',$Flightplan->airline);

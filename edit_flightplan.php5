@@ -11,56 +11,77 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
 {
     if ($_POST['flightplanId'] != NULL AND $_POST['email'] != NULL AND $_POST['privateKey'] != NULL AND $_POST['departureAirport'] != NULL AND $_POST['departureTime'] != NULL AND $_POST['date'] != NULL AND $_POST['arrivalAirport'] != NULL AND $_POST['arrivalTime'] != NULL)
     {
+        global $db;
+        
         // We select the flightplan
         $Flightplan = new Flightplan();
-        $flightplanId = mysql_real_escape_string(htmlspecialchars($_POST['flightplanId']));
+        $flightplanId = $_POST['flightplanId'];
         $Flightplan->selectById($flightplanId);
         
-        $departureAirport = mysql_real_escape_string(htmlspecialchars($_POST['departureAirport']));
-        $departureTime = mysql_real_escape_string(htmlspecialchars($_POST['departureTime']));
-        $date = mysql_real_escape_string(htmlspecialchars($_POST['date']));
-        $cruiseAltitude = mysql_real_escape_string(htmlspecialchars($_POST['cruiseAltitude']));
-        $waypoints = mysql_real_escape_string(htmlspecialchars($_POST['waypoints']));
-        $arrivalAirport = mysql_real_escape_string(htmlspecialchars($_POST['arrivalAirport']));
-        $arrivalTime = mysql_real_escape_string(htmlspecialchars($_POST['arrivalTime']));
-        $pilotName = mysql_real_escape_string(htmlspecialchars($_POST['pilotName']));
-        $airline = mysql_real_escape_string(htmlspecialchars($_POST['airline']));
-        $flightNumber = mysql_real_escape_string(htmlspecialchars($_POST['flightNumber']));
-        $category = mysql_real_escape_string(htmlspecialchars($_POST['category']));
-        $aircraftType = mysql_real_escape_string(htmlspecialchars($_POST['aircraftType']));
-        $alternateDestination = mysql_real_escape_string(htmlspecialchars($_POST['alternateDestination']));
-        $trueSpeed = mysql_real_escape_string(htmlspecialchars($_POST['trueSpeed']));
-        $soulsOnBoard = mysql_real_escape_string(htmlspecialchars($_POST['soulsOnBoard']));
-        $fuelTime = mysql_real_escape_string(htmlspecialchars($_POST['fuelTime']));
-        $comments = mysql_real_escape_string(htmlspecialchars($_POST['comments']));
+        $departureAirport = $_POST['departureAirport'];
+        $departureTime = $_POST['departureTime'];
+        $date = $_POST['date'];
+        $cruiseAltitude = $_POST['cruiseAltitude'];
+        $waypoints = $_POST['waypoints'];
+        $arrivalAirport = $_POST['arrivalAirport'];
+        $arrivalTime = $_POST['arrivalTime'];
+        $pilotName = $_POST['pilotName'];
+        $airline = $_POST['airline'];
+        $flightNumber = $_POST['flightNumber'];
+        $category = $_POST['category'];
+        $aircraftType = $_POST['aircraftType'];
+        $alternateDestination = $_POST['alternateDestination'];
+        $trueSpeed = $_POST['trueSpeed'];
+        $soulsOnBoard = $_POST['soulsOnBoard'];
+        $fuelTime = $_POST['fuelTime'];
+        $comments = $_POST['comments'];
         
         // We pick the email and key
-        $entered_email = mysql_real_escape_string(htmlspecialchars($_POST['email']));
-        $entered_privateKey = mysql_real_escape_string(htmlspecialchars($_POST['privateKey']));
+        $entered_email = $_POST['email'];
+        $entered_privateKey = $_POST['privateKey'];
         
         // We check if those info correspond to those inside the flightplan
         if ($entered_email == $Flightplan->email AND $entered_privateKey == $Flightplan->privateKey)
         {
             // If it's ok then we update the table
-            mysql_query("UPDATE flightplans20140113 SET
-                airline = '$airline',
-                flightnumber = '$flightNumber',
-                airportICAOFrom = '$departureAirport',
-                airportICAOTo = '$arrivalAirport',
-                alternateDestination = '$alternateDestination',
-                cruiseAltitude = '$cruiseAltitude',
-                trueAirspeed = '$trueSpeed',
-                dateDeparture = '$date',
-                departureTime = '$departureTime',
-                arrivalTime = '$arrivalTime',
-                aircraft = '$aircraftType',
-                soulsOnBoard = '$soulsOnBoard',
-                fuelTime = '$fuelTime',
-                pilotName = '$pilotName',
-                waypoints = '$waypoints',
-                category = '$category',
-                comments = '$comments'
-                WHERE flightplanId = $Flightplan->id;") or die(mysql_error());
+            $preparedQuery = $db->prepare("UPDATE flightplans20140113 SET
+                airline = :airline:,
+                flightnumber = :flightNumber:,
+                airportICAOFrom = :departureAirport:,
+                airportICAOTo = :arrivalAirport:,
+                alternateDestination = :alternateDestination:,
+                cruiseAltitude = :cruiseAltitude:,
+                trueAirspeed = :trueSpeed:,
+                dateDeparture = :date:,
+                departureTime = :departureTime:,
+                arrivalTime = :arrivalTime:,
+                aircraft = :aircraftType:,
+                soulsOnBoard = :soulsOnBoard:,
+                fuelTime = :fuelTime:,
+                pilotName = :pilotName:,
+                waypoints = :waypoints:,
+                category = :category:,
+                comments = comments
+                WHERE flightplanId = :flightplanId;");
+            $preparedQuery->execute(array(
+                ":airline"                  =>  $airline,
+                ":flightNumber"             =>  $flightNumber,
+                ":airportICAOFrom"          =>  $departureAirport,
+                ":airportICAOTo"            =>  $arrivalAirport,
+                ":cruiseAltitude"           =>  $cruiseAltitude,
+                ":trueAirspeed"             =>  $trueSpeed,
+                ":dateDeparture"            =>  $date,
+                ":departureTime"            =>  $departureTime,
+                ":arrivalTime"              =>  $arrivalTime,
+                ":aircraft"                 =>  $aircraftType,
+                ":soulsOnBoard"             =>  $soulsOnBoard,
+                ":fuelTime"                 =>  $fuelTime,
+                ":pilotName"                =>  $pilotName,
+                ":waypoints"                =>  $waypoints,
+                ":category"                 =>  $category,
+                ":comments"                 =>  $comments,
+                ":flightplanId"             =>  $Flightplan->id
+            ));
             
             echo "<div class='information'>Your flightplan has been successfully edited !</div>";
         }
@@ -73,7 +94,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
 {
     // We select the flightplan
     $Flightplan = new Flightplan();
-    $flightplanId = mysql_real_escape_string(htmlspecialchars($_GET['flightplanId']));
+    $flightplanId = $_GET['flightplanId'];
     $Flightplan->selectById($flightplanId);
     
     ?>

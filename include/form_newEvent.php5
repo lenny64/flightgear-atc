@@ -65,10 +65,10 @@ if (isset($_GET['newSession']))
 	}
 			
     // We copy less important values by default
-    $FGCOM = mysql_real_escape_string(htmlspecialchars($_POST['newSessionFGCOM']));
-    $TeamSpeak = mysql_real_escape_string(htmlspecialchars($_POST['newSessionTeamSpeak']));
-    $DocsLink = mysql_real_escape_string(htmlspecialchars($_POST['newSessionDocsLink']));
-    $Remarks = mysql_real_escape_string(htmlspecialchars($_POST['newSessionRemarks']));
+    $FGCOM = $_POST['newSessionFGCOM'];
+    $TeamSpeak = $_POST['newSessionTeamSpeak'];
+    $DocsLink = $_POST['newSessionDocsLink'];
+    $Remarks = $_POST['newSessionRemarks'];
     
     // Is it okay to create a new session ?
     if ($permissionToCreate == true)

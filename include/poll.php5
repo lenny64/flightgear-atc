@@ -1,6 +1,8 @@
 
 <?php
 
+global $db;
+
 // If there is a new poll submission
 if (isset($_POST['poll_id']) AND $_POST['poll_id'] != NULL AND isset($_POST['poll_answer']) AND $_POST['poll_answer'] != NULL)
 {
@@ -15,9 +17,9 @@ if (isset($_POST['poll_id']) AND $_POST['poll_id'] != NULL AND isset($_POST['pol
 }
 
 // We get all the polls
-$polls_list = mysql_query("SELECT * FROM polls_submits");
+$polls_list = $db->query("SELECT * FROM polls_submits");
 
-while ($poll = mysql_fetch_array($polls_list))
+foreach ($polls_list as $poll)
 {
 	// We get all the information regarding the poll
 	$Poll = new Poll();

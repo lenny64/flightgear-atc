@@ -1,9 +1,6 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+global $db;
 
 echo "<div style='color: #666; font-size: 0.8em; margin: 3% 0 3% 5%;'>";
 echo "Number of events for each airport : ";
@@ -11,9 +8,9 @@ echo "Number of events for each airport : ";
 $airports = Array();
 $count = Array();
 
-$list_of_airports = mysql_query("SELECT * FROM events ORDER BY airportICAO");
+$list_of_airports = $db->query("SELECT * FROM events ORDER BY airportICAO");
 
-while ($airport = mysql_fetch_array($list_of_airports))
+foreach ($list_of_airports as $airport)
 {
     $airport_icao = $airport['airportICAO'];
     if (isset($airports[$airport_icao]))

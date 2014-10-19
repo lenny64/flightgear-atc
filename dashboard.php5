@@ -91,7 +91,7 @@ if (isset($_POST['change_settings']))
 <?php
 
 // We gather every sessions this user made
-$events = $db->query("SELECT * FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10") or die(mysql_error());
+$events = $db->query("SELECT * FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10");
 
 foreach ($events as $event)
 { 

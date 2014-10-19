@@ -1,15 +1,17 @@
 <?php
 
+global $db;
+
 // THIS PAGE IS CALLED BY EVENT.PHP5
 
 // We gather the flightplans
-$flightplans = mysql_query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
+$flightplans = $db->query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
 //TO ADD AGAIIIN !!! WHERE eventId=$Event->id 
 
 // This index will tell us if there is a flightplan for the event
 $flightplan_num = 0;
 // We list the flightplans
-while ($flightplan = mysql_fetch_array($flightplans))
+foreach ($flightplans as $flightplan)
 {
     // We select the flightplan
     $Flightplan = new Flightplan();

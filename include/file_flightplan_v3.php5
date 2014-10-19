@@ -3,20 +3,20 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
 {
     $NewFlightplan = new Flightplan();
     
-    $callsign = mysql_real_escape_string(htmlspecialchars($_POST['callsign']));
-    $email = mysql_real_escape_string(htmlspecialchars($_POST['email']));
-    $departureAirport = mysql_real_escape_string(htmlspecialchars($_POST['departureAirport']));
-    $departureTime = mysql_real_escape_string(htmlspecialchars($_POST['departureTimeHours'])).":".mysql_real_escape_string(htmlspecialchars($_POST['departureTimeMinutes'])).":00";
-    $date = mysql_real_escape_string(htmlspecialchars($_POST['date']));
-    $cruiseAltitude = mysql_real_escape_string(htmlspecialchars($_POST['cruiseAltitude']));
-    $waypoints = mysql_real_escape_string(htmlspecialchars($_POST['waypoints']));
-    $arrivalAirport = mysql_real_escape_string(htmlspecialchars($_POST['arrivalAirport']));
-    $arrivalTime = mysql_real_escape_string(htmlspecialchars($_POST['arrivalTimeHours'])).":".mysql_real_escape_string(htmlspecialchars($_POST['arrivalTimeMinutes'])).":00";
-    $pilotName = mysql_real_escape_string(htmlspecialchars($_POST['pilotName']));
-    $airline = mysql_real_escape_string(htmlspecialchars($_POST['airline']));
-    $flightNumber = mysql_real_escape_string(htmlspecialchars($_POST['flightNumber']));
-    $category = mysql_real_escape_string(htmlspecialchars($_POST['category']));
-    $aircraftType = mysql_real_escape_string(htmlspecialchars($_POST['aircraftType']));
+    $callsign = $_POST['callsign'];
+    $email = $_POST['email'];
+    $departureAirport = $_POST['departureAirport'];
+    $departureTime = $_POST['departureTimeHours'].":".$_POST['departureTimeMinutes'].":00";
+    $date = $_POST['date'];
+    $cruiseAltitude = $_POST['cruiseAltitude'];
+    $waypoints = $_POST['waypoints'];
+    $arrivalAirport = $_POST['arrivalAirport'];
+    $arrivalTime = $_POST['arrivalTimeHours'].":".$_POST['arrivalTimeMinutes'].":00";
+    $pilotName = $_POST['pilotName'];
+    $airline = $_POST['airline'];
+    $flightNumber = $_POST['flightNumber'];
+    $category = $_POST['category'];
+    $aircraftType = $_POST['aircraftType'];
     
     // We create the Flightplan
     $NewFlightplan->create($date, $departureAirport, $arrivalAirport, $alternateDestination, $cruiseAltitude, $trueAirspeed, $callsign, $pilotName, $airline, $flightNumber, $category, $aircraftType, $departureTime, $arrivalTime, $waypoints, $soulsOnBoard, $fuelTime, $comments);

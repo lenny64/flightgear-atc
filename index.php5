@@ -30,7 +30,7 @@
 {
 	if (isset($_POST['FPForm_visibility']) AND $_POST['FPForm_visibility'] != NULL)
 	{
-		$FPForm_visibility = mysql_real_escape_string(htmlspecialchars($_POST['FPForm_visibility']));
+		$FPForm_visibility = $_POST['FPForm_visibility'];
 		$parameters = ['FPForm_visibility' => $FPForm_visibility];
 		$User->changeParameters($parameters);
 		?>
@@ -61,7 +61,7 @@
 
 // If we receive how many days one wants to see
 if (!isset($_GET['daysToShow']) OR $_GET['daysToShow'] < 1 OR $_GET['daysToShow'] > 200) $daysToShow = 37;
-else $daysToShow = mysql_real_escape_string(htmlspecialchars($_GET['daysToShow']));
+else $daysToShow = $_GET['daysToShow'];
 
 // We include the form to create an event. It will be hidden at the top of the page
 include('./include/form_newEvent.php5');

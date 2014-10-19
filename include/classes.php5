@@ -15,69 +15,76 @@ class User
     
     public function associateCookieToUser()
     {
-		// We check if the user has a cookie
-		if (isset($_COOKIE['lenny64_id']))
-		{
-			// If the cookie is not corrupted
-			if ($_COOKIE['lenny64_id'] != NULL)
-			{
-				// We copy this value
-				$this->userCookieId = $_COOKIE['lenny64_id'];
-				$this->hasCookie = true;
-			}
-			else $this->hasCookie = false;
-		}
-		else $this->hasCookie = false;
-		
-		// If the user has a cookie
-		if ($this->hasCookie == true AND isset($this->id) AND $this->id != NULL)
-		{
-			// We put it inside the "cookie" column
-			mysql_query("UPDATE users SET `cookie` = '$this->userCookieId' WHERE `userId` = '$this->id';");
-		}
-	}
-	
-	public function searchUserCookie()
-	{
-		// We check if the user has a cookie
-		if (isset($_COOKIE['lenny64_id']))
-		{
-			// If the cookie is not corrupted
-			if ($_COOKIE['lenny64_id'] != NULL)
-			{
-				// We copy this value
-				$this->userCookieId = $_COOKIE['lenny64_id'];
-				$this->hasCookie = true;
-			}
-			else $this->hasCookie = false;
-		}
-		else $this->hasCookie = false;
-		
-		if($this->hasCookie == true)
-		{
-			// We gather every cookie from table
-			$list_cookies = mysql_query("SELECT userId, cookie FROM users");
-			
-			while ($cookie = mysql_fetch_array($list_cookies))
-			{
-				if ($cookie['cookie'] == $this->userCookieId)
-				{
-					$this->id = $cookie['userId'];
-					$this->selectById($this->id);
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+        global $db;
+        
+        // We check if the user has a cookie
+        if (isset($_COOKIE['lenny64_id']))
+        {
+            // If the cookie is not corrupted
+            if ($_COOKIE['lenny64_id'] != NULL)
+            {
+                // We copy this value
+                $this->userCookieId = $_COOKIE['lenny64_id'];
+                $this->hasCookie = true;
+            }
+            else $this->hasCookie = false;
+        }
+        else $this->hasCookie = false;
+
+        // If the user has a cookie
+        if ($this->hasCookie == true AND isset($this->id) AND $this->id != NULL)
+        {
+            // We put it inside the "cookie" column
+            $preparedQuery = $db->prepare("UPDATE users SET `cookie` = :userCookieId WHERE `userId` = :userId;");
+            $preparedQuery->execute(array(":userCookieId" => $this->userCookieId, ":userId" => $this->id));
+        }
+    }
+
+    public function searchUserCookie()
+    {
+        global $db;
+        
+        // We check if the user has a cookie
+        if (isset($_COOKIE['lenny64_id']))
+        {
+            // If the cookie is not corrupted
+            if ($_COOKIE['lenny64_id'] != NULL)
+            {
+                // We copy this value
+                $this->userCookieId = $_COOKIE['lenny64_id'];
+                $this->hasCookie = true;
+            }
+            else $this->hasCookie = false;
+        }
+        else $this->hasCookie = false;
+
+        if($this->hasCookie == true)
+        {
+            // We gather every cookie from table
+            $list_cookies = $db->query("SELECT userId, cookie FROM users");
+
+            foreach ($list_cookies as $cookie)
+            {
+                if ($cookie['cookie'] == $this->userCookieId)
+                {
+                    $this->id = $cookie['userId'];
+                    $this->selectById($this->id);
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
     
     public function create($Mail,$Password,$IP)
     {
+        global $db;
+        
         // We get the list of users
-        $users_list = mysql_query("SELECT userId, mail, password FROM users");
+        $users_list = $db->query("SELECT userId, mail, password FROM users");
         
         // We see
-        while ($user = mysql_fetch_array($users_list))
+        foreach ($users_list as $user)
         {
             // if there is an user with that mail
             if ($user['mail'] == $Mail)
@@ -96,7 +103,8 @@ class User
                     if ($user['ip'] != $IP AND $IP != NULL)
                     {
                         $this->ip = $IP;
-                        mysql_query("UPDATE users SET `ip`=$IP WHERE userId = $this->id;");
+                        $preparedQuery = $db->prepare("UPDATE users SET :ip WHERE userId = :id;");
+                        $preparedQuery->execute(array(":ip" => $IP, ":userId" => $this->id));
                     }
                     
                     $_SESSION['id'] = $this->id;
@@ -125,7 +133,8 @@ class User
         // If we receive the signal to create a new user (by default)
         if ($this->requestNewUser == true)
         {
-            mysql_query("INSERT INTO `users` VALUES('','$Mail','$Password','$IP','0','','');") or die(mysql_error());
+            $preparedQuery = $db->prepare("INSERT INTO `users` VALUES('',:Mail,:Password,:IP,'0','','');");
+            $preparedQuery->execute(array(":Mail" => $Mail, ":Password" => $Password, ":IP" => $IP));
             $_SESSION['mode'] = 'connected';
             $_SESSION['id'] = getInfo('userId', 'users', 'mail', $Mail);
             $this->id = $_SESSION['id'];
@@ -144,7 +153,7 @@ class User
         {
             if ($id != NULL)
             {
-                $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+                global $db;
                 
                 $users_list = $db->query("SELECT * FROM users WHERE userId = $id");
                 $users = $users_list->fetch(PDO::FETCH_ASSOC);
@@ -185,7 +194,10 @@ class User
      */
     public function changeNotification($notification)
     {
-        mysql_query("UPDATE users SET notifications='$notification' WHERE userId='".$this->id."';");
+        global $db;
+        
+        $preparedQuery = $db->prepare("UPDATE users SET notifications=:notification WHERE userId=:userId;");
+        $preparedQuery->execute(array(":notification" => $notification, ":userId" => $this->id));
         $this->notifications = $notification;
     }
     
@@ -193,8 +205,11 @@ class User
      */
     public function changeParameters($parameters)
     {
+        global $db;
+        
 	$jsonUserParameters = json_encode($parameters);
-        mysql_query("UPDATE users SET userParameters='$jsonUserParameters' WHERE userId='".$this->id."';");
+        $preparedQuery = $db->prepare("UPDATE users SET userParameters=:jsonUserParameters WHERE userId=:userId;");
+        $preparedQuery->execute(array(":jsonUserParameters" => $jsonUserParameters, ":userId" => $this->id));
         $this->parameters = $parameters;
     }
     
@@ -204,7 +219,9 @@ class User
      */
     public function changeName($name)
     {
-        mysql_query("INSERT INTO users_names VALUES ('','$this->id','$name')");
+        global $db;
+        $preparedQuery = $db->prepare("INSERT INTO users_names VALUES ('',:userId,:name)");
+        $preparedQuery->execute(array(":userId" => $this->id, ":name" => $name));
         $this->name = $name;
     }
     
@@ -220,14 +237,16 @@ class Airport
     
     public function create($AirportName, $AirportICAO)
     {
+        global $db;
+        
         $this->name         =   $AirportName;
         $this->icao         =   $AirportICAO;
         
         // We get the list of airports
-        $airports_list = mysql_query("SELECT * FROM airports");
+        $airports_list = $db->query("SELECT * FROM airports");
         
         // We see
-        while ($airport = mysql_fetch_array($airports_list))
+        foreach ($airports_list as $airport)
         {
             // if there is an airport with that name
             if ($airport['name'] == $AirportName)
@@ -242,7 +261,11 @@ class Airport
         }
         
         // If we receive the signal to create a new session (by default)
-        if ($this->requestNewAirport == true) mysql_query("INSERT INTO `airports` VALUES('','$AirportName','$AirportICAO');") or die(mysql_error());
+        if ($this->requestNewAirport == true)
+        {
+            $preparedQuery = $db->prepare("INSERT INTO `airports` VALUES('',:AirportName,:AirportICAO);");
+            $preparedQuery->execute(array(":AirportName" => $AirportName, ":AirportICAO" => $AirportICAO));
+        }
     }
 }
 
@@ -269,6 +292,8 @@ class Event
 
     public function create($Year, $Month, $Day, $BeginHour, $BeginMinutes, $EndHour, $EndMinutes, $AirportICAO, $FGCOM, $TeamSpeak, $DocsLink, $Remarks)
     {
+        global $db;
+        
         $this->fgcom        =   $FGCOM;
         $this->teamspeak    =   $TeamSpeak;
         $this->docsLink     =   $DocsLink;
@@ -304,12 +329,16 @@ class Event
         // If the user is not connected (password not correct)
         if ($_SESSION['mode'] != 'connected')
         {
-			// We check if there is a session planned from OpenRadar
-			// (it's "remark" will have the value "openradar")
-			if (!isset($Remarks) OR $this->remarks != "openradar")
-			{
-				$this->requestNewEvent = false;
-			}
+            // We check if there is a session planned from OpenRadar
+            // (it's "remark" will have the value "openradar")
+            if (!isset($Remarks) OR $this->remarks != "openradar")
+            {
+                $this->requestNewEvent = false;
+            }
+            else
+            {
+                $this->userId = 36;
+            }
         }
         
         // We get the list of events
@@ -351,27 +380,31 @@ class Event
         // If we receive the signal to create a new session (by default)
         if ($this->requestNewEvent == true)
         {
-            mysql_query("INSERT INTO `events` 
-                VALUES('',
-                '$this->airportICAO',
-                '$this->userId',
-                '$this->date',
-                '$this->beginTime',
-                '$this->endTime',
-                '$this->fgcom',
-                '$this->teamspeak',
-                '$this->transitionLevel',
-                '$this->runways',
-                '$this->ils',
-                '$this->docsLink',
-                '$this->remarks',
-                '',
-                '',
-                '',
-                '',
-                '');") or die(mysql_error());
+            $statement = $db->prepare("INSERT INTO `events` (`airportICAO`, `userId`, `date`, `beginTime`, `endTime`, `fgcom`, `teamspeak`, `docsLink`, `remarks`)
+                VALUES(
+                :airportICAO,
+                :userId,
+                :date,
+                :beginTime,
+                :endTime,
+                :fgcom,
+                :teamspeak,
+                :docsLink,
+                :remarks);");
+            
+            $statement->execute(array(
+                ':airportICAO'      =>  $this->airportICAO,
+                ':userId'           =>  $this->userId,
+                ':date'             =>  $this->date,
+                ':beginTime'        =>  $this->beginTime,
+                ':endTime'          =>  $this->endTime,
+                ':fgcom'            =>  $this->fgcom,
+                ':teamspeak'        =>  $this->teamspeak,
+                ':docsLink'         =>  $this->docsLink,
+                ':remarks'          =>  $this->remarks));
+            
+            $this->id = $db->lastInsertId();
             $this->eventCreated = true;
-            $this->id = mysql_insert_id();
         }
     }
     
@@ -385,8 +418,10 @@ class Event
         {
             if ($id != NULL)
             {
-                $events_list = mysql_query("SELECT * FROM events WHERE eventId = $id");
-                $event = mysql_fetch_array($events_list);
+                global $db;
+                
+                $events_list = $db->query("SELECT * FROM events WHERE eventId = $id");
+                $event = $events_list->fetch(PDO::FETCH_ASSOC);
                 
                 $this->id = $event['eventId'];
                 $this->airportICAO = $event['airportICAO'];
@@ -410,16 +445,18 @@ class Event
         $string = '';
         if ($_SESSION['mode'] == 'connected')
         {
+            global $db;
+            
             $nbInfos = sizeof($infos);
             $i = 1;
             foreach ($infos as $info => $value)
             {
-                if ($i == $nbInfos) $string .= "`".$info."`='".mysql_real_escape_string(htmlspecialchars($value))."'";
-                else $string .= "`".$info."`='".mysql_real_escape_string(htmlspecialchars($value))."',";
+                if ($i == $nbInfos) $string .= "`".$info."`='".$value."'";
+                else $string .= "`".$info."`='".htmlspecialchars($value)."',";
                 $i++;
             }
-            $query = "UPDATE events SET $string WHERE `eventId`=".$infos['eventId'].";";
-            mysql_query($query) or die(mysql_error());
+            $preparedQuery = $db->prepare("UPDATE events SET $string WHERE `eventId`=".$infos['eventId'].";");
+            $preparedQuery->execute();
         }
     }
 }
@@ -442,7 +479,10 @@ class SpecialEvent
         {
             if ($callsign != NULL AND $participation != NULL)
             {
-                mysql_query("INSERT INTO specialEvents_pilots VALUES('','$this->id','$callsign','$participation',NOW());");
+                global $db;
+                
+                $preparedQuery = $db->prepare("INSERT INTO specialEvents_pilots VALUES('','$this->id','$callsign','$participation',NOW());");
+                $preparedQuery->execute();
                 $this->pilotsList = Array();
                 $this->selectById($this->id);
             }
@@ -455,8 +495,7 @@ class SpecialEvent
         {
             if ($id != NULL)
             {
-                
-                $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
+                global $db;
     
                 $specialEvents_list = $db->query("SELECT * FROM specialEvents_events WHERE specialEventsId = $id");
                 $specialEvent = $specialEvents_list->fetch(PDO::FETCH_ASSOC);
@@ -527,33 +566,36 @@ class Flightplan
             // In particular, the airport must contain 4 letters
             if (preg_match("#^[a-zA-z]{4}$#",$departureAirport) AND preg_match("#^[a-zA-z]{4}$#",$arrivalAirport) AND $callsign != NULL AND $callsign != 'Callsign' AND $departureTime != NULL AND $arrivalTime != NULL AND $dateDeparture != NULL)
             {
+                
+                global $db;
+                
                 // We can generate some alerts
                 $alert_departureATC = true;
                 $alert_arrivalATC = true;
                 
                 // We gather the information
-                $this->departureAirport = mysql_real_escape_string(htmlspecialchars($departureAirport));
-                $this->arrivalAirport = mysql_real_escape_string(htmlspecialchars($arrivalAirport));
-                $this->alternateDestination = mysql_real_escape_string(htmlspecialchars($alternateDestination));
-                $this->cruiseAltitude = mysql_real_escape_string(htmlspecialchars($cruiseAltitude));
-                $this->trueAirspeed = mysql_real_escape_string(htmlspecialchars($trueAirspeed));
-                $this->callsign = mysql_real_escape_string(htmlspecialchars($callsign));
-                $this->airline = mysql_real_escape_string(htmlspecialchars($airline));
-                $this->flightNumber = mysql_real_escape_string(htmlspecialchars($flightNumber));
-                $this->category = mysql_real_escape_string(htmlspecialchars($category));
-                $this->aircraftType = mysql_real_escape_string(htmlspecialchars($aircraftType));
-                $this->departureTime = mysql_real_escape_string(htmlspecialchars($departureTime));
-                $this->arrivalTime = mysql_real_escape_string(htmlspecialchars($arrivalTime));
-                $this->dateDeparture = mysql_real_escape_string(htmlspecialchars($dateDeparture));
+                $this->departureAirport = $departureAirport;
+                $this->arrivalAirport = $arrivalAirport;
+                $this->alternateDestination = $alternateDestination;
+                $this->cruiseAltitude = $cruiseAltitude;
+                $this->trueAirspeed = $trueAirspeed;
+                $this->callsign = $callsign;
+                $this->airline = $airline;
+                $this->flightNumber = $flightNumber;
+                $this->category = $category;
+                $this->aircraftType = $aircraftType;
+                $this->departureTime = $departureTime;
+                $this->arrivalTime = $arrivalTime;
+                $this->dateDeparture = $dateDeparture;
                 // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
                 if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
                 // Otherwise i assume the arrival date is the same than the departure one
                 else $this->dateArrival = $this->dateDeparture;
-                $this->waypoints = mysql_real_escape_string(htmlspecialchars($waypoints));
-                $this->soulsOnBoard = mysql_real_escape_string(htmlspecialchars($soulsOnBoard));
-                $this->fuelTime = mysql_real_escape_string(htmlspecialchars($fuelTime));
-                $this->pilotName = mysql_real_escape_string(htmlspecialchars($pilotName));
-                $this->comments = mysql_real_escape_string(htmlspecialchars($comments));
+                $this->waypoints = $waypoints;
+                $this->soulsOnBoard = $soulsOnBoard;
+                $this->fuelTime = $fuelTime;
+                $this->pilotName = $pilotName;
+                $this->comments = $comments;
                 $this->status = 'filled';
 				
                 // If the airport is not controlled, we advise the pilot
@@ -569,20 +611,43 @@ class Flightplan
                 }
                 
                 // I insert the flightplan into DB
-                mysql_query("INSERT INTO flightplans20140113 VALUES('','','$this->callsign','$this->airline','$this->flightNumber','$this->departureAirport','$this->arrivalAirport','$this->alternateDestination','$this->cruiseAltitude','$this->trueAirspeed','$this->dateDeparture','$this->dateArrival','$this->departureTime','$this->arrivalTime','$this->aircraftType','$this->soulsOnBoard','$this->fuelTime','$this->pilotName','$this->waypoints','$this->category','$this->comments','','');");
-                $this->id = mysql_insert_id();
+                $preparedQuery = $db->prepare("INSERT INTO flightplans20140113 VALUES('','',:callsign,:airline,:flightNumber,:departureAirport,:arrivalAirport,:alternateDestination,:cruiseAltitude,:trueAirspeed,:dateDeparture,:dateArrival,:departureTime,:arrivalTime,:aircraftType,:soulsOnBoard,:fuelTime,:pilotName,:waypoints,:category,:comments,'','');");
+                $preparedQuery->execute(array(
+                    ":callsign"             =>  $this->callsign,
+                    ":airline"              =>  $this->airline,
+                    ":flightNumber"         =>  $this->flightNumber,
+                    ":departureAirport"     =>  $this->departureAirport,
+                    ":arrivalAirport"       =>  $this->arrivalAirport,
+                    ":alternateDestination" =>  $this->alternateDestination,
+                    ":cruiseAltitude"       =>  $this->cruiseAltitude,
+                    ":trueAirspeed"         =>  $this->trueAirspeed,
+                    ":dateDeparture"        =>  $this->dateDeparture,
+                    ":dateArrival"          =>  $this->dateArrival,
+                    ":departureTime"        =>  $this->departureTime,
+                    ":arrivalTime"          =>  $this->arrivalTime,
+                    ":aircraftType"         =>  $this->aircraftType,
+                    ":soulsOnBoard"         =>  $this->soulsOnBoard,
+                    ":fuelTime"             =>  $this->fuelTime,
+                    ":pilotName"            =>  $this->pilotName,
+                    ":waypoints"            =>  $this->waypoints,
+                    ":category"             =>  $this->category,
+                    ":comments"             =>  $this->comments,
+                ));
+                $this->id = $db->lastInsertId();
                 // I also insert the default comment entered by the pilot
-                mysql_query("INSERT INTO flightplan_comments VALUES('','$this->id','$this->callsign','$this->comments','".date("Y-m-d H:i:s")."');");
+                $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:callsign,:comments,'".date("Y-m-d H:i:s")."');");
+                $preparedQuery->execute(array(":id" => $this->id, ":callsign" => $this->callsign, ":comments" => $this->comments));
                 // I also insert the status of the flightplan
-                mysql_query("INSERT INTO flightplan_status VALUES('','9999','$this->id','$this->status','".date("Y-m-d H:i:s")."');");
+                $preparedQuery = $db->prepare("INSERT INTO flightplan_status VALUES('','9999',:id,:status,'".date("Y-m-d H:i:s")."');");
+                $preparedQuery->execute(array(":id" => $this->id, ":status" => $this->status));
                 
                 // We get the ATC user ID
-                $dep_ATCiD = mysql_query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1") or die(mysql_error());
-                $dep_ATCiD = mysql_fetch_row($dep_ATCiD);
+                $dep_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1");
+                $dep_ATCiD =$dep_ATCiD->fetch(PDO::FETCH_ASSOC);
                 $dep_ATCiD = $dep_ATCiD[0];
                 
-                $arr_ATCiD = mysql_query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1") or die(mysql_error());
-                $arr_ATCiD = mysql_fetch_row($arr_ATCiD);
+                $arr_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1");
+                $arr_ATCiD = $arr_ATCiD->fetch(PDO::FETCH_ASSOC);
                 $arr_ATCiD = $arr_ATCiD[0];
                 
                 // If the user wants to, we can send him the alert
@@ -612,26 +677,28 @@ class Flightplan
             // In particular, the airport must contain 4 letters
             if (preg_match("#^[a-zA-z]{4}$#",$departureAirport) AND preg_match("#^[a-zA-z]{4}$#",$arrivalAirport) AND $callsign != NULL AND $departureTime != NULL AND $arrivalTime != NULL AND $dateDeparture != NULL)
             {
+                global $db;
+                
                 // We can generate some alerts
                 $alert_departureATC = true;
                 $alert_arrivalATC = true;
                 
                 // We gather the information
-                $this->departureAirport = mysql_real_escape_string(htmlspecialchars($departureAirport));
-                $this->arrivalAirport = mysql_real_escape_string(htmlspecialchars($arrivalAirport));
-                $this->cruiseAltitude = mysql_real_escape_string(htmlspecialchars($cruiseAltitude));
-                $this->callsign = mysql_real_escape_string(htmlspecialchars($callsign));
-                $this->category = mysql_real_escape_string(htmlspecialchars($category));
-                $this->aircraftType = mysql_real_escape_string(htmlspecialchars($aircraftType));
-                $this->departureTime = mysql_real_escape_string(htmlspecialchars($departureTime));
-                $this->arrivalTime = mysql_real_escape_string(htmlspecialchars($arrivalTime));
-                $this->dateDeparture = mysql_real_escape_string(htmlspecialchars($dateDeparture));
+                $this->departureAirport = $departureAirport;
+                $this->arrivalAirport = $arrivalAirport;
+                $this->cruiseAltitude = $cruiseAltitude;
+                $this->callsign = $callsign;
+                $this->category = $category;
+                $this->aircraftType = $aircraftType;
+                $this->departureTime = $departureTime;
+                $this->arrivalTime = $arrivalTime;
+                $this->dateDeparture = $dateDeparture;
                 // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
                 if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
                 // Otherwise i assume the arrival date is the same than the departure one
                 else $this->dateArrival = $this->dateDeparture;
-                $this->waypoints = mysql_real_escape_string(htmlspecialchars($waypoints));
-                $this->comments = mysql_real_escape_string(htmlspecialchars($comments));
+                $this->waypoints = $waypoints;
+                $this->comments = $comments;
 				
                 // If the airport is not controlled, we advise the pilot
                 if (isAirportControlled($departureAirport, $this->dateDeparture, $departureTime) == false)
@@ -646,16 +713,30 @@ class Flightplan
                 }
                 
                 // I insert the flightplan into DB
-                mysql_query("INSERT INTO flightplans20140113 VALUES('','','$this->callsign','','$this->departureAirport','$this->arrivalAirport','','$this->cruiseAltitude','','$this->dateDeparture','$this->dateArrival','$this->departureTime','$this->arrivalTime','$this->aircraftType','','','','$this->waypoints','$this->category','$this->comments','','');") or die(mysql_error());
-                $this->id = mysql_insert_id();
+                $preparedQuery = $db->prepare("INSERT INTO flightplans20140113 VALUES('','',:callsign,'',:departureAirport,:arrivalAirport,'',:cruiseAltitude,'',:dateDeparture,:dateArrival,:departureTime,:arrivalTime,:aircraftType,'','','',:waypoints,:category,:comments,'','');");
+                $preparedQuery->execute(array(
+                    ":callsign"             =>  $this->callsign,
+                    ":departureAirport"     =>  $this->departureAirport,
+                    ":arrivalAirport"       =>  $this->arrivalAirport,
+                    ":cuiseAltitude"        =>  $this->cruiseAltitude,
+                    ":dateDeparture"        =>  $this->dateDeparture,
+                    ":dateArrival"          =>  $this->dateArrival,
+                    ":departureTime"        =>  $this->departureTime,
+                    ":arrivalTime"          =>  $this->arrivalTime,
+                    ":aircraftType"         =>  $this->aircraftType,
+                    ":waypoints"            =>  $this->waypoints,
+                    ":category"             =>  $this->category,
+                    ":comments"             =>  $this->comments
+                ));
+                $this->id = $db->lastInsertId();
                                 
                 // We get the ATC user ID
-                $dep_ATCiD = mysql_query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1") or die(mysql_error());
-                $dep_ATCiD = mysql_fetch_row($dep_ATCiD);
+                $dep_ATCiDQuery = $db->query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1");
+                $dep_ATCiD = $dep_ATCiDQuery->fetch(PDO::FETCH_ASSOC);
                 $dep_ATCiD = $dep_ATCiD[0];
                 
-                $arr_ATCiD = mysql_query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1") or die(mysql_error());
-                $arr_ATCiD = mysql_fetch_row($arr_ATCiD);
+                $arr_ATCiDQuery = $db->query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1");
+                $arr_ATCiD = $arr_ATCiDQuery->fetch(PDO::FETCH_ASSOC);
                 $arr_ATCiD = $arr_ATCiD[0];
                 
                 // If the user wants to, we can send him the alert
@@ -682,8 +763,10 @@ class Flightplan
         {
             if ($id != NULL)
             {
-                $flightplans_list = mysql_query("SELECT * FROM flightplans20140113 WHERE flightplanId = $id");
-                $flightplan = mysql_fetch_array($flightplans_list);
+                global $db;
+                
+                $flightplans_list = $db->query("SELECT * FROM flightplans20140113 WHERE flightplanId = $id");
+                $flightplan = $flightplans_list->fetch(PDO::FETCH_ASSOC);
                 
                 $this->id = $flightplan['flightplanId'];
                 $this->associatedEvent = $flightplan['eventId'];
@@ -708,10 +791,10 @@ class Flightplan
                 
                 // C O M M E N T S
                 // We retrieve all comments relative to that flight plan
-                $comments_list = mysql_query("SELECT * FROM flightplan_comments WHERE flightplanId = $id");
+                $comments_list = $db->query("SELECT * FROM flightplan_comments WHERE flightplanId = $id");
                 // We initialize the comment array
                 $this->comments = array();
-                while ($comment = mysql_fetch_array($comments_list))
+                foreach ($comments_list as $comment)
                 {
                     // We select the comment's pseudo and password
                     $pseudo = $comment['pseudo'];
@@ -722,18 +805,18 @@ class Flightplan
                 
                 // S T A T U S
                 // We retrieve the status if the flightplan
-                $status_list = mysql_query("SELECT * FROM flightplan_status WHERE flightplanId = $id ORDER BY flightplanStatusId DESC LIMIT 1");
-                $status = mysql_fetch_assoc($status_list);
+                $status_list = $db->query("SELECT * FROM flightplan_status WHERE flightplanId = $id ORDER BY flightplanStatusId DESC LIMIT 1");
+                $status = $status_list->fetch(PDO::FETCH_ASSOC);
                 $this->status = $status['status'];
                 
                 // H I S T O R Y
                 // We retrieve the flightplan's history
-                $history_list = mysql_query("SELECT * FROM flightplan_history WHERE flightplanId = $this->id ORDER BY dateTime DESC");
+                $history_list = $db->query("SELECT * FROM flightplan_history WHERE flightplanId = $this->id ORDER BY dateTime DESC");
                 // We initialize the last updated dateTime value
                 $this->lastUpdated = 0;
                 // We initialize the history array
                 $this->history = array();
-                while ($history = mysql_fetch_array($history_list))
+                foreach ($history_list as $history)
                 {
                     // We select the variable and value
                     $variable = $history['variable'];
@@ -752,8 +835,8 @@ class Flightplan
                 
                 // E M A I L   A N D   P R I V A T E   K E Y
                 // We retrieve the email address
-                $email_list = mysql_query("SELECT * FROM flightplan_emails WHERE flightplanId = $id ORDER BY flightplanEmailId DESC LIMIT 1");
-                $email = mysql_fetch_assoc($email_list);
+                $email_list = $db->query("SELECT * FROM flightplan_emails WHERE flightplanId = $id ORDER BY flightplanEmailId DESC LIMIT 1");
+                $email = $email_list->fetch(PDO::FETCH_ASSOC);
                 $this->email = $email['email'];
                 $this->privateKey = $email['privateKey'];
                 
@@ -767,8 +850,11 @@ class Flightplan
         {
             if ($pseudo != NULL AND $comment != NULL)
             {
+                global $db;
+                
                 // We insert the comment
-                mysql_query("INSERT INTO flightplan_comments VALUES('','$this->id','$pseudo','$comment','".date('Y-m-d H:i:s')."');") or die(mysql_error());
+                $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:pseudo,:comment,:date);");
+                $preparedQuery->execute(array(":id" => $this->id, ":pseudo" => $pseudo, ":comment" => $comment, ":date" => date('Y-m-d H:i:s')));
                 echo "Comment added<br/>";
             }
         }
@@ -780,10 +866,13 @@ class Flightplan
         {
             if ($userId != NULL AND $flightplanId != NULL AND $status != NULL)
             {
+                global $db;
+                
                 $dateTime = date("Y-m-d H:i:s");
                 $this->lastUpdated = $dateTime;
                 $this->status = $status;
-                mysql_query("INSERT INTO flightplan_status VALUES('','$userId','$flightplanId','$status','$dateTime');") or die(mysql_error());
+                $preparedQuery = $db->prepare("INSERT INTO flightplan_status VALUES('',:userId,:flightplanId,:status,:dateTime);");
+                $preparedQuery->execute(array(":userId" => $userId, ":flightplanId" => $flightplanId, ":status" => $status, ":dateTime" => $dateTime));
             }
         }
     }
@@ -794,10 +883,13 @@ class Flightplan
         {
             if ($userId != NULL AND $flightplanId != NULL AND $variable != NULL AND $value != NULL)
             {
+                global $db;
+                
                 $dateTime = date("Y-m-d H:i:s");
                 $this->lastUpdated = $dateTime;
                 $this->history[$variable] = array('value' => $value, 'dateTime' => $dateTime);
-                mysql_query("INSERT INTO flightplan_history VALUES('','$flightplanId','$userId','$variable','$value','$dateTime');") or die(mysql_error());
+                $preparedQuery = $db->prepare("INSERT INTO flightplan_history VALUES('',:flightplanId,:userId,:variable,:value,:dateTime);");
+                $preparedQuery->execute(array(":flightplanId" => $flightplanId, ":userId" => $userId, ":variable" => $variable, ":value" => $value, ":dateTime" => $dateTime));
             }
         }
     }
@@ -808,9 +900,12 @@ class Flightplan
         {
             if ($email != NULL)
             {
-                $this->email = mysql_real_escape_string(htmlspecialchars($email));
+                global $db;
+                
+                $this->email = $email;
                 $this->privateKey = substr(md5($email.$this->id),0,6);
-                mysql_query("INSERT INTO flightplan_emails VALUES('','$this->id','$this->email','$this->privateKey',NOW());");
+                $preparedQuery = $db->prepare("INSERT INTO flightplan_emails VALUES('', :id, :email, :privateKey, NOW());");
+                $preparedQuery->execute(array(":id" => $this->id, ":email" => $this->email, ":privateKey" => $this->privateKey));
                 mail($this->email, $this->callsign.' : Your key to modify the flightplan '.$this->id, 'Good day ! To modify your flightplan, this is the key you will need : '.$this->privateKey);
             }
         }
@@ -820,123 +915,126 @@ class Flightplan
 
 class Poll
 {
-	public $id;
-	public $userPollId;
-	public $dateBegin;
-	public $dateEnd;
-	public $title;
-	public $content;
-	public $choices = Array();
-	public $okToVote = TRUE;
-	
-	public function create()
-	{
-	}
-	
-	public function selectById($id)
-	{
-		if (isset($id))
-		{
-			if ($id != NULL)
-			{
-				$polls_list = mysql_query("SELECT * FROM polls_submits WHERE pollId = $id");
-				$poll = mysql_fetch_array($polls_list);
+    public $id;
+    public $userPollId;
+    public $dateBegin;
+    public $dateEnd;
+    public $title;
+    public $content;
+    public $choices = Array();
+    public $okToVote = TRUE;
 
-				$this->id = $poll['pollId'];
-				$this->userPollId = $poll['userId'];
-				$this->dateBegin = $poll['dateBegin'];
-				$this->dateEnd = $poll['dateEnd'];
-				$this->title = $poll['title'];
-				$this->content = $poll['content'];
-				
-				// We get every choices for a given poll
-				$choices_list = mysql_query("SELECT answer FROM polls_answers WHERE pollId = $id");
-				// We gather every choice for this poll
-				while ($choice = mysql_fetch_array($choices_list))
-				{
-					$this->choices[] = $choice['answer'];
-				}
-			}
-		}
-	}
-	
-	public function checkAnswer()
-	{
-		/*
-		 * PART TO AVOID VOTING TWICE
-		 * Now there is only the IP verification
-		 * Later there should be a cookie verification
-		 */
-		// This is the user IP
-		$ip = $_SERVER['REMOTE_ADDR'];
-		// I list the IP into the database
-		$listPreviousIp = mysql_query("SELECT ip FROM polls_results");
-		// Now we consider the user can vote
-		$this->okToVote = TRUE;
-		
-		// For each IP into database
-		while ($previousIp = mysql_fetch_array($listPreviousIp))
-		{
-			// We check if the current IP is stored
-			if ($previousIp['ip'] == $ip)
-			{
-				// If so, we prohibit the user to vote again
-				$this->okToVote = FALSE;
-			}
-		}
-		
-		// Is there any cookie for this poll ?
-		if (isset($_COOKIE['lenny64_poll']) AND $_COOKIE['lenny64_poll'] == $this->id)
-		{
-			// If so, we prohibit the user to vote again
-			$this->okToVote = FALSE;
-		}
-		
-		// Of course, if the user can vote, we allow a new entry into database
-		if ($this->okToVote !== FALSE)
-		{
-			return TRUE;
-		}
-		// If the person has already voted
-		else
-		{
-			return FALSE;
-		}
-	}
-	
-	public function answer($answer,$ip)
-	{
-		$this->checkAnswer();
-		
-		if ($this->okToVote != TRUE)
-		{
-			// We print an alert message
-			echo "<div class='warning'>You already voted. 
-			<br/><br/>
-			Note : This feature is in Beta. Please <a href='./contact.php5' style='color: #aaa;'>contact me</a> for :
-			<ul>
-				<li>Poll proposals ;</li>
-				<li>Bug reports.</li>
-			</ul>
-			</div>";
-			return FALSE;
-		}
-		else
-		{
-			// Insertion of the vote
-			mysql_query("INSERT INTO polls_results VALUES('','$this->id','$answer','','$ip','".date('Y-m-d H:i:s')."');");
-			// We display a message
-			echo "<div class='warning'>Your vote has been accepted. Thank you.
-			<br/><br/>
-			Note : This feature is in Beta. Please <a href='./contact.php5' style='color: #aaa;'>contact me</a> for :
-			<ul>
-				<li>Poll proposals ;</li>
-				<li>Bug reports.</li>
-			</ul>
-			</div>";
-			return TRUE;
-		}
-	}
+    public function create()
+    {
+    }
+
+    public function selectById($id)
+    {
+        if (isset($id))
+        {
+            if ($id != NULL)
+            {
+                global $db;
+                $polls_list = $db->query("SELECT * FROM polls_submits WHERE pollId = $id");
+                $poll = $polls_list->fetch(PDO::FETCH_ASSOC);
+
+                $this->id = $poll['pollId'];
+                $this->userPollId = $poll['userId'];
+                $this->dateBegin = $poll['dateBegin'];
+                $this->dateEnd = $poll['dateEnd'];
+                $this->title = $poll['title'];
+                $this->content = $poll['content'];
+
+                // We get every choices for a given poll
+                $choices_list = $db->query("SELECT answer FROM polls_answers WHERE pollId = $id");
+                // We gather every choice for this poll
+                foreach ($choices_list as $choice)
+                {
+                    $this->choices[] = $choice['answer'];
+                }
+            }
+        }
+    }
+
+    public function checkAnswer()
+    {
+        global $db;
+        /*
+         * PART TO AVOID VOTING TWICE
+         * Now there is only the IP verification
+         * Later there should be a cookie verification
+         */
+        // This is the user IP
+        $ip = $_SERVER['REMOTE_ADDR'];
+        // I list the IP into the database
+        $listPreviousIp = $db->query("SELECT ip FROM polls_results");
+        // Now we consider the user can vote
+        $this->okToVote = TRUE;
+
+        // For each IP into database
+        foreach ($listPreviousIp as $previousIp)
+        {
+                // We check if the current IP is stored
+                if ($previousIp['ip'] == $ip)
+                {
+                        // If so, we prohibit the user to vote again
+                        $this->okToVote = FALSE;
+                }
+        }
+
+        // Is there any cookie for this poll ?
+        if (isset($_COOKIE['lenny64_poll']) AND $_COOKIE['lenny64_poll'] == $this->id)
+        {
+                // If so, we prohibit the user to vote again
+                $this->okToVote = FALSE;
+        }
+
+        // Of course, if the user can vote, we allow a new entry into database
+        if ($this->okToVote !== FALSE)
+        {
+                return TRUE;
+        }
+        // If the person has already voted
+        else
+        {
+                return FALSE;
+        }
+    }
+
+    public function answer($answer,$ip)
+    {
+        $this->checkAnswer();
+
+        if ($this->okToVote != TRUE)
+        {
+                // We print an alert message
+                echo "<div class='warning'>You already voted. 
+                <br/><br/>
+                Note : This feature is in Beta. Please <a href='./contact.php5' style='color: #aaa;'>contact me</a> for :
+                <ul>
+                        <li>Poll proposals ;</li>
+                        <li>Bug reports.</li>
+                </ul>
+                </div>";
+                return FALSE;
+        }
+        else
+        {
+                // Insertion of the vote
+                $preparedQuery = $db->prepare("INSERT INTO polls_results VALUES('', :id, :answer, '', :ip, :date);");
+                $preparedQuery->execute(array(":id" => $this->id, ":answer" => $answer, ":ip" => $ip, ":date" => date('Y-m-d H:i:s')));
+                // We display a message
+                echo "<div class='warning'>Your vote has been accepted. Thank you.
+                <br/><br/>
+                Note : This feature is in Beta. Please <a href='./contact.php5' style='color: #aaa;'>contact me</a> for :
+                <ul>
+                        <li>Poll proposals ;</li>
+                        <li>Bug reports.</li>
+                </ul>
+                </div>";
+                return TRUE;
+        }
+    }
 	
 }
 

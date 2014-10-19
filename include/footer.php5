@@ -2,7 +2,6 @@
 <?php
 
 // We close the DB open in header.php
-//mysql_close();
 $db = null;
 
 ?>
