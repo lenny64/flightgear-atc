@@ -13,7 +13,7 @@ if (isset($_POST['mail']) AND isset($_POST['subject']) AND isset($_POST['content
         $subject = $_POST['subject'];
         $content = $_POST['content'];
         
-        mail('lenny64@free.fr', $subject, 'Mail de '.$mail.' : '.$content);
+        mail('thibault.armengaud@free.fr', $subject, 'Mail de '.$mail.' : '.$content);
     }
 }
 

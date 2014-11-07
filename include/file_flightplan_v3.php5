@@ -188,8 +188,6 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     <input type="submit" value="Create" class="create_flightplan_button"/>
 </form>
 
-<br style='clear: both;'/>
-
 <script type="text/javascript" language="javascript">
     $(document).ready(function(){
        $(".showall").click(function(){

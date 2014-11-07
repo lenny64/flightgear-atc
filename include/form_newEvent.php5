@@ -111,7 +111,8 @@ if (isset($_GET['newSession']))
     }
 }
 
-
+// We define global variable to prevent "undefined variable" error
+global $getDate;
 
 // Information to print the new session form
 if (isset($_GET['form_newSession']) AND isset($_GET['date']))
@@ -124,10 +125,10 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
 
 ?>
 
-<form action="./index.php5?newSession#calendar_day<?php echo $getDate;?>" method="post" class="form_new_event">
+<form action="./new_event.php5?date=<?php echo $getDate; ?>&newSession" method="post" class="form_new_event">
     <?php
     // If we asked the form to open
-    if (isset($_GET['form_newSession']) AND isset($_GET['date']))
+    if (isset($_GET['date']))
     {
         if ($_GET['date'] != NULL)
         {
@@ -199,15 +200,17 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                     }
                     $autoCompletionEvent = $autoCompletionEvent_result->fetch(PDO::FETCH_ASSOC);
                     
-                    $beginTime = explode(':',$autoCompletionEvent['beginTime']);
-                    $endTime = explode(':',$autoCompletionEvent['endTime']);
+                    if ($autoCompletionEvent != FALSE)
+                    {
+                        $beginTime = explode(':',$autoCompletionEvent['beginTime']);
+                        $endTime = explode(':',$autoCompletionEvent['endTime']);
 
-                    $fgcom = $autoCompletionEvent['fgcom'];
-                    $teamspeak = $autoCompletionEvent['teamspeak'];
-                    $docsLink = $autoCompletionEvent['docsLink'];
-                    
-                    $remarks = str_replace("\n","",$autoCompletionEvent['remarks']);?>
-                    <span class="airport_selection_button" onclick="
+                        $fgcom = $autoCompletionEvent['fgcom'];
+                        $teamspeak = $autoCompletionEvent['teamspeak'];
+                        $docsLink = $autoCompletionEvent['docsLink'];
+
+                        $remarks = str_replace("\n","",$autoCompletionEvent['remarks']);?>
+                        <span class="airport_selection_button" onclick="
                             document.getElementById('apt_name').value='<?php echo $name; ?>';
                             document.getElementById('apt_name').style.backgroundColor='#33ee33';
                             document.getElementById('apt_icao').value='<?php echo $ICAO; ?>';
@@ -233,9 +236,10 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                             document.getElementById('apt_remarks').value='<?php echo str_replace("\r","",$remarks);?>';
                             document.getElementById('apt_remarks').style.backgroundColor='#33ee33';
                             <?php } // DO NOT FORGET TO CLOSE TAG >>>> ?>">
-                    <?php echo $airport['ICAO'];?> 
-                    </span>
+                        <?php echo $airport['ICAO'];?> 
+                        </span>
                 <?php }
+                }
                 ?>
                 <br/>
                 <span class="airport_selection_button" onclick="

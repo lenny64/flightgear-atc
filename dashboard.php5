@@ -4,30 +4,6 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
-<?php if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))
-{
-?>
-<div class="submenu">
-		<div class="menu_entry">
-			<form action="./index.php5#newSession" method="get" class="submenu_quick_atc">
-				<input type="hidden" name="form_newSession"/>
-				<input type="text" id="dateTimePicker" name="date" size="8" value="<?php echo date('Y-m-d');?>"/>
-				<input type="submit" value="Create ATC event"/>
-			</form>
-		</div>
-</div>
-<?php
-}
-?>
-
-<script type="text/javascript" language="javascript">
-
-$(document).ready(function() {
-	$('#dateTimePicker').datepicker({ dateFormat:'yy-mm-dd', showOn: 'button', buttonImage: './img/scheme_date.png', buttonImageOnly: true });
-});
-
-</script>
-
 
 <?php
 
@@ -89,9 +65,8 @@ if (isset($_POST['change_settings']))
 </div>
 
 <?php
-
 // We gather every sessions this user made
-$events = $db->query("SELECT * FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10");
+$events = $db->query("SELECT eventId FROM events WHERE userId = $User->id ORDER BY `date` DESC LIMIT 0,10");
 
 foreach ($events as $event)
 { 
@@ -100,7 +75,7 @@ foreach ($events as $event)
     $Event->selectById($event['eventId']);
     
     // We pick the airport ID to ident it
-    $airportId = getInfo('airportId', 'airports', 'ICAO', $event['airportICAO']);
+    $airportId = getInfo('airportId', 'airports', 'ICAO', $Event->airportICAO);
     // We list the airport which is concerned
     $airports = $db->query("SELECT * FROM airports WHERE airportId = $airportId");
     // We gather the information
@@ -136,7 +111,7 @@ foreach ($events as $event)
 		 */
 		
 		// We select all the flightplans relevant to this event
-		$flightplans = $db->query("SELECT * FROM flightplans20140113 ORDER BY departureTime");
+		$flightplans = $db->query("SELECT flightplanId FROM flightplans20140113 WHERE airportICAOFrom = '$Event->airportICAO' OR airportICAOTo = '$Event->airportICAO' ORDER BY departureTime");
 
 		foreach ($flightplans as $flightplan)
 		{

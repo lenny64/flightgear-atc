@@ -63,18 +63,35 @@ form.file_flightplan { clear: both; display: none; position: fixed; top: 6px; le
         table.grouped_categories td { vertical-align: top; }
 
 /* CALENDAR */
-table.calendar { margin-left: 0; padding: 5px 35px;}
+table.calendar { margin-left: 0; padding: 5px 35px; float: left; }
 table.calendar tr.calendarHeader { font-weight: bold; font-size: 1.0em;}
     table.calendar tr.calendarHeader td { background-color: #fff; color: #333; height: 30px; }
 table.calendar td { width: 50px; height: 40px; text-align: center; background-color: #ddd; font-size: 0.8em; }
     table.calendar td:hover { background-color: #fff; cursor: pointer; }
     table.calendar td span.number_events { font-size: 0.9em; color: #ff6060;}
+    table.calendar td a { color: #000; }
 table.calendar td.pastDate { color: #999; }
     table.calendar td.pastDate:hover { background-color: #ddd; cursor: default;}
     td.pastDate span.number_events { color: #ff6060 !important; }
 table.calendar td.today { font-weight: bold; border-top: solid 3px #ff2a2a; }
     td.today span.number_events { color: #ff2c2c !important; }
-	
+table.calendar td.isSelected { background-color: #aaa; font-weight: bold; }
+
+/* View event */
+div.viewEvents { margin: 1%; padding: 1%; width: 94%; }
+    div.viewEvents h4 { font-size: 1.1em; color: #666; margin-left: 0; padding: 0; }
+        div.viewEvents h4 img { margin-right: 15px; }
+        div.viewEvents span.eventDate { background-color: #666; color: #fff; padding: 7px; margin-left: 15px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+    div.viewEvents div.newEvent { font-size: 0.9em; color: #666; font-weight: bold; margin: 2% 0; text-transform: uppercase; letter-spacing: 1px; }
+        div.newEvent a { padding: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+        div.newEvent a:hover { background-color: #424D15; color: #fff; }
+    div.viewEvents div.eventsList {  }
+        div.event { margin: 10px 0; padding: 13px; margin-left: 10px; background-color: #eee; }
+            div.firstInformation { min-width: 300px; float: left; }
+                span.eventICAO { display: inline-block; font-weight: bold; background-color: #424D15; color: #fff; padding: 2px 8px; margin: 0px 10px 6px 0; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+                span.eventName { color: #424D15; }
+                span.eventATC { font-size: 0.9em; color: #666;}
+            div.secondInformation {  }
 
 /* Event creation */
 form.form_new_event { padding: 0 2%;}

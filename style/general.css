@@ -12,16 +12,13 @@ html,body {
     font-family: "Liberation Sans", FreeSans, Helvetica, "Helvetica Neue", Verdana, Tahoma, sans-serif;
     font-size: 13px;
     line-height: 140%;
-    background-color: #666;
+    background-color: #fff;
 }
 
 div#body_container {
 	width: 900px;
 	background-color: #fff;
 	margin: 0 auto 0 auto;
-	box-shadow: 0px 0px 15px -7px #000;
-	-moz-box-shadow: 0px 0px 15px -7px #000;
-	-webkit-box-shadow: 0px 0px 15px -7px #000;
 }
 
 p.normal_content { margin: 2% 4%; }
@@ -74,45 +71,54 @@ span.input_example {
 }
 
 #menu {
+    text-align: left;
+    margin: 0;
     margin-top: -5px;
     margin-bottom: 40px;
-    text-align: left;
-    background-color: #ccc;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 860px;
 }
 
-#menu div.menu_entry {
+#menu a {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
     display: inline-block;
-    padding: 2px 0.5% 2px 0.5%;
-    margin: 5px 0px 5px 15px;
+    text-align: center;
+    padding: 4px 4px 4px 4px;
+    margin: 0px 2px 0px 2px;
+    width: 130px;
+    background-color: #f0f0f0;
 }
 
-#menu div.menu_entry:hover {
-    background-color: #71c837;
+#menu a:hover {
+    background-color: #ddd;
 }
 
-#menu div.menu_entry a {
-	color: #666;
-    font-weight: bold;
-    font-size: 12px;
+#menu a div.menu_entry {
+	color: #444;
+    font-size: 11px;
     font-style: normal;
+    font-weight: bold;
     text-decoration: none;
     display: inline;
     text-transform: uppercase;
+    margin: 0;
 }
-
-#menu div.menu_entry:hover a {
-	color: #fff;
-} 
 
 
 .submenu {
+    clear: both;
     margin-top: -40px;
     margin-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    width: 860px;
     text-align: left;
-    background-color: #ededed;
 }
 
 .submenu div.menu_entry { 
@@ -121,7 +127,7 @@ span.input_example {
 	-webkit-border-radius: 3px;
     display: inline-block;
     padding: 2px 0.5% 2px 0.5%;
-    margin: 3px 0px 3px 15px;
+    margin: 3px 0px 3px 0px;
 }
 
 .submenu div.menu_entry:hover { }
@@ -145,7 +151,6 @@ form.daySelection {
 
 #footer {
     width: 860px;
-    background-color: #eaeaea;
     border-top: solid 1px #ccc;
     margin-top: 5%;
     padding: 15px 20px 10% 20px;

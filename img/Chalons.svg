@@ -450,12 +450,12 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
      inkscape:window-width="1600"
      inkscape:window-height="876"
      id="namedview4"
-     showgrid="false"
+     showgrid="true"
      showguides="false"
      inkscape:guide-bbox="true"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="-4705.1667"
-     inkscape:cy="5687.7183"
+     inkscape:zoom="11.313708"
+     inkscape:cx="-1339.2539"
+     inkscape:cy="5970.2342"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -7351,7 +7351,7 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
        height="94.594406"
        width="900"
        id="rect4086"
-       style="fill:#ececec;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
     <g
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
@@ -8012,6 +8012,18 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
      id="layer2"
      inkscape:label="Masque"
      style="fill:none;display:inline">
+    <rect
+       style="fill:#ececec;fill-opacity:1;stroke:none"
+       id="rect5029"
+       width="16"
+       height="16"
+       x="-1355"
+       y="-5154"
+       rx="1.0666667"
+       ry="0.8888889"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/menu_controlled.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        sodipodi:nodetypes="cccccc"
        inkscape:connector-curvature="0"
@@ -9940,5 +9952,242 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
        inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/SpecialEventImage.png"
        inkscape:export-xdpi="64.534203"
        inkscape:export-ydpi="64.534203" />
+    <rect
+       style="fill:#ececec;fill-opacity:1;stroke:none"
+       id="rect4182"
+       width="16"
+       height="16"
+       x="-1410"
+       y="-5154"
+       rx="1.0666667"
+       ry="0.8888889"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/menu_events.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       ry="0.8888889"
+       rx="1.0666667"
+       y="-5154"
+       x="-1380"
+       height="16"
+       width="16"
+       id="rect4979"
+       style="fill:#ececec;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/menu_phraseology.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="rect4981"
+       width="4"
+       height="8"
+       x="-1374"
+       y="-5152"
+       rx="2"
+       ry="2" />
+    <path
+       style="fill:none;stroke:#444444;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="m -1375.5,-5140 7,0"
+       id="path4983"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4985"
+       d="m -1372,-5140.5 0,-1"
+       style="fill:none;stroke:#444444;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:#444444;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-linecap:round"
+       d="m -1369,-5147 0,2 c 0,1.662 -1.338,3 -3,3 -1.662,0 -3,-1.338 -3,-3 l 0,-2"
+       id="rect4991"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csssc" />
+    <rect
+       ry="0.77777779"
+       rx="0.9333334"
+       y="-5153"
+       x="-1409"
+       height="14"
+       width="14"
+       id="rect5011"
+       style="fill:#444444;fill-opacity:1;stroke:none" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="path5013"
+       sodipodi:cx="-1405"
+       sodipodi:cy="-5152"
+       sodipodi:rx="1"
+       sodipodi:ry="1"
+       d="m -1404,-5152 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
+       transform="translate(-1,1)" />
+    <path
+       transform="translate(3,1)"
+       d="m -1404,-5152 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
+       sodipodi:ry="1"
+       sodipodi:rx="1"
+       sodipodi:cy="-5152"
+       sodipodi:cx="-1405"
+       id="path5015"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       sodipodi:type="arc" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="path5017"
+       sodipodi:cx="-1405"
+       sodipodi:cy="-5152"
+       sodipodi:rx="1"
+       sodipodi:ry="1"
+       d="m -1404,-5152 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
+       transform="translate(7,1)" />
+    <text
+       xml:space="preserve"
+       style="font-size:7.01631498px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1406.7914"
+       y="-5142.7925"
+       id="text5019"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5021"
+         style="font-weight:bold;fill:#ffffff;-inkscape-font-specification:Sans Bold"
+         x="-1406.7914"
+         y="-5142.7925">12</tspan></text>
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -1406,-5151 0,-2"
+       id="path5023"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5025"
+       d="m -1402,-5151 0,-2"
+       style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -1398,-5151 0,-2"
+       id="path5027"
+       inkscape:connector-curvature="0" />
+    <g
+       style="fill:none;display:inline"
+       transform="matrix(0.04532725,0,0,0.04532725,-1329.8206,-4958.8941)"
+       id="g5082" />
+    <rect
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="rect5286"
+       width="4"
+       height="6"
+       x="-1349"
+       y="-5145" />
+    <path
+       style="fill:none;stroke:#444444;stroke-width:1px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -1350,-5147 -1,-3"
+       id="path5295"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5297"
+       d="m -1344,-5147 1,-3"
+       style="fill:none;stroke:#444444;stroke-width:1px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#444444;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -1347,-5147 0,-3"
+       id="path5299"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="rect5303"
+       width="10"
+       height="1"
+       x="-1352"
+       y="-5147"
+       rx="0.5"
+       ry="0.5" />
+    <rect
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="rect5305"
+       width="12"
+       height="1"
+       x="-1353"
+       y="-5151"
+       rx="0.5"
+       ry="0.5" />
+    <rect
+       ry="0.8888889"
+       rx="1.0666667"
+       y="-5154"
+       x="-1335"
+       height="16"
+       width="16"
+       id="rect5307"
+       style="fill:#ececec;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/menu_contact.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g5333"
+       transform="translate(-0.99999774,0.70820404)"
+       style="fill:none">
+      <path
+         transform="matrix(0.83333333,0,0,0.99999999,-223.33334,-3.7080593)"
+         d="m -1316,-5144.292 c 0,2.048 -2.6863,3.7082 -6,3.7082 -3.3137,0 -6,-1.6602 -6,-3.7082 0,-2.048 2.6863,-3.7082 6,-3.7082 3.3137,0 6,1.6602 6,3.7082 z"
+         sodipodi:ry="3.708204"
+         sodipodi:rx="6"
+         sodipodi:cy="-5144.292"
+         sodipodi:cx="-1322"
+         id="path5328"
+         style="fill:#444444;fill-opacity:1;stroke:none"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:nodetypes="czcccc"
+         inkscape:connector-curvature="0"
+         id="path5330"
+         d="m -1331.134,-5141.5 c 0,0 1,-1.1348 1,-2 0,-0.8652 -0.732,-1 -0.732,-1 l 0.866,0 0.866,0 c 0,2 -1,2 -2,3 z"
+         inkscape:transform-center-y="0.24999992"
+         style="fill:#444444;fill-opacity:1;stroke:none"
+         transform="translate(3.1339746,-0.49999998)" />
+    </g>
+    <rect
+       style="fill:#ececec;fill-opacity:1;stroke:none"
+       id="rect5337"
+       width="16"
+       height="16"
+       x="-1315"
+       y="-5154"
+       rx="1.0666667"
+       ry="0.8888889"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/menu_dashboard.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="rect5351"
+       width="7"
+       height="3"
+       x="-1314"
+       y="-5152"
+       rx="1"
+       ry="1" />
+    <rect
+       ry="1"
+       rx="1"
+       y="-5148"
+       x="-1312"
+       height="3"
+       width="7"
+       id="rect5379"
+       style="fill:#444444;fill-opacity:1;stroke:none" />
+    <rect
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="rect5381"
+       width="7"
+       height="3"
+       x="-1307"
+       y="-5144"
+       rx="1"
+       ry="1" />
   </g>
 </svg>

@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL); ini_set("display_errors", 1);
+//error_reporting(E_ALL); ini_set("display_errors", 1);
 
 date_default_timezone_set('UTC');
 
@@ -67,7 +67,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
     
     <div id="body_container">
     
-    <img src="./img/banniere9.png" alt="Flightgear ATC events"/>
+    <img src="./img/banniere9.jpg" alt="Flightgear ATC events"/>
     
     <?php
         

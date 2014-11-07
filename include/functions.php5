@@ -37,26 +37,13 @@ function returnEvents($date = NULL)
     global $db;
     
     $events = array();
-    if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT * FROM events WHERE date = '$date' ORDER BY beginTime");   
-    else $events_list = $db->query("SELECT * FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime"); 
+    if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT eventId,airportICAO FROM events WHERE date = '$date' ORDER BY beginTime");   
+    else $events_list = $db->query("SELECT eventId,airportICAO FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime"); 
     $i = 0;
     
     foreach ($events_list as $row)
     {
-        if ($row["airportICAO"] != NULL)
-        {
-            $events[$i]["Id"] = $row['eventId'];
-            $events[$i]["ICAO"] = $row['airportICAO'];
-            $events[$i]["ATCId"] = $row['userId'];
-            $events[$i]["Name"] = getInfo('name','airports','ICAO',$row['airportICAO']);
-            $events[$i]["date"] = $row['date'];
-            $events[$i]["beginTime"] = $row['beginTime'];
-            $events[$i]["endTime"] = $row['endTime'];
-            $events[$i]["fgcom"] = $row['fgcom'];
-            $events[$i]["teamspeak"] = $row['teamspeak'];
-            $events[$i]["docsLink"] = $row['docsLink'];
-            $events[$i]["remarks"] = $row['remarks'];
-        }
+        $events[$i]["Id"] = $row['eventId'];
         $i++;
     }
 

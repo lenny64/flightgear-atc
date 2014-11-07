@@ -103,7 +103,7 @@ class User
                     if ($user['ip'] != $IP AND $IP != NULL)
                     {
                         $this->ip = $IP;
-                        $preparedQuery = $db->prepare("UPDATE users SET :ip WHERE userId = :id;");
+                        $preparedQuery = $db->prepare("UPDATE users SET ip = :ip WHERE userId = :userId;");
                         $preparedQuery->execute(array(":ip" => $IP, ":userId" => $this->id));
                     }
                     
@@ -294,10 +294,10 @@ class Event
     {
         global $db;
         
-        $this->fgcom        =   $FGCOM;
-        $this->teamspeak    =   $TeamSpeak;
-        $this->docsLink     =   $DocsLink;
-        $this->remarks      =   $Remarks;
+        $this->fgcom        =   ($FGCOM != NULL ? $FGCOM : 'N/A');
+        $this->teamspeak    =   ($TeamSpeak != NULL ? $TeamSpeak : 'N/A');
+        $this->docsLink     =   ($DocsLink != NULL ? $DocsLink : 'N/A');
+        $this->remarks      =   ($Remarks != NULL ? $Remarks : 'N/A');
         
         // We check if there is an airport called
         if (isset($AirportICAO) AND $AirportICAO != NULL) $this->airportICAO = $AirportICAO;
@@ -576,14 +576,14 @@ class Flightplan
                 // We gather the information
                 $this->departureAirport = $departureAirport;
                 $this->arrivalAirport = $arrivalAirport;
-                $this->alternateDestination = $alternateDestination;
-                $this->cruiseAltitude = $cruiseAltitude;
-                $this->trueAirspeed = $trueAirspeed;
+                $this->alternateDestination = ($alternateDestination != NULL ? $alternateDestination : 'N/A');
+                $this->cruiseAltitude = ($cruiseAltitude != NULL ? $cruiseAltitude : 'N/A');
+                $this->trueAirspeed = ($trueAirspeed != NULL ? $trueAirspeed : 'N/A');
                 $this->callsign = $callsign;
-                $this->airline = $airline;
-                $this->flightNumber = $flightNumber;
-                $this->category = $category;
-                $this->aircraftType = $aircraftType;
+                $this->airline = ($airline != NULL ? $airline : 'N/A');
+                $this->flightNumber = ($flightNumber != NULL ? $flightNumber : 'N/A');
+                $this->category = ($category != NULL ? $category : 'N/A');
+                $this->aircraftType = ($aircraftType != NULL ? $aircraftType : 'N/A');
                 $this->departureTime = $departureTime;
                 $this->arrivalTime = $arrivalTime;
                 $this->dateDeparture = $dateDeparture;
@@ -591,11 +591,11 @@ class Flightplan
                 if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
                 // Otherwise i assume the arrival date is the same than the departure one
                 else $this->dateArrival = $this->dateDeparture;
-                $this->waypoints = $waypoints;
-                $this->soulsOnBoard = $soulsOnBoard;
-                $this->fuelTime = $fuelTime;
-                $this->pilotName = $pilotName;
-                $this->comments = $comments;
+                $this->waypoints = ($waypoints != NULL ? $waypoints : 'N/A');
+                $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : 1);
+                $this->fuelTime = ($fuelTime != NULL ? $fuelTime : 'N/A');
+                $this->pilotName = ($pilotName != NULL ? $pilotName : 'N/A');
+                $this->comments = ($comments != NULL ? $comments : 'N/A');
                 $this->status = 'filled';
 				
                 // If the airport is not controlled, we advise the pilot
