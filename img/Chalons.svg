@@ -28,7 +28,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -453,9 +453,9 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
      showgrid="true"
      showguides="false"
      inkscape:guide-bbox="true"
-     inkscape:zoom="11.313708"
-     inkscape:cx="-1339.2539"
-     inkscape:cy="5970.2342"
+     inkscape:zoom="7.9999996"
+     inkscape:cx="-1332.2764"
+     inkscape:cy="5988.0733"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -10189,5 +10189,39 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
        y="-5144"
        rx="1"
        ry="1" />
+    <rect
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/menu_faq.png"
+       ry="0.8888889"
+       rx="1.0666667"
+       y="-5154"
+       x="-1295"
+       height="16"
+       width="16"
+       id="rect4213"
+       style="fill:#ececec;fill-opacity:1;stroke:none" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#444444;fill-opacity:1;stroke:none"
+       id="path4223"
+       sodipodi:cx="-1286.5"
+       sodipodi:cy="-5141.5"
+       sodipodi:rx="1.5"
+       sodipodi:ry="1.5"
+       d="m -1285,-5141.5 a 1.5,1.5 0 1 1 -3,0 1.5,1.5 0 1 1 3,0 z"
+       transform="matrix(4.0000159,0,0,4.0000159,3859.0202,15420.082)" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.3578949px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1290.0247"
+       y="-5142.1558"
+       id="text5020"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5022"
+         style="font-weight:bold;fill:#ffffff;-inkscape-font-specification:Sans Bold"
+         x="-1290.0247"
+         y="-5142.1558">?</tspan></text>
   </g>
 </svg>

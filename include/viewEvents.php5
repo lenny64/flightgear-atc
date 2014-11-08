@@ -61,7 +61,7 @@ $eventsSelectedDate = returnEvents($viewSelectedDate);
             <!-- Dividing information into multiple divs -->
             <div class="firstInformation">
                 <span class="eventICAO"><?php echo $Event->airportICAO; ?></span>
-                <span class="eventName"><?php echo getInfo('name', 'airports', 'ICAO', $Event->airportICAO); ?></span>
+                <span class="eventName"><?php echo getInfo('globalAirportName', 'airports_global', 'globalAirportICAO', $Event->airportICAO)." (".getInfo('globalAirportCity', 'airports_global', 'globalAirportICAO', $Event->airportICAO).")"; ?></span>
                 <br/>
                 <img src="./img/scheme_time.png" height="11" alt=""/>
                 <span class="eventBeginTime"><?php echo date('H:i', strtotime($Event->beginTime)); ?> UTC</span>
