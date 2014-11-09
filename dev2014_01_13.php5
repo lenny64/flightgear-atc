@@ -10,7 +10,7 @@ require_once './include/config.php5';
 // Let's open the DB
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
-define("DEV_VERSION","20141016");
+define("DEV_VERSION","20141108");
 
 // A little tracker
 $db->query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
@@ -48,34 +48,56 @@ if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET
  */
 else if (isset($_GET['getFlightplans']))
 {
+    // Callsign
     if (isset($_GET['callsign']) AND $_GET['callsign'] != NULL)
     {
         $callsign = $_GET['callsign'];
-        $queryCallsign = "callsign = '$callsign'";
+        $queryCallsign = "FP.callsign = '$callsign'";
     }
     else
     {
-        $queryCallsign = "callsign LIKE '%'";
+        $queryCallsign = "FP.callsign LIKE '%'";
     }
+    // Date
     if (isset($_GET['date']) AND $_GET['date'] != NULL)
     {
         $date = $_GET['date'];
-        $queryDate = "dateDeparture = '$date'";
+        $queryDate = "FP.dateDeparture = '$date'";
     }
     else
     {
-        $queryDate = "dateDeparture LIKE '%'";
+        $queryDate = "FP.dateDeparture LIKE '%'";
     }
+    // Airport
     if (isset($_GET['airport']) AND $_GET['airport'] != NULL)
     {
         $ICAO = $_GET['airport'];
-        $queryICAO = "(airportICAOFrom = '$ICAO' OR airportICAOTo = '$ICAO')";
+        $queryICAO = "(FP.airportICAOFrom = '$ICAO' OR FP.airportICAOTo = '$ICAO')";
     }
     else
     {
-        $queryICAO = "(airportICAOFrom LIKE '%' OR airportICAOTo LIKE '%')";
+        $queryICAO = "(FP.airportICAOFrom LIKE '%' OR FP.airportICAOTo LIKE '%')";
     }
-    $query = "SELECT * FROM flightplans20140113 WHERE $queryCallsign AND $queryDate AND $queryICAO ;";
+    // Status
+    if (isset($_GET['status']) AND $_GET['status'] != NULL)
+    {
+        $queryStatus = "HAVING FPStatus.status = '".$_GET['status']."'";
+    }
+    else
+    {
+        $queryStatus = "";
+    }
+    
+    $query = "SELECT FP.flightplanId,FPStatus.*
+                FROM (
+                    SELECT * FROM flightplan_status
+                    ORDER BY flightplan_status.dateTime DESC) AS FPStatus
+                        JOIN (
+                        SELECT * FROM flightplans20140113) AS FP
+                            ON FP.flightplanId = FPStatus.flightplanId
+                WHERE $queryCallsign AND $queryDate AND $queryICAO
+                GROUP BY FP.flightplanId
+                $queryStatus;";
     
     $queryPrepare = $db->prepare($query);
     $queryPrepare->execute();
