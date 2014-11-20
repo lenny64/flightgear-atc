@@ -506,7 +506,7 @@ class SpecialEvent
                 $this->url = $specialEvent['url'];
                 $this->dateTimeCreation = $specialEvent['dateTime'];
                 
-                $specialEventsEvents_list = $db->query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsid = $id AND specialEvents_airports.eventId = events.eventId AND events.date >= CURDATE() ORDER BY events.date, events.beginTime");
+                $specialEventsEvents_list = $db->query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsId = $id AND specialEvents_airports.eventId = events.eventId AND events.date >= CURDATE() ORDER BY events.date, events.beginTime");
                 $this->eventsList = Array();
                 foreach ($specialEventsEvents_list as $specialEventsEvent)
                 {

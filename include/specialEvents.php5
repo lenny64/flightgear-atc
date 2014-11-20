@@ -23,13 +23,13 @@ if (isset($_POST['specialEventId']) AND isset($_POST['specialEventParticipate'])
 }
 
 // In any case we select all the special events
-$specialEvents_list = $db->query("SELECT * FROM specialEvents_events");
+$specialEvents_list = $db->query("SELECT specialEventsId FROM specialEvents_events");
 // We go through them
 foreach ($specialEvents_list as $specialEvents)
 {
     // We select the specialEvent
     $SpecialEvent->selectById($specialEvents['specialEventsId']);
-
+    
     // Here we check if the special event is valid. The first reason is when all events are in the past
     if ($SpecialEvent->valid == TRUE)
     {

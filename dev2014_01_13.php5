@@ -10,7 +10,7 @@ require_once './include/config.php5';
 // Let's open the DB
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
-define("DEV_VERSION","20141108");
+define("DEV_VERSION","20141116");
 
 // A little tracker
 $db->query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
@@ -126,18 +126,30 @@ else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
             $Event->selectById($event['eventId']);
             
             $XMLEvent = $XMLEvents->addChild('event');
-            $XMLEvent->addChild('eventId',$Event->id);
-            $XMLEvent->addChild('airportICAO',$Event->airportICAO);
-            $XMLEvent->addChild('date',$Event->date);
-            $XMLEvent->addChild('beginTime',$Event->beginTime);
-            $XMLEvent->addChild('endTime',$Event->endTime);
-            $XMLEvent->addChild('fgcom',$Event->fgcom);
-            $XMLEvent->addChild('teamspeak',$Event->teamspeak);
-            $XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
-            $XMLEvent->addChild('runways',$Event->runways);
-            $XMLEvent->addChild('ILS',$Event->ils);
-            $XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
-            $XMLEvent->addChild('remarks',$Event->remarks);
+            //$XMLEvent->addChild('eventId',$Event->id);
+            $XMLEvent->eventId = $Event->id;
+            //$XMLEvent->addChild('airportICAO',$Event->airportICAO);
+            $XMLEvent->airportICAO = $Event->airportICAO;
+            //$XMLEvent->addChild('date',$Event->date);
+            $XMLEvent->date = $Event->date;
+            //$XMLEvent->addChild('beginTime',$Event->beginTime);
+            $XMLEvent->beginTime = $Event->beginTime;
+            //$XMLEvent->addChild('endTime',$Event->endTime);
+            $XMLEvent->endTime = $Event->endTime;
+            //$XMLEvent->addChild('fgcom',$Event->fgcom);
+            $XMLEvent->fgcom = $Event->fgcom;
+            //$XMLEvent->addChild('teamspeak',$Event->teamspeak);
+            $XMLEvent->teamspeak = $Event->teamspeak;
+            //$XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
+            $XMLEvent->transitionLevel = $Event->transitionLevel;
+            //$XMLEvent->addChild('runways',$Event->runways);
+            $XMLEvent->runways = $Event->runways;
+            //$XMLEvent->addChild('ILS',$Event->ils);
+            $XMLEvent->ILS = $Event->ils;
+            //$XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
+            $XMLEvent->docsLink = htmlspecialchars($Event->docsLink);
+            //$XMLEvent->addChild('remarks',$Event->remarks);
+            $XMLEvent->remarks = $Event->remarks;
         }
         
         header('Content-type: application/xml');

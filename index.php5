@@ -59,14 +59,11 @@ elseif (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPF
     echo "</script>";
 }
 
-// We include the form to create an event. It will be hidden at the top of the page
-//include('./include/form_newEvent.php5');
-
 // I am first looking for every eventId
 $events = returnEvents();
 
 // New specialEvents feature
-//include('./include/specialEvents.php5');
+include('./include/specialEvents.php5');
 
 
 
