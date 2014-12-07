@@ -1,1 +1,15 @@
 
+p.normal_content { color: #666; }
+
+div.flightplanSuggestionList { margin-left: 4%; padding: 0%; }
+    div.flightplanSuggestion { background-color: #eee; margin: 15px 0; padding: 15px; width: 800px;}
+    div.flightplanSuggestion div.flightplanSuggestionContent { width: 45%; float: left; }
+        div.flightplanSuggestionContent span.flightplanSuggestionTitle { display: block; font-weight: bold; font-size: 1.2em; padding: 10px 0; margin: 0px 0 0px 0; color: #333; }
+        div.flightplanSuggestionContent div.flightplanSuggestionDescription { display: block; color: #666; line-height: 150%;}
+        div.flightplanSuggestionContent div.flightplanSuggestionDocs { font-weight: bold; margin-bottom: 20px; }
+            div.flightplanSuggestionDocs img { margin-right: 15px; margin-bottom: 10px; position: relative; top: 15px; }
+    form.flightplanSuggestionForm { float: right; width: 50%; color: #3c71b2; border: solid 1px #3c71b2; padding: 10px; }
+        form.flightplanSuggestionForm h4 { margin: -10px -10px 10px -10px; background-color: #3c71b2; color: #fff; padding: 10px;}
+        form.flightplanSuggestionForm table { width: 100%;}
+        form.flightplanSuggestionForm input { padding: 5px; margin: 5px 0; color: #666; }
+        form.flightplanSuggestionForm input.flightplanSuggestionSubmit { padding: 10px; background-color: #3c71b2; color: #fff; font-weight: bold;}

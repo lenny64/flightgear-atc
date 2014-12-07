@@ -406,18 +406,6 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
        y2="-5228.9224" />
     <filter
        inkscape:collect="always"
-       id="filter5165"
-       x="-0.20874955"
-       width="1.4174991"
-       y="-0.65979152"
-       height="2.319583">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="57.911199"
-         id="feGaussianBlur5167" />
-    </filter>
-    <filter
-       inkscape:collect="always"
        id="filter4987"
        x="-0.10694737"
        width="1.2138947"
@@ -453,9 +441,9 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
      showgrid="true"
      showguides="false"
      inkscape:guide-bbox="true"
-     inkscape:zoom="2.828427"
-     inkscape:cx="-1084.1089"
-     inkscape:cy="5260.9685"
+     inkscape:zoom="0.99999996"
+     inkscape:cx="-1110.3285"
+     inkscape:cy="5468.3161"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -7345,10 +7333,10 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
     <rect
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
-       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/banniere9.png"
+       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/banniere10.png"
        y="-4646.2109"
        x="-1588.0001"
-       height="94.594406"
+       height="72.210938"
        width="900"
        id="rect4086"
        style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
@@ -7357,7 +7345,7 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
        inkscape:export-xdpi="900"
        inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/flightgear-atc_logo_shadowless.png"
        style="fill:none"
-       transform="matrix(0.22065094,0,0,0.22065094,-1054.0672,-3693.1668)"
+       transform="matrix(0.12946067,0,0,0.12946067,-1237.6569,-4073.9712)"
        id="g4088">
       <g
          id="g4090"
@@ -7589,181 +7577,6 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
            id="path4157"
            inkscape:connector-curvature="0"
            sodipodi:nodetypes="cc" />
-      </g>
-    </g>
-    <g
-       id="g5081"
-       transform="matrix(0.22065094,0,0,-0.03993756,-1054.0672,-4747.3789)"
-       style="fill:#808080;filter:url(#filter5165)"
-       inkscape:export-filename="/home/thibault/Dropbox/NetBeansProjects/flightgear-atc/img/flightgear-atc_logo.png"
-       inkscape:export-xdpi="900"
-       inkscape:export-ydpi="900">
-      <g
-         style="fill:#808080"
-         transform="matrix(0.70793913,0,0,0.70793913,-111.09634,-1231.4639)"
-         id="g5083">
-        <g
-           style="fill:#808080"
-           transform="matrix(-0.96592583,-0.25881905,-0.25881905,0.96592583,-1850.7716,-188.80148)"
-           id="g5085">
-          <path
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-             inkscape:transform-center-x="58.580854"
-             d="m -837.17374,-4373.6314 c 184.05934,145.5094 422.63599,20.0305 375.55432,195.7418 l 9.77929,-36.497 c 56.08411,-209.3086 -221.50455,-29.7283 -385.33361,-159.2448 z"
-             id="path5087"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="cccc"
-             inkscape:transform-center-y="1.631463" />
-          <path
-             sodipodi:nodetypes="cccc"
-             inkscape:connector-curvature="0"
-             id="path5089"
-             d="m -838.59926,-4368.3114 c 184.05932,145.5096 407.35257,77.069 366.02106,231.3202 l 9.77933,-36.4969 c 45.88136,-171.2317 -194.42086,-51.432 -375.80039,-194.8233 z"
-             inkscape:transform-center-x="54.500751"
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-             inkscape:transform-center-y="-16.678491" />
-          <path
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-             inkscape:transform-center-x="54.995187"
-             d="m -840.15502,-4362.5054 c 184.05929,145.5095 393.16425,130.0205 356.3911,267.2598 l 9.77931,-36.4969 c 40.4957,-151.1321 -187.91633,-89.8425 -366.17041,-230.7629 z"
-             id="path5091"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="cccc"
-             inkscape:transform-center-y="-16.678436" />
-        </g>
-        <g
-           id="g5093"
-           transform="matrix(0.96592583,-0.25881905,0.25881905,0.96592583,1089.9963,-188.80148)"
-           style="fill:#808080">
-          <path
-             inkscape:transform-center-y="1.631463"
-             sodipodi:nodetypes="cccc"
-             inkscape:connector-curvature="0"
-             id="path5095"
-             d="m -837.17374,-4373.6314 c 184.05934,145.5094 422.63599,20.0305 375.55432,195.7418 l 9.77929,-36.497 c 56.08411,-209.3086 -221.50455,-29.7283 -385.33361,-159.2448 z"
-             inkscape:transform-center-x="58.580854"
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-          <path
-             inkscape:transform-center-y="-16.678491"
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-             inkscape:transform-center-x="54.500751"
-             d="m -838.59926,-4368.3114 c 184.05932,145.5096 407.35257,77.069 366.02106,231.3202 l 9.77933,-36.4969 c 45.88136,-171.2317 -194.42086,-51.432 -375.80039,-194.8233 z"
-             id="path5097"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="cccc" />
-          <path
-             inkscape:transform-center-y="-16.678436"
-             sodipodi:nodetypes="cccc"
-             inkscape:connector-curvature="0"
-             id="path5099"
-             d="m -840.15502,-4362.5054 c 184.05929,145.5095 393.16425,130.0205 356.3911,267.2598 l 9.77931,-36.4969 c 40.4957,-151.1321 -187.91633,-89.8425 -366.17041,-230.7629 z"
-             inkscape:transform-center-x="54.995187"
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-        </g>
-      </g>
-      <g
-         id="g5101"
-         style="fill:#808080;fill-opacity:1"
-         transform="translate(-2.3434597,0)">
-        <g
-           id="g5103"
-           style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:0.76302207;stroke-opacity:1"
-           transform="matrix(0.56090532,0,0,0.5607715,-166.52533,-1853.5246)">
-          <path
-             sodipodi:nodetypes="cc"
-             inkscape:connector-curvature="0"
-             id="path5105"
-             d="m -408.47754,-4255.2694 -20.4951,-51.2007"
-             style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:2.28906608;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-          <path
-             style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:2.28906608;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-             d="m -342.46989,-4255.2694 20.77572,-51.9017"
-             id="path5107"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="cc" />
-          <path
-             sodipodi:nodetypes="cc"
-             inkscape:connector-curvature="0"
-             id="path5110"
-             d="m -395.7926,-4278.199 -11.75495,-29.3662"
-             style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:2.28906608;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-          <path
-             style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:2.28906608;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-             d="m -355.15477,-4278.199 11.36459,-28.3909"
-             id="path5112"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="cc" />
-          <path
-             sodipodi:nodetypes="cc"
-             inkscape:connector-curvature="0"
-             id="path5114"
-             d="m -375.57128,-4275.8518 0,-29.6986"
-             style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:2.28906608;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-          <path
-             style="fill:#808080;fill-opacity:1;stroke:#333333;stroke-width:2.28906608;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-             d="m -375.57128,-4311.3518 0,-19.1986"
-             id="path5116"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="cc" />
-        </g>
-        <g
-           id="g5118"
-           style="fill:#808080;fill-opacity:1"
-           transform="matrix(0.56090532,0,0,0.5607715,-166.52533,-1853.5246)">
-          <path
-             sodipodi:nodetypes="ccccc"
-             inkscape:connector-curvature="0"
-             id="path5120"
-             d="m -418.10114,-4279.311 85.25485,0 -9.6236,24.0416 -66.00765,0 z"
-             style="fill:#808080;fill-opacity:1;stroke:none" />
-          <path
-             style="fill:#808080;fill-opacity:1;stroke:none"
-             d="m -432.20039,-4305.474 113.45335,0 -6.88495,-7.4246 -99.68345,0 z"
-             id="path5122"
-             inkscape:connector-curvature="0"
-             sodipodi:nodetypes="ccccc" />
-          <path
-             sodipodi:nodetypes="ccccc"
-             inkscape:connector-curvature="0"
-             id="path5124"
-             d="m -432.95039,-4247.974 114.95335,0 -6.97598,-7.4246 -101.00139,0 z"
-             style="fill:#808080;fill-opacity:1;stroke:none" />
-          <rect
-             y="-4251.5098"
-             x="-395.45038"
-             height="49.316296"
-             width="39.953339"
-             id="rect5126"
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-          <rect
-             y="-4316.5"
-             x="-385.57129"
-             height="3.7500002"
-             width="20"
-             id="rect5128"
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-          <rect
-             style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-             id="rect5130"
-             width="31.313709"
-             height="3.7500002"
-             x="-391.22815"
-             y="-4314.7324" />
-        </g>
-      </g>
-      <g
-         style="fill:#808080"
-         transform="matrix(0.66283339,0,0,0.66283339,-128.25401,-1408.3343)"
-         id="g5132">
-        <path
-           sodipodi:type="arc"
-           style="fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="path5134"
-           sodipodi:cx="-379.00925"
-           sodipodi:cy="-4127.8896"
-           sodipodi:rx="110.30866"
-           sodipodi:ry="110.30866"
-           d="m -268.70058,-4127.8896 c 0,60.9217 -49.38687,110.3086 -110.30867,110.3086 -60.92179,0 -110.30866,-49.3869 -110.30866,-110.3086 0,-60.9218 49.38687,-110.3087 110.30866,-110.3087 60.9218,0 110.30867,49.3869 110.30867,110.3087 z" />
       </g>
     </g>
     <image
@@ -8255,6 +8068,50 @@ g.nationGroup, path        { fill:#C0C0C0; stroke:white; stroke-width:8; }
            style="opacity:0.20000000000000001;fill:#ffffff;stroke:#333333;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       </g>
     </g>
+    <g
+       id="g4354"
+       transform="matrix(1.532766,0,0,1.532766,729.88324,2433.6636)"
+       style="fill:none">
+      <path
+         sodipodi:type="arc"
+         style="fill:#55acee;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path3187"
+         sodipodi:cx="827.45093"
+         sodipodi:cy="163.03943"
+         sodipodi:rx="27.876326"
+         sodipodi:ry="27.876326"
+         d="m 855.32725,163.03943 c 0,15.39567 -12.48065,27.87632 -27.87632,27.87632 -15.39567,0 -27.87633,-12.48065 -27.87633,-27.87632 0,-15.39567 12.48066,-27.87633 27.87633,-27.87633 15.39567,0 27.87632,12.48066 27.87632,27.87633 z"
+         transform="matrix(0.20144323,0,0,0.20144323,-1102.7392,-4632.4587)" />
+      <path
+         d="m -932.12906,-4601.4509 c -0.26915,0.1194 -0.55847,0.2 -0.86206,0.2364 0.30988,-0.1858 0.54792,-0.4799 0.65996,-0.8304 -0.29005,0.172 -0.61126,0.2969 -0.95316,0.3642 -0.27378,-0.2918 -0.66389,-0.474 -1.0956,-0.474 -0.82891,0 -1.50099,0.672 -1.50099,1.501 0,0.1175 0.0133,0.2321 0.0388,0.342 -1.24747,-0.063 -2.35342,-0.6602 -3.09372,-1.5683 -0.12921,0.2217 -0.20327,0.4795 -0.20327,0.7546 0,0.5208 0.26501,0.9802 0.66774,1.2493 -0.24602,-0.01 -0.47746,-0.075 -0.67985,-0.1877 -1.5e-4,0.01 -1.5e-4,0.013 -1.5e-4,0.019 0,0.7272 0.51739,1.3337 1.20404,1.4718 -0.12594,0.034 -0.25854,0.053 -0.39545,0.053 -0.0967,0 -0.1907,-0.01 -0.28239,-0.027 0.19104,0.5963 0.74532,1.0302 1.40217,1.0423 -0.51369,0.4026 -1.1609,0.6426 -1.86413,0.6426 -0.12116,0 -0.24065,-0.01 -0.35806,-0.021 0.66427,0.426 1.45323,0.6744 2.30087,0.6744 2.76082,0 4.2706,-2.2871 4.2706,-4.2706 0,-0.065 0,-0.1298 -0.004,-0.1942 0.29323,-0.2116 0.54769,-0.476 0.74892,-0.7769 z"
+         id="path3189"
+         inkscape:connector-curvature="0"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:9.37637615px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#333333;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-803.6319"
+       y="-4614"
+       id="text5151"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5153"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#333333;fill-opacity:1;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L Bold"
+         x="-803.6319"
+         y="-4614">@Flightgear_ATC</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#333333;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1230.1154"
+       y="-4605.7656"
+       id="text5159"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#333333;fill-opacity:1;font-family:Arvo;-inkscape-font-specification:Arvo Bold"
+         x="-1230.1154"
+         y="-4605.7656"
+         id="tspan5163">Flightgear ATC</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"

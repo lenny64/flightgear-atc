@@ -6,6 +6,11 @@
 
 <?php include('./include/log.php5'); ?>
 
+<a href="./download.php5?file=Newsletter-201411.pdf" target="_blank" style="margin-left: 30px; font-weight: bold; color: #3C71B2; padding: 10px 10px; border: solid 1px #e0e0e0; background-color: #f5f5f5;"><img src="./img/logo_pdf.png" width="25" style="position: relative; top: 8px; margin-right: 10px;"/> November newsletter</a>
+<br/>
+<br/>
+<br/>
+
 <?php
 // F L I G H T P L A N    F O R M    V I S I B I L I T Y
 // If the user is connected
@@ -42,6 +47,9 @@ if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))
     }
 }
 
+// I am first looking for every eventId
+$events = returnEvents();
+
 // If the user is not connected or wants to see the FP area
 if (!isset($User->parameters['FPForm_visibility']) OR (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPForm_visibility'] == "visible"))
 {
@@ -59,20 +67,17 @@ elseif (isset($User->parameters['FPForm_visibility']) AND $User->parameters['FPF
     echo "</script>";
 }
 
-// I am first looking for every eventId
-$events = returnEvents();
 
 // New specialEvents feature
 include('./include/specialEvents.php5');
 
-
-
 // C A L E N D A R
 include('./include/calendar.php5');
-
 echo '<br style="clear:both;"/>';
+
 // E V E N T S
 include('./include/viewEvents.php5');
+
 ?>
 
 <br/>

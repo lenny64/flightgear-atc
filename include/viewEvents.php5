@@ -84,6 +84,30 @@ $eventsSelectedDate = returnEvents($viewSelectedDate);
             </div>
             <!-- Removing the "float: left" -->
             <br style="clear: both; display: none;"/>
+            <br/>
+            <span class="quickFlightPlanToggle" onclick="document.getElementById('quickFlightPlanForm<?php echo $Event->id; ?>').style.display = 'block';">+ Flight Plan</span>
+            <form class="quickFlightPlanForm" method="post" action="./index.php5" id="quickFlightPlanForm<?php echo $Event->id; ?>">
+                Every field is required
+                <br/>
+                <br/>
+                <input type="hidden" name="date" value="<?php echo $Event->date; ?>"/>
+                <img src="./img/scheme_pilot.png"/>
+                <input type="text" name="callsign" placeholder="Callsign" size="6" required="required"/>
+                <input type="text" name="email" placeholder="Email address" size="25"/>
+                <br/>
+                Departure
+                <br/>
+                <img src="./img/scheme_airport.png"/>
+                <input type="text" name="departureAirport" placeholder="ICAO" size="4" required="required"/> at
+                <input type="text" name="departureTimeHours" placeholder="HH" size="2" required="required"/>:<input type="text" name="departureTimeMinutes" placeholder="MM" size="2" required="required"/> UTC<br/>
+                Arrival
+                <br/>
+                <img src="./img/scheme_airport.png"/>
+                <input type="text" name="arrivalAirport" placeholder="ICAO" size="4" required="required"/> at
+                <input type="text" name="arrivalTimeHours" placeholder="HH" size="2" required="required"/>:<input type="text" name="arrivalTimeMinutes" placeholder="MM" size="2" required="required"/> UTC<br/>
+                <input type="submit" class="fpSubmitButton" value="Quick submit!"/>
+                Please make sure to be at <b><?php echo $Event->airportICAO; ?></b> between <b><?php echo $Event->beginTime." and ".$Event->endTime; ?> UTC</b>
+            </form>
         </div>
         
             <?php

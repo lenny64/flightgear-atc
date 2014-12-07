@@ -43,7 +43,8 @@ function returnEvents($date = NULL)
     
     foreach ($events_list as $row)
     {
-        $events[$i]["Id"] = $row['eventId'];
+        $events[$i]['Id'] = $row['eventId'];
+        $events[$i]['airportICAO'] = $row['airportICAO'];
         $i++;
     }
 

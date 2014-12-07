@@ -1,3 +1,9 @@
+
+<form class="calendar_filter" method="get" action="./index.php5">
+    Show only :
+    <input type="text" name="filterICAO" placeholder="ICAO" size="5"/> <input type="submit" value="Filter"/>
+</form>
+
 <?php
 
 // We open the calendar DIV, master
@@ -69,8 +75,28 @@ for ($monthNumber = 0; $monthNumber < 2; $monthNumber++)
         // CELL CONTENT GENERATION
         // Inside the cell we print the day number
         echo date('d',strtotime($dayCounter));
+        
         // We get all the events for this particular day
-        $events[$dayCounter] = returnEvents($dayCounter);
+        if (isset($_GET['filterICAO']) AND $_GET['filterICAO'] != NULL)
+        {
+            // In the case there is an ICAO filter, i gather all events relative to this particular ICAO
+            $events = array();
+            $events_list = $db->query("SELECT eventId,airportICAO FROM events WHERE date = '$dayCounter' AND airportICAO = '".$_GET['filterICAO']."' ORDER BY beginTime");
+            $i = 0;
+            foreach ($events_list as $row)
+            {
+                $events[$i]['Id'] = $row['eventId'];
+                $events[$i]['airportICAO'] = $row['airportICAO'];
+                $i++;
+            }
+            $events[$dayCounter] = $events;
+        }
+        else
+        {
+            // In the case there is no filter, i gather all the events
+            $events = array();
+            $events[$dayCounter] = returnEvents($dayCounter);
+        }
         // If there are no events for this day we don't show anything
         if (sizeof($events[$dayCounter]) < 1) { echo "<br/>&nbsp;"; }
         // Otherwise we show the number of events occuring this day

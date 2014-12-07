@@ -8,13 +8,13 @@ div.submenu input#submenu_dateTimePicker_submit { background-color: #89a02c; col
 
 div.flightplan_banner { width: 600px; margin: 4% auto 4% auto;}
         
-div.flightplan_list_area { width: 100%; margin: 0 10px 0 10px; }
+div.flightplan_list_area { width: 100%; margin: 0 0px 0 10px; }
     div.flightplan_day { float: left; width: 170px; margin: 0 3px 0 3px; }
         div.flightplan_day span.flightplan_date { display: block; color: #666; font-size: 0.9em; text-align: center; }
         div.flightplan_day div.flightplan_add_button { text-align: center; width: 70%; margin: 5px 15% 10px 15%; font-size: 0.7em; color: #fff; padding: 0px; background-color: #3C71B2; border-radius: 50px; -moz-border-radius: 50px; -webkit-border-radius: 50px; cursor: pointer; }
             div.flightplan_day div.flightplan_add_button:hover { background-color: white; color: #3C71B2; }
         div.flightplan_list_area div.flightplan { background-color: #ececec; border: solid 1px #ccc; margin: 3px 0; border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;}
-            div.flightplan_list_area div.flightplan.empty { color: #999; font-size: 0.9em; padding: 5px; text-align: center; border: solid 1px #ddd; background-color: #f0f0f0;}
+            div.flightplan_list_area div.flightplan.empty { color: #999; font-size: 0.9em; padding: 5px; margin-bottom: 0; text-align: center; border: solid 1px #ddd; background-color: #f0f0f0;}
             div.flightplan_list_area div.flightplan.flightplanHidden { display: none; }
             div.flightplan_list_area div.flightplan.showall { font-weight: bold; color: #3C71B2; cursor: pointer; }
             div.flightplan_list_area div.flightplan table { width: 94%; margin: 3%; font-size: 0.8em; line-height: 140%; }
@@ -30,6 +30,8 @@ div.flightplan_list_area { width: 100%; margin: 0 10px 0 10px; }
                 span.status.close { color: #666; }
                 span.status.abort { color: #ff2a2a; }
             td input.action { font-size: 1.0em; padding: 2px 6px; margin: 0;}
+        div.flightplan_day div.flightplan_atcevents { font-size: 0.7em; color: #999; text-align: center; padding: 5px 0; margin: 0 auto 0px auto; line-height: 160%;}
+            div.flightplan_atcevents b { color: #424D15; }
 
                 
 form.file_flightplan { clear: both; display: none; position: fixed; top: 6px; left: 10px; width: 310px; overflow-y: scroll; max-height: 600px; }
@@ -63,6 +65,8 @@ form.file_flightplan { clear: both; display: none; position: fixed; top: 6px; le
         table.grouped_categories td { vertical-align: top; }
 
 /* CALENDAR */
+form.calendar_filter { width: 810px; margin: 20px auto 0 auto; padding: 5px 10px; background-color: #f0f0f0; color: #666; }
+    form.calendar_filter input { padding: 5px; color: #424D15; font-weight: bold; background-color: #fff; border: solid 1px #aaa; }
 table.calendar { margin-left: 0; padding: 5px 35px; float: left; }
 table.calendar tr.calendarHeader { font-weight: bold; font-size: 1.0em;}
     table.calendar tr.calendarHeader td { background-color: #fff; color: #333; height: 30px; }
@@ -83,7 +87,7 @@ div.viewEvents { margin: 1%; padding: 1%; width: 94%; }
         div.viewEvents h4 img { margin-right: 15px; }
         div.viewEvents span.eventDate { background-color: #666; color: #fff; padding: 7px; margin-left: 15px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
     div.viewEvents div.newEvent { font-size: 0.9em; color: #666; font-weight: bold; margin: 2% 0; text-transform: uppercase; letter-spacing: 1px; }
-        div.newEvent a { padding: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+        div.newEvent a { color: #424D15; padding: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
         div.newEvent a:hover { background-color: #424D15; color: #fff; }
     div.viewEvents div.eventsList {  }
         div.event { margin: 10px 0; padding: 13px; margin-left: 10px; background-color: #eee; }
@@ -92,7 +96,12 @@ div.viewEvents { margin: 1%; padding: 1%; width: 94%; }
                 span.eventName { color: #424D15; }
                 span.eventATC { font-size: 0.9em; color: #666;}
             div.secondInformation {  }
-
+            span.quickFlightPlanToggle { font-size: 0.9em; color: #3C71B2; padding: 5px 10px; border: solid 1px #3C71B2; cursor: pointer; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+                span.quickFlightPlanToggle:hover { color: #fff; background-color: #3C71B2; border: solid 1px #3C71B2; }
+            form.quickFlightPlanForm { font-size: 0.9em; color: #333; margin: 10px 0 0px 0; display: none; }
+                form.quickFlightPlanForm input { font-size: 0.9em; padding: 5px 7px; margin: 5px 0; border: solid 1px #3C71B2; }
+                form.quickFlightPlanForm input.fpSubmitButton { background-color: #3C71B2; color: #fff; padding: 5px 20px; margin: 15px 10px 0 0; }
+                form.quickFlightPlanForm img { position: relative; top: 5px; margin-right: 10px;}
 /* Event creation */
 form.form_new_event { padding: 0 2%;}
 	form.form_new_event input { background-color: #efefef; padding: 10px; }

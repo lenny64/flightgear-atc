@@ -66,6 +66,27 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
         <span class="flightplan_date"><?php echo date('D j M',strtotime($currentDate));?></span>
         <div class="flightplan_add_button" onclick="document.getElementById('file_flightplan-form').style.display='block'; document.getElementById('file_flightplan-date').value='<?php echo $currentDate;?>';">+ NEW FLIGHTPLAN</div>
         <?php
+        
+        $events[$currentDate] = returnEvents($currentDate);
+        // Anyway we also show ATC events
+        echo '<div class="flightplan_atcevents">';
+        echo 'Controlled airports<br/>';
+        if ($events[$currentDate] != NULL)
+        {
+            foreach ($events[$currentDate] as $event)
+            {
+                $Event = new Event();
+                $Event->selectById($event['Id']);
+                echo "<b>".$Event->airportICAO."</b>";
+                echo " ";
+            }
+        }
+        else
+        {
+            echo "None";
+        }
+        echo '</div>';
+        
         // FP counter
         $nbFlightplans = 0;
         // We list all FP for this date
@@ -130,6 +151,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     
     ?>
     <br style="clear: both;"/>
+    <br/>
 </div>
 
 <form class="file_flightplan" id="file_flightplan-form" method="post" action="./index.php5" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
