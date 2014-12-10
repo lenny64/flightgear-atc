@@ -1,4 +1,9 @@
 <?php
+
+/*
+ * C O N F I G U R A T I O N
+ */
+
 //error_reporting(E_ALL); ini_set("display_errors", 1);
 
 // Time UTC
@@ -10,13 +15,37 @@ require_once './include/config.php5';
 // Let's open the DB
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
-define("DEV_VERSION","20141116");
+define("DEV_VERSION","20141209");
 
 // A little tracker
 $db->query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
 
 include('./include/classes.php5');
 include('./include/functions.php5');
+
+/*
+ * F U N C T I O N  D E F I N I T I O N S
+ */
+
+function checkIdent($ident)
+{
+    global $db;
+    
+    // We check if it is a registered user
+    $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$ident' LIMIT 1");
+    $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
+    $wrong_ident = false;
+    if ($ident_infos['ident'] != $ident AND $ident_infos['ident'] == 0)
+    {
+        $wrong_ident = true;
+    }
+    
+    return $wrong_ident;
+}
+
+/*
+ * A P I 
+ */
 
 // IS AIRPORT CONTROLLED ?
 if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET['time']))
@@ -42,10 +71,7 @@ if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET
     }
 }
 
-/* MASTER FLIGHTPLAN SEARCH !!!!
- * BEWARE IT WILL ROCK !
- * Yes
- */
+// GET FLIGHTPLANS
 else if (isset($_GET['getFlightplans']))
 {
     // Callsign
@@ -104,6 +130,22 @@ else if (isset($_GET['getFlightplans']))
     $flightplans = $queryPrepare->fetchAll();
     
     flightplansToXML($flightplans);
+    
+}
+
+// GET FLIGHTPLAN DETAILS
+else if (isset($_GET['getFlightplanDetails']) AND isset($_GET['flightplanId']))
+{
+    if ($_GET['flightplanId'] != NULL)
+    {
+        $id = $_GET['flightplanId'];
+        // I just select the FP
+        $Flightplan = new Flightplan();
+        $Flightplan->selectById($id);
+        
+        // And output it as XML
+        flightplanToXML($Flightplan);
+    }
 }
 
 // GET ATC SESSIONS
@@ -208,15 +250,8 @@ else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET
             $inject_minute = date("i",strtotime($inject_time));
         $inject_airportICAO = $_GET['airportICAO'];
 
-        // We check if it is a registered user
-        $ident_infos_list = $db->prepare("SELECT * FROM request_users WHERE ident = :inject_ident LIMIT 1");
-        $ident_infos_list->execute(array(":inject_ident"=>$inject_ident));
-        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
-        
-        $wrong_ident = false;
-        if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) $wrong_ident = true;
-
-        if ($wrong_ident != true)
+        // We check if ident is fine
+        if (checkIdent($inject_ident) != true)
         {
             $Event = new Event();
             $Event->create($inject_year,$inject_month,$inject_day,$inject_hour,$inject_minute,'23','59',$inject_airportICAO,'','','','openradar');
@@ -271,13 +306,8 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
         $inject_category = $_GET['category'];
         $inject_comments = $_GET['comments'];
         
-        // We check if it is a registered user
-        $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
-        $wrong_ident = false;
-        if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) { $wrong_ident = true; }
-        
-        if ($wrong_ident != true)
+        // If the ident is fine
+        if (checkIdent($inject_ident) != true)
         {
             $injectFlightplan = new Flightplan();
             $injectFlightplan->create($inject_dateDeparture, $inject_departureAirport, $inject_arrivalAirport, $inject_alternateDestination, $inject_cruiseAltitude, $inject_trueAirspeed, $inject_callsign, $inject_pilotName, $inject_airline, $inject_flightNumber, $inject_category, $inject_aircraftType, $inject_departureTime, $inject_arrivalTime, $inject_waypoints, $inject_soulsOnBoard, $inject_fuelTime, $inject_comments);
@@ -289,6 +319,39 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
     }
 }
 
+// EDIT A FLIGHTPLAN
+else if (isset($_GET['editFlightplan']) AND isset($_GET['ident']) AND isset($_GET['flightplanId']))
+{
+    if ($_GET['ident'] != NULL AND $_GET['flightplanId'] != NULL)
+    {
+        $inject_ident = $_GET['ident'];
+        $flightplanId = $_GET['flightplanId'];
+        
+        // If the ident is fine
+        if (checkIdent($inject_ident) != true)
+        {
+            $Flightplan = new Flightplan();
+            $Flightplan->selectById($flightplanId);
+
+            foreach ($_GET as $k => $v)
+            {
+                if ($k == "airportFrom") { $k = "departureAirport"; }
+                if ($k == "airportTo") { $k = "arrivalAirport"; }
+                if ($k == "aircraft") { $k = "aircraftType"; }
+                if (isset($Flightplan->$k))
+                {
+                    $Flightplan->$k = $v;
+                }
+            }
+
+            $Flightplan->editFlightplan();
+
+            // And output it as XML
+            flightplanToXML($Flightplan);
+        }
+    }
+}
+
 // MODIFY THE STATUS OF A FLIGHTPLAN
 else if ((isset($_GET['openFlightplan']) OR isset($_GET['closeFlightplan'])) AND isset($_GET['ident']) AND isset($_GET['flightplanId']))
 {
@@ -297,30 +360,23 @@ else if ((isset($_GET['openFlightplan']) OR isset($_GET['closeFlightplan'])) AND
         $inject_ident = $_GET['ident'];
         $inject_flightplanId = $_GET['flightplanId'];
         
-        // We check if it is a registered user
-        $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
-        $wrong_ident = false;
-        if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) $wrong_ident = true;
-        
         // We check if the user wants to open or close flightplan
         if (isset($_GET['openFlightplan'])) $operation = 'open';
         else if (isset($_GET['closeFlightplan'])) $operation = 'close';
-        
-        if ($wrong_ident != true)
+        // If the ident is fine
+        if (checkIdent($inject_ident) != true)
         {
             $FlightplanToOpen = new Flightplan();
             $FlightplanToOpen->selectById($_GET['flightplanId']);
             $FlightplanToOpen->changeFlightplanStatus($inject_ident, $inject_flightplanId, $operation);
             
             flightplanToXML($FlightplanToOpen);
-            
         }
     }
 }
 
 // MODIFY THE VARIABLE/VALUE OF A FLIGHTPLAN
-else if (isset($_GET['changeFlightplan']) AND isset($_GET['ident']) AND isset($_GET['flightplanId']) AND isset($_GET['variable']) AND isset($_GET['value']))
+else if (isset($_GET['setVar']) AND isset($_GET['ident']) AND isset($_GET['flightplanId']) AND isset($_GET['variable']) AND isset($_GET['value']))
 {
     if ($_GET['ident'] != NULL AND $_GET['flightplanId'] != NULL AND $_GET['variable'] != NULL AND $_GET['value'] != NULL)
     {
@@ -329,23 +385,21 @@ else if (isset($_GET['changeFlightplan']) AND isset($_GET['ident']) AND isset($_
         $variable = urldecode($_GET['variable']);
         $value = urldecode($_GET['value']);
         
-        // We check if it is a registered user
-        $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$inject_ident' LIMIT 1");
-        $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
-        $wrong_ident = false;
-        if ($ident_infos['ident'] != $inject_ident AND $ident_infos['ident'] == 0) $wrong_ident = true;
-                
-        if ($wrong_ident != true)
+        // We check if the ident is fine
+        if (checkIdent($inject_ident) != true)
         {
             $FlightplanToOpen = new Flightplan();
             $FlightplanToOpen->selectById($_GET['flightplanId']);
             $FlightplanToOpen->changeFlightplanInfo($inject_ident, $inject_flightplanId, $variable, $value);
             
             flightplanToXML($FlightplanToOpen);
-            
         }
     }
 }
+
+/*
+ * A P I  H O M E  P A G E
+ */
 
 else
 { ?>
@@ -382,6 +436,40 @@ else
     </form>
 
     <form action="./dev2014_01_13.php5" method="get">
+        <h5>Get details about a particular flightplan</h5>
+        <input type="hidden" name="getFlightplanDetails"/>
+        Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?getFlightplanDetails&flightplanId=<input type="text" name="flightplanId" value="" size="3"/>
+        <br/>
+        <input type="submit" value="OK"/>
+    </form>
+
+    <form action="./dev2014_01_13.php5" method="get">
+        <h5>Edit a flightplan</h5>
+        <input type="hidden" name="getFlightplanDetails"/>
+        Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?editFlightplan&ident=<input type="text" name="ident" value="MY IDENT" size="8" disabled/>&flightplanId=<input type="text" name="flightplanId" value="" size="3"/>
+        <br/>&callsign=<input type="text" name="callsign" value="" size="8" disabled/>
+        <br/>&airline=<input type="text" name="airline" value="" size="8" disabled/>
+        <br/>&flightNumber=<input type="text" name="flightNumber" value="" size="6" disabled/>
+        <br/>&departureAirport=<input type="text" name="departureAirport" disabled/>
+        <br/>&arrivalAirport=<input type="text" name="arrivalAirport" disabled/>
+        <br/>&alternateDestination=<input type="text" name="alternateDestination" disabled/>
+        <br/>&cruiseAltitude=<input type="text" name="cruiseAltitude" disabled/>
+        <br/>&trueAirspeed=<input type="text" name="trueAirspeed" disabled/>
+        <br/>&dateDeparture=<input type="text" name="dateDeparture" disabled/>
+        <br/>&departureTime=<input type="text" name="departureTime" disabled/>
+        <br/>&arrivalTime=<input type="text" name="arrivalTime" disabled/>
+        <br/>&aircraft=<input type="text" name="aicraft" disabled/>
+        <br/>&soulsOnBoard=<input type="text" name="soulsOnBoard" size="3" disabled/>
+        <br/>&fuelTime=<input type="text" name="fuelTime" size="3" disabled/>
+        <br/>&pilotName=<input type="text" name="pilotName" size="8" disabled/>
+        <br/>&waypoints=<input type="text" name="waypoints" size="30" disabled/>
+        <br/>&category=<input type="text" name="category" size="3" disabled/>
+        <br/>&comments=<input type="text" name="comments" size="30" disabled/>
+        <br/>
+        <input type="submit" value="OK"/>
+    </form>
+
+    <form action="./dev2014_01_13.php5" method="get">
         <h5>Get ATC sessions until a given date</h5>
         <input type="hidden" name="getATCSessions"/>
         Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?getATCSessions&limitDate=<input type="text" name="limitDate" value="<?php echo date("Y-m-d");?>" size="7"/>
@@ -390,9 +478,9 @@ else
     </form>
     
     <form action="./dev2014_01_13.php5" method="get">
-        <h5>Change a flightplan : to add or modify values</h5>
+        <h5>Change a flightplan's custom variable</h5>
         <input type="hidden" name="changeFlightplan"/>
-        Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?changeFlightplan&ident=<input type="text" name="ident" value="MY IDENT" size="8" disabled/>&flightplanId=<input type="text" name="flightplanId" size="3"/>&variable=<input type="text" name="variable" size="5"/>&value=<input type="text" name="value" size="3"/>
+        Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?setVar&ident=<input type="text" name="ident" value="MY IDENT" size="8" disabled/>&flightplanId=<input type="text" name="flightplanId" size="3"/>&variable=<input type="text" name="variable" size="5"/>&value=<input type="text" name="value" size="3"/>
         <br/>
         <input type="submit" value="OK"/>
     </form>
@@ -437,14 +525,9 @@ else
     <br/>&pilotName=<input type="text" name="pilotName" size="8" disabled/>
     <br/>&waypoints=<input type="text" name="waypoints" size="30" disabled/>
     <br/>&category=<input type="text" name="category" size="3" disabled/>
-    <br/>&comments=<input type="text" name="comments" size="30" disabled/>
-    <br/>
-    
+    <br/>&comments=<input type="text" name="comments" size="30" disabled/>    
 </form>
-
 <?php }
-
 // We close the session
 $db = null;
-
 ?>

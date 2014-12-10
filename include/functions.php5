@@ -119,12 +119,15 @@ function flightplanToXML($Flightplan)
 	$XMLflightplanComments = $XMLflightplan->addChild('comments');
 	if (isset($Flightplan->comments) AND $Flightplan->comments != NULL)
 	{
+            if (is_array($Flightplan->comments))
+            {
 		foreach ($Flightplan->comments as $comments)
 		{
 			$XMLcomment = $XMLflightplanComments->addChild('comment');
 			$XMLcomment->addChild('user',$comments['pseudo']);
 			$XMLcomment->addChild('message',$comments['comment']);
 		}
+            }
 	}
 	$XMLflightplan->addChild('status',$Flightplan->status);
 	

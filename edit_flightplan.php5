@@ -45,35 +45,36 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
         {
             // If it's ok then we update the table
             $preparedQuery = $db->prepare("UPDATE flightplans20140113 SET
-                airline = :airline:,
-                flightnumber = :flightNumber:,
-                airportICAOFrom = :departureAirport:,
-                airportICAOTo = :arrivalAirport:,
-                alternateDestination = :alternateDestination:,
-                cruiseAltitude = :cruiseAltitude:,
-                trueAirspeed = :trueSpeed:,
-                dateDeparture = :date:,
-                departureTime = :departureTime:,
-                arrivalTime = :arrivalTime:,
-                aircraft = :aircraftType:,
-                soulsOnBoard = :soulsOnBoard:,
-                fuelTime = :fuelTime:,
-                pilotName = :pilotName:,
-                waypoints = :waypoints:,
-                category = :category:,
-                comments = comments
+                airline = :airline,
+                flightnumber = :flightNumber,
+                airportICAOFrom = :departureAirport,
+                airportICAOTo = :arrivalAirport,
+                alternateDestination = :alternateDestination,
+                cruiseAltitude = :cruiseAltitude,
+                trueAirspeed = :trueSpeed,
+                dateDeparture = :date,
+                departureTime = :departureTime,
+                arrivalTime = :arrivalTime,
+                aircraft = :aircraftType,
+                soulsOnBoard = :soulsOnBoard,
+                fuelTime = :fuelTime,
+                pilotName = :pilotName,
+                waypoints = :waypoints,
+                category = :category,
+                comments = :comments
                 WHERE flightplanId = :flightplanId;");
             $preparedQuery->execute(array(
                 ":airline"                  =>  $airline,
                 ":flightNumber"             =>  $flightNumber,
-                ":airportICAOFrom"          =>  $departureAirport,
-                ":airportICAOTo"            =>  $arrivalAirport,
+                ":departureAirport"         =>  $departureAirport,
+                ":arrivalAirport"           =>  $arrivalAirport,
+                ":alternateDestination"     =>  $alternateDestination,
                 ":cruiseAltitude"           =>  $cruiseAltitude,
-                ":trueAirspeed"             =>  $trueSpeed,
-                ":dateDeparture"            =>  $date,
+                ":trueSpeed"                =>  $trueSpeed,
+                ":date"                     =>  $date,
                 ":departureTime"            =>  $departureTime,
                 ":arrivalTime"              =>  $arrivalTime,
-                ":aircraft"                 =>  $aircraftType,
+                ":aircraftType"             =>  $aircraftType,
                 ":soulsOnBoard"             =>  $soulsOnBoard,
                 ":fuelTime"                 =>  $fuelTime,
                 ":pilotName"                =>  $pilotName,
@@ -160,7 +161,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
                 <option value="VFR" <?php if ($Flightplan->category == 'VFR') { echo "selected"; }?> >Visual (VFR)</option>
             </select>
             <br/>
-            <label>Aircraft</label><input type="text" name="aircraft" class="aircraft" id="file_flightplan-aircraft" size="10" value="<?php echo $Flightplan->aircraftType; ?>"/>
+            <label>Aircraft</label><input type="text" name="aircraftType" class="aircraft" id="file_flightplan-aircraft" size="10" value="<?php echo $Flightplan->aircraftType; ?>"/>
             <br/><br/>
             <label>Alternate destination</label><input type="text" class="airport" name="alternateDestination" id="file_flightplan-alternateDestination" size="6" placeholder="ICAO" value="<?php echo $Flightplan->alternateDestination; ?>"/>
             <br/>

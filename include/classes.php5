@@ -576,14 +576,14 @@ class Flightplan
                 // We gather the information
                 $this->departureAirport = $departureAirport;
                 $this->arrivalAirport = $arrivalAirport;
-                $this->alternateDestination = ($alternateDestination != NULL ? $alternateDestination : 'N/A');
-                $this->cruiseAltitude = ($cruiseAltitude != NULL ? $cruiseAltitude : 'N/A');
-                $this->trueAirspeed = ($trueAirspeed != NULL ? $trueAirspeed : 'N/A');
+                $this->alternateDestination = ($alternateDestination != NULL ? $alternateDestination : '');
+                $this->cruiseAltitude = ($cruiseAltitude != NULL ? $cruiseAltitude : '');
+                $this->trueAirspeed = ($trueAirspeed != NULL ? $trueAirspeed : '');
                 $this->callsign = $callsign;
-                $this->airline = ($airline != NULL ? $airline : 'N/A');
-                $this->flightNumber = ($flightNumber != NULL ? $flightNumber : 'N/A');
-                $this->category = ($category != NULL ? $category : 'N/A');
-                $this->aircraftType = ($aircraftType != NULL ? $aircraftType : 'N/A');
+                $this->airline = ($airline != NULL ? $airline : '');
+                $this->flightNumber = ($flightNumber != NULL ? $flightNumber : '');
+                $this->category = ($category != NULL ? $category : '');
+                $this->aircraftType = ($aircraftType != NULL ? $aircraftType : '');
                 $this->departureTime = $departureTime;
                 $this->arrivalTime = $arrivalTime;
                 $this->dateDeparture = $dateDeparture;
@@ -591,11 +591,11 @@ class Flightplan
                 if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
                 // Otherwise i assume the arrival date is the same than the departure one
                 else $this->dateArrival = $this->dateDeparture;
-                $this->waypoints = ($waypoints != NULL ? $waypoints : 'N/A');
-                $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : 1);
-                $this->fuelTime = ($fuelTime != NULL ? $fuelTime : 'N/A');
-                $this->pilotName = ($pilotName != NULL ? $pilotName : 'N/A');
-                $this->comments = ($comments != NULL ? $comments : 'N/A');
+                $this->waypoints = ($waypoints != NULL ? $waypoints : '');
+                $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : -1);
+                $this->fuelTime = ($fuelTime != NULL ? $fuelTime : '');
+                $this->pilotName = ($pilotName != NULL ? $pilotName : '');
+                $this->comments = ($comments != NULL ? $comments : '');
                 $this->status = 'filled';
 				
                 // If the airport is not controlled, we advise the pilot
@@ -757,6 +757,61 @@ class Flightplan
         }
     }
     
+    // Function to edit a flight plan
+    public function editFlightplan()
+    {
+        global $db;
+        
+        // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
+        if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
+        
+        $preparedQuery = $db->prepare("UPDATE flightplans20140113 SET
+                callsign = :callsign,
+                airline = :airline,
+                flightnumber = :flightNumber,
+                airportICAOFrom = :departureAirport,
+                airportICAOTo = :arrivalAirport,
+                alternateDestination = :alternateDestination,
+                cruiseAltitude = :cruiseAltitude,
+                trueAirspeed = :trueSpeed,
+                dateDeparture = :dateDeparture,
+                dateArrival = :dateArrival,
+                departureTime = :departureTime,
+                arrivalTime = :arrivalTime,
+                aircraft = :aircraftType,
+                soulsOnBoard = :soulsOnBoard,
+                fuelTime = :fuelTime,
+                pilotName = :pilotName,
+                waypoints = :waypoints,
+                category = :category,
+                comments = :comments 
+                WHERE flightplanId = :flightplanId;");
+        
+        $preparedQuery->execute(array(
+            ":callsign"             =>  $this->callsign,
+            ":airline"              =>  $this->airline,
+            ":flightNumber"         =>  $this->flightNumber,
+            ":departureAirport"     =>  $this->departureAirport,
+            ":arrivalAirport"       =>  $this->arrivalAirport,
+            ":alternateDestination" =>  $this->alternateDestination,
+            ":cruiseAltitude"       =>  $this->cruiseAltitude,
+            ":trueSpeed"            =>  $this->trueAirspeed,
+            ":dateDeparture"        =>  $this->dateDeparture,
+            ":dateArrival"          =>  $this->dateArrival,
+            ":departureTime"        =>  $this->departureTime,
+            ":arrivalTime"          =>  $this->arrivalTime,
+            ":aircraftType"         =>  $this->aircraftType,
+            ":soulsOnBoard"         =>  $this->soulsOnBoard,
+            ":fuelTime"             =>  $this->fuelTime,
+            ":pilotName"            =>  $this->pilotName,
+            ":waypoints"            =>  $this->waypoints,
+            ":category"             =>  $this->category,
+            ":comments"             =>  $this->comments,
+            ":flightplanId"         =>  $this->id
+        ));
+    }
+    
+    // Function to select a flight plan with it's ID
     public function selectById($id)
     {
         if (isset($id))

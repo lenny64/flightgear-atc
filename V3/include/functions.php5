@@ -134,14 +134,15 @@ function flightplansToXML($flightplans_list)
 	$XMLflightplans = new SimpleXMLElement("<flightplans></flightplans>");
 	$XMLflightplans->addAttribute('version',DEV_VERSION);
 	
-	while ($flightplan = mysql_fetch_array($flightplans_list))
+	//while ($flightplan = mysql_fetch_array($flightplans_list))
+        foreach ($flightplans_list as $flightplan)
 	{
 		
 		$Flightplan = new Flightplan();
 		$Flightplan->selectById($flightplan['flightplanId']);
 		
 		$XMLflightplan = $XMLflightplans->addChild('flightplan');
-		
+                
 		$XMLflightplan->addChild('flightplanId',$Flightplan->id);
 		$XMLflightplan->addChild('callsign',$Flightplan->callsign);
 		$XMLflightplan->addChild('flightNumber',$Flightplan->flightNumber);

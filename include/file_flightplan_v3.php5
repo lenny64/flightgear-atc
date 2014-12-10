@@ -95,35 +95,43 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             $nbFlightplans++;
             $Flightplan = new Flightplan();
             $Flightplan->selectById($flightplan['flightplanId']);
+            
+            // CAUTION VERY IMPORTANT !
+            // The _TEST callsign is relative to OR and ATCs tests
+            // Those flight plans are available through the API and remain into the DB
+            // but they do not appear on the website graphical interface.
+            if ($Flightplan->callsign != '_TEST')
+            {
             ?>
         
-        <div class="flightplan <?php if ($nbFlightplans >= 4) { echo "flightplanHidden"; } ?>">
-            <table>
-                <tr>
-                    <td class="align-left"><span class="callsign"><?php echo $Flightplan->callsign; ?></span></td>
-                    <td class="align-right"><span class="aircraft"><?php echo $Flightplan->aircraftType; ?></span></td>
-                </tr>
-                <tr>
-                    <td class="align-left"><span class="airport"><?php echo $Flightplan->departureAirport; ?></span></td>
-                    <td class="align-right"><span class="time"><?php echo $Flightplan->departureTime; ?></span></td>
-                </tr>
-                <tr>
-                    <td class="align-left"><span class="airport"><?php echo $Flightplan->arrivalAirport; ?></span></td>
-                    <td class="align-right"><span class="time"><?php echo $Flightplan->arrivalTime; ?></span></td>
-                </tr>
-                <tr>
-                    <td class="align-left"><span class="status <?php echo $Flightplan->status;?>"><img src="./img/flightplan_indicator_<?php echo $Flightplan->status;?>.png"/> Flightplan <?php echo $Flightplan->status; ?></span></td>
-                    <td class="align-right">
-                        <form action="./edit_flightplan.php5" method="get">
-                            <input type="hidden" name="flightplanId" value="<?php echo $Flightplan->id;?>"/>
-                            <input type="submit" class="action" value="Edit"/>
-                        </form>
-                    </td>
-                </tr>
-            </table>
-        </div>
+            <div class="flightplan <?php if ($nbFlightplans >= 4) { echo "flightplanHidden"; } ?>">
+                <table>
+                    <tr>
+                        <td class="align-left"><span class="callsign"><?php echo $Flightplan->callsign; ?></span></td>
+                        <td class="align-right"><span class="aircraft"><?php echo $Flightplan->aircraftType; ?></span></td>
+                    </tr>
+                    <tr>
+                        <td class="align-left"><span class="airport"><?php echo $Flightplan->departureAirport; ?></span></td>
+                        <td class="align-right"><span class="time"><?php echo $Flightplan->departureTime; ?></span></td>
+                    </tr>
+                    <tr>
+                        <td class="align-left"><span class="airport"><?php echo $Flightplan->arrivalAirport; ?></span></td>
+                        <td class="align-right"><span class="time"><?php echo $Flightplan->arrivalTime; ?></span></td>
+                    </tr>
+                    <tr>
+                        <td class="align-left"><span class="status <?php echo $Flightplan->status;?>"><img src="./img/flightplan_indicator_<?php echo $Flightplan->status;?>.png"/> Flightplan <?php echo $Flightplan->status; ?></span></td>
+                        <td class="align-right">
+                            <form action="./edit_flightplan.php5" method="get">
+                                <input type="hidden" name="flightplanId" value="<?php echo $Flightplan->id;?>"/>
+                                <input type="submit" class="action" value="Edit"/>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         
             <?php
+            }
         }
         // Are there no FP this day ?
         if ($nbFlightplans == 0)
