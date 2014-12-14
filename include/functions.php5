@@ -32,6 +32,22 @@ function getInfo($wantedInfo,$table,$col,$value)
     }
 }
 
+function checkIdent($ident)
+{
+    global $db;
+    
+    // We check if it is a registered user
+    $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$ident' LIMIT 1");
+    $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
+    $wrong_ident = false;
+    if ($ident_infos['ident'] != $ident AND $ident_infos['ident'] == 0)
+    {
+        $wrong_ident = true;
+    }
+    
+    return $wrong_ident;
+}
+
 function returnEvents($date = NULL)
 {
     global $db;
@@ -91,10 +107,8 @@ function date_difference ($date1timestamp, $date2timestamp)
 
 function flightplanToXML($Flightplan)
 {
-	$XMLflightplans = new SimpleXMLElement("<flightplans></flightplans>");
-	$XMLflightplans->addAttribute('version',DEV_VERSION);
-	
-	$XMLflightplan = $XMLflightplans->addChild('flightplan');
+	$XMLflightplan = new SimpleXMLElement("<flightplan></flightplan>");
+	$XMLflightplan->addAttribute('version',DEV_VERSION);
 		
 	$XMLflightplan->addChild('flightplanId',$Flightplan->id);
 	$XMLflightplan->addChild('callsign',$Flightplan->callsign);
@@ -143,7 +157,7 @@ function flightplanToXML($Flightplan)
 	$XMLflightplan->addChild('lastUpdated',$Flightplan->lastUpdated);
 	
 	header('Content-type: application/xml');
-	echo $XMLflightplans->asXML();
+	echo $XMLflightplan->asXML();
 }
 
 function flightplansToXML($flightplans_list)

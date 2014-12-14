@@ -849,13 +849,17 @@ class Flightplan
                 $comments_list = $db->query("SELECT * FROM flightplan_comments WHERE flightplanId = $id");
                 // We initialize the comment array
                 $this->comments = array();
-                foreach ($comments_list as $comment)
+                // A security in case comments_list is null
+                if ($comments_list != NULL)
                 {
-                    // We select the comment's pseudo and password
-                    $pseudo = $comment['pseudo'];
-                    $comment = $comment['comment'];
-                    // We put it into an array that will be displayed
-                    $this->comments[] = array("pseudo" => $pseudo, "comment" => $comment);
+                    foreach ($comments_list as $comment)
+                    {
+                        // We select the comment's pseudo and password
+                        $pseudo = $comment['pseudo'];
+                        $comment = $comment['comment'];
+                        // We put it into an array that will be displayed
+                        $this->comments[] = array("pseudo" => $pseudo, "comment" => $comment);
+                    }
                 }
                 
                 // S T A T U S
@@ -871,21 +875,25 @@ class Flightplan
                 $this->lastUpdated = 0;
                 // We initialize the history array
                 $this->history = array();
-                foreach ($history_list as $history)
+                // A security in case history_list is NULL
+                if ($history_list != NULL)
                 {
-                    // We select the variable and value
-                    $variable = $history['variable'];
-                    $value = $history['value'];
-                    $date = $history['dateTime'];
-                    // If the variable has not been stored into the history array
-                    if (!array_key_exists($variable,$this->history))
+                    foreach ($history_list as $history)
                     {
-                        // We put the variable to the value
-                        $this->history[$variable] = array('value' => $value, 'dateTime' => $date);
-                        //echo $variable." = ".$value." at ".$date."<br/>";
-                    }
+                        // We select the variable and value
+                        $variable = $history['variable'];
+                        $value = $history['value'];
+                        $date = $history['dateTime'];
+                        // If the variable has not been stored into the history array
+                        if (!array_key_exists($variable,$this->history))
+                        {
+                            // We put the variable to the value
+                            $this->history[$variable] = array('value' => $value, 'dateTime' => $date);
+                            //echo $variable." = ".$value." at ".$date."<br/>";
+                        }
 
-                    if ($this->lastUpdated == 0) $this->lastUpdated = $date;
+                        if ($this->lastUpdated == 0) $this->lastUpdated = $date;
+                    }
                 }
                 
                 // E M A I L   A N D   P R I V A T E   K E Y
