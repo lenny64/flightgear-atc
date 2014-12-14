@@ -4,6 +4,7 @@
  * C O N F I G U R A T I O N
  */
 
+// In need of error reporting
 //error_reporting(E_ALL); ini_set("display_errors", 1);
 
 // Time UTC
@@ -15,7 +16,13 @@ require_once './include/config.php5';
 // Let's open the DB
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
-define("DEV_VERSION","20141209");
+// Version definition
+define("DEV_VERSION","20141213");
+// Error codes definitions
+define("WRONG_IDENT", 'The ident you are using is not correct');
+define("ERR_VAR1", 'A variable is missing or is NULL');
+define("ERR_VAR2", 'Some variables are missing or are NULL');
+define("INVALID_FLIGHTPLAN", 'This flight plan does not exist');
 
 // A little tracker
 $db->query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
@@ -27,20 +34,17 @@ include('./include/functions.php5');
  * F U N C T I O N  D E F I N I T I O N S
  */
 
-function checkIdent($ident)
+function generateError($errno,$message)
 {
-    global $db;
+    $XMLerror = new SimpleXMLElement("<error></error>");
     
-    // We check if it is a registered user
-    $ident_infos_list = $db->query("SELECT * FROM request_users WHERE ident = '$ident' LIMIT 1");
-    $ident_infos = $ident_infos_list->fetch(PDO::FETCH_ASSOC);
-    $wrong_ident = false;
-    if ($ident_infos['ident'] != $ident AND $ident_infos['ident'] == 0)
-    {
-        $wrong_ident = true;
-    }
+    $XMLerror->addAttribute('version', DEV_VERSION);
     
-    return $wrong_ident;
+    $XMLerror->addChild("code",$errno);
+    $XMLerror->addChild("message",$message);
+    
+    header('Content-type: application/xml');
+    echo $XMLerror->asXML();
 }
 
 /*
@@ -69,6 +73,14 @@ if (isset($_GET['isAirportControlled']) AND isset($_GET['date']) AND isset($_GET
         header('Content-type: application/xml');
         echo $XMLairport->asXML();
     }
+    else
+    {
+        generateError('ERR_VAR2',ERR_VAR2);
+    }
+}
+else if (isset($_GET['isAirportControlled']))
+{
+    generateError('ERR_VAR','isAirportControlled requires date and time');
 }
 
 // GET FLIGHTPLANS
@@ -143,9 +155,28 @@ else if (isset($_GET['getFlightplanDetails']) AND isset($_GET['flightplanId']))
         $Flightplan = new Flightplan();
         $Flightplan->selectById($id);
         
-        // And output it as XML
-        flightplanToXML($Flightplan);
+        // If the flight plan is correct
+        // This means has a date and callsign -> should be managed by classes.php in the future !
+        if ($Flightplan->dateDeparture != NULL AND $Flightplan->callsign != NULL)
+        {
+            // And output it as XML
+            flightplanToXML($Flightplan);
+        }
+        // If the flight plan is not correct
+        else
+        {
+            generateError('INVALID_FLIGHTPLAN',INVALID_FLIGHTPLAN);
+        }
     }
+    // If the flightplanId has not been entered
+    else
+    {
+        generateError('ERR_VAR1',ERR_VAR1);
+    }
+}
+else if (isset($_GET['getFlightplanDetails']))
+{
+    generateError('ERR_VAR','getFlightplanDetails requires flightplanId');
 }
 
 // GET ATC SESSIONS
@@ -197,6 +228,14 @@ else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
         header('Content-type: application/xml');
         echo $XMLEvents->asXML();
     }
+    else
+    {
+        generateError('ERR_VAR1',ERR_VAR1);
+    }
+}
+else if (isset($_GET['getATCSessions']))
+{
+    generateError('ERR_VAR','getATCSessions requires limitDate');
 }
 
 // REQUESTING AUTHORIZATION TO FILE FLIGHTPLANS
@@ -234,6 +273,10 @@ else if (isset($_GET['request_auth']) AND isset($_POST['mail']))
     mail($mail,'Your ident to file flightplans','Hello, you can now file flightplans using this URL : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?fileFlightplan&ident='.$md5_mail.'&callsign=&date=&departureTime=&departureAirport=&arrivalTime=&arrivalAirport=&cruiseAltitude=&aircraft=&category=&waypoints=');
     
 }
+else if (isset($_GET['request_auth']))
+{
+    generateError('ERR_VAR','request_auth requires mail');
+}
 
 // NEW LIVE ATC SESSION FROM OPENRADAR
 else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET['date']) AND isset($_GET['time']) AND isset($_GET['airportICAO']))
@@ -257,28 +300,40 @@ else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET
             $Event->create($inject_year,$inject_month,$inject_day,$inject_hour,$inject_minute,'23','59',$inject_airportICAO,'','','','openradar');
 
             $XMLEvents = new SimpleXMLElement("<events></events>");
-                $XMLEvents->addAttribute('version',DEV_VERSION);
+            $XMLEvents->addAttribute('version',DEV_VERSION);
 
-                $XMLEvent = $XMLEvents->addChild('event');
-                $XMLEvent->addChild('eventId',$Event->id);
-                $XMLEvent->addChild('airportICAO',$Event->airportICAO);
-                $XMLEvent->addChild('date',$Event->date);
-                $XMLEvent->addChild('beginTime',$Event->beginTime);
-                $XMLEvent->addChild('endTime',$Event->endTime);
-                $XMLEvent->addChild('fgcom',$Event->fgcom);
-                $XMLEvent->addChild('teamspeak',$Event->teamspeak);
-                $XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
-                $XMLEvent->addChild('runways',$Event->runways);
-                $XMLEvent->addChild('ILS',$Event->ils);
-                $XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
-                $XMLEvent->addChild('remarks',$Event->remarks);
+            $XMLEvent = $XMLEvents->addChild('event');
+            $XMLEvent->addChild('eventId',$Event->id);
+            $XMLEvent->addChild('airportICAO',$Event->airportICAO);
+            $XMLEvent->addChild('date',$Event->date);
+            $XMLEvent->addChild('beginTime',$Event->beginTime);
+            $XMLEvent->addChild('endTime',$Event->endTime);
+            $XMLEvent->addChild('fgcom',$Event->fgcom);
+            $XMLEvent->addChild('teamspeak',$Event->teamspeak);
+            $XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
+            $XMLEvent->addChild('runways',$Event->runways);
+            $XMLEvent->addChild('ILS',$Event->ils);
+            $XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
+            $XMLEvent->addChild('remarks',$Event->remarks);
 
-                header('Content-type: application/xml');
-                echo $XMLEvents->asXML();
-
+            header('Content-type: application/xml');
+            echo $XMLEvents->asXML();
+        }
+        // If the ident is not fine we generate an error
+        else
+        {
+            generateError('WRONG_IDENT',WRONG_IDENT);
         }
 
     }
+    else
+    {
+        generateError('ERR_VAR2',ERR_VAR2);
+    }
+}
+else if (isset($_GET['newAtcSession']))
+{
+    generateError('ERR_VAR','newAtcSession requires ident, date, time, and airportICAO');
 }
 
 // FILE A FLIGHTPLAN
@@ -313,10 +368,21 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
             $injectFlightplan->create($inject_dateDeparture, $inject_departureAirport, $inject_arrivalAirport, $inject_alternateDestination, $inject_cruiseAltitude, $inject_trueAirspeed, $inject_callsign, $inject_pilotName, $inject_airline, $inject_flightNumber, $inject_category, $inject_aircraftType, $inject_departureTime, $inject_arrivalTime, $inject_waypoints, $inject_soulsOnBoard, $inject_fuelTime, $inject_comments);
             
             flightplanToXML($injectFlightplan);
-			
         }
-        
+        // If the ident is not fine we generate an error
+        else
+        {
+            generateError('WRONG_IDENT',WRONG_IDENT);
+        }
     }
+    else
+    {
+        generateError('ERR_VAR2',ERR_VAR2);
+    }
+}
+else if (isset($_GET['fileFlightplan']))
+{
+    generateError('ERR_VAR','newAtcSession requires ident, callsign, dateDeparture, departureAirport, departureTime, arrivalAirport and arrivalTime');
 }
 
 // EDIT A FLIGHTPLAN
@@ -332,24 +398,82 @@ else if (isset($_GET['editFlightplan']) AND isset($_GET['ident']) AND isset($_GE
         {
             $Flightplan = new Flightplan();
             $Flightplan->selectById($flightplanId);
-
-            foreach ($_GET as $k => $v)
+            
+            // If the flight plan is correct
+            // This means has a date and callsign -> should be managed by classes.php in the future !
+            if ($Flightplan->dateDeparture != NULL AND $Flightplan->callsign != NULL)
             {
-                if ($k == "airportFrom") { $k = "departureAirport"; }
-                if ($k == "airportTo") { $k = "arrivalAirport"; }
-                if ($k == "aircraft") { $k = "aircraftType"; }
-                if (isset($Flightplan->$k))
+                // We list every GET variable given
+                foreach ($_GET as $k => $v)
                 {
-                    $Flightplan->$k = $v;
+                    // Some little exceptions (differences between variables appearing in FP and in DB)
+                    if ($k == "airportFrom") { $k = "departureAirport"; }
+                    if ($k == "airportTo") { $k = "arrivalAirport"; }
+                    if ($k == "aircraft") { $k = "aircraftType"; }
+                    // We check if the FP contains this variable and has a correct value
+                    if (isset($Flightplan->$k) AND isset($v) AND $v != NULL)
+                    {
+                        $Flightplan->$k = $v;
+                    }
+                    // If the FP does not contain this variable
+                    else if (!isset($Flightplan->$k))
+                    {
+                        // We have exceptions : variables inherent to the command
+                        if ($k != 'editFlightplan' AND $k != 'ident' AND $k != 'flightplanId')
+                        {
+                            $fpUnknownVar[] = $k;
+                        }
+                    }
+                    // If the FP contains this variable but the value is not set
+                    else
+                    {
+                        $fpWrongValue[] = $k;
+                    }
+                }
+                
+                // If there was unknown vars we generate an error
+                if (isset($fpUnknownVar) AND $fpUnknownVar != NULL)
+                {
+                    $errors = implode(' ',$fpUnknownVar);
+                    generateError('WRONG_VAR', 'You tried to edit following values that does not exist : '.$errors);
+                }
+                
+                // If a value was null
+                else if (isset($fpWrongValue) AND $fpWrongValue != NULL)
+                {
+                    $errors = implode(' ',$fpWrongValue);
+                    generateError('WRONG_VAL', 'Those variables should not be null : '.$errors);
+                }
+                
+                // No errors ? We continue : we edit flightplan and show it
+                else
+                {
+                    $Flightplan->editFlightplan();
+                    // And output it as XML
+                    flightplanToXML($Flightplan);
                 }
             }
-
-            $Flightplan->editFlightplan();
-
-            // And output it as XML
-            flightplanToXML($Flightplan);
+            // In case the FP is not correct
+            else
+            {
+                generateError('INVALID_FLIGHTPLAN', INVALID_FLIGHTPLAN);
+            }
+        }
+        // If the ident is not fine we generate an error
+        else
+        {
+            generateError('WRONG_IDENT',WRONG_IDENT);
         }
     }
+    // Given variables are NULL ?
+    else
+    {
+        generateError('ERR_VAR2',ERR_VAR2);
+    }
+}
+else if (isset($_GET['editFlightplan']))
+{
+    generateError('ERR_VAR','editFlightplan requires ident and flightplanId');
 }
 
 // MODIFY THE STATUS OF A FLIGHTPLAN
@@ -368,11 +492,35 @@ else if ((isset($_GET['openFlightplan']) OR isset($_GET['closeFlightplan'])) AND
         {
             $FlightplanToOpen = new Flightplan();
             $FlightplanToOpen->selectById($_GET['flightplanId']);
-            $FlightplanToOpen->changeFlightplanStatus($inject_ident, $inject_flightplanId, $operation);
             
-            flightplanToXML($FlightplanToOpen);
+            // If the flight plan is correct
+            // This means has a date and callsign -> should be managed by classes.php in the future !
+            if ($FlightplanToOpen->dateDeparture != NULL AND $FlightplanToOpen->callsign != NULL)
+            {
+                $FlightplanToOpen->changeFlightplanStatus($inject_ident, $inject_flightplanId, $operation);
+
+                flightplanToXML($FlightplanToOpen);
+            }
+            // In case the FP is not correct
+            else
+            {
+                generateError('INVALID_FLIGHTPLAN', INVALID_FLIGHTPLAN);
+            }
+        }
+        // If the ident is not fine we generate an error
+        else
+        {
+            generateError('WRONG_IDENT',WRONG_IDENT);
         }
     }
+    else
+    {
+        generateError('ERR_VAR2',ERR_VAR2);
+    }
+}
+else if (isset($_GET['openFlightplan']) OR isset($_GET['closeFlightplan']))
+{
+    generateError('ERR_VAR','openFlightplan or closeFlightplan requires ident and flightplanId');
 }
 
 // MODIFY THE VARIABLE/VALUE OF A FLIGHTPLAN
@@ -390,11 +538,50 @@ else if (isset($_GET['setVar']) AND isset($_GET['ident']) AND isset($_GET['fligh
         {
             $FlightplanToOpen = new Flightplan();
             $FlightplanToOpen->selectById($_GET['flightplanId']);
-            $FlightplanToOpen->changeFlightplanInfo($inject_ident, $inject_flightplanId, $variable, $value);
             
-            flightplanToXML($FlightplanToOpen);
+            // If the flight plan is correct
+            // This means has a date and callsign -> should be managed by classes.php in the future !
+            if ($FlightplanToOpen->dateDeparture != NULL AND $FlightplanToOpen->callsign != NULL)
+            {
+                $FlightplanToOpen->changeFlightplanInfo($inject_ident, $inject_flightplanId, $variable, $value);
+
+                flightplanToXML($FlightplanToOpen);
+            }
+            // In case the FP is not correct
+            else
+            {
+                generateError('INVALID_FLIGHTPLAN', INVALID_FLIGHTPLAN);
+            }
+        }
+        // If the ident is not fine we generate an error
+        else
+        {
+            generateError('WRONG_IDENT',WRONG_IDENT);
         }
     }
+    else
+    {
+        generateError('ERR_VAR2',ERR_VAR2);
+    }
+}
+else if (isset($_GET['setVar']))
+{
+    generateError('ERR_VAR','setVar requires ident, flightplanId, variable and value');
+}
+
+
+// IF THERE IS AN UNKNOWN COMMAND
+else if (isset($_GET) AND $_GET != NULL)
+{
+    $arguments = array();
+    foreach ($_GET as $key => $value)
+    {
+        if ($key != NULL)
+        {
+            $arguments[] = $key;
+        }
+    }
+    generateError('WRONG_COMMAND', 'The command '.$arguments[0].' is not valid');
 }
 
 /*
@@ -445,7 +632,7 @@ else
 
     <form action="./dev2014_01_13.php5" method="get">
         <h5>Edit a flightplan</h5>
-        <input type="hidden" name="getFlightplanDetails"/>
+        <input type="hidden" name="editFlightplan"/>
         Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?editFlightplan&ident=<input type="text" name="ident" value="MY IDENT" size="8" disabled/>&flightplanId=<input type="text" name="flightplanId" value="" size="3"/>
         <br/>&callsign=<input type="text" name="callsign" value="" size="8" disabled/>
         <br/>&airline=<input type="text" name="airline" value="" size="8" disabled/>
@@ -479,7 +666,7 @@ else
     
     <form action="./dev2014_01_13.php5" method="get">
         <h5>Change a flightplan's custom variable</h5>
-        <input type="hidden" name="changeFlightplan"/>
+        <input type="hidden" name="setVar"/>
         Syntax : http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5?setVar&ident=<input type="text" name="ident" value="MY IDENT" size="8" disabled/>&flightplanId=<input type="text" name="flightplanId" size="3"/>&variable=<input type="text" name="variable" size="5"/>&value=<input type="text" name="value" size="3"/>
         <br/>
         <input type="submit" value="OK"/>
