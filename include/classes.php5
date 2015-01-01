@@ -469,6 +469,7 @@ class SpecialEvent
     public $description;
     public $url;
     public $dateTimeCreation;
+    public $dateEvent;
     public $valid = TRUE;
     public $eventsList = Array();
     public $pilotsList = Array();
@@ -497,8 +498,10 @@ class SpecialEvent
             {
                 global $db;
     
+                // We list every special event
                 $specialEvents_list = $db->query("SELECT * FROM specialEvents_events WHERE specialEventsId = $id");
                 $specialEvent = $specialEvents_list->fetch(PDO::FETCH_ASSOC);
+                // And gather all relative information
                 $this->id = $specialEvent['specialEventsId'];
                 $this->creatorId = $specialEvent['userId'];
                 $this->title = $specialEvent['title'];
@@ -506,15 +509,45 @@ class SpecialEvent
                 $this->url = $specialEvent['url'];
                 $this->dateTimeCreation = $specialEvent['dateTime'];
                 
-                $specialEventsEvents_list = $db->query("SELECT specialEvents_airports.*,events.* FROM specialEvents_airports,events where specialEvents_airports.specialeventsId = $id AND specialEvents_airports.eventId = events.eventId AND events.date >= CURDATE() ORDER BY events.date, events.beginTime");
+                /* EVENT LIST */
+                // We make a query returning specialEventId and eventId
+                $specialEventsEvents_list = $db->query(
+                        "SELECT specialEvents_airports.specialEventsId,events.eventId
+                        FROM specialEvents_airports,events 
+                        WHERE specialEvents_airports.specialeventsId = $id
+                        AND specialEvents_airports.eventId = events.eventId
+                        AND events.date >= CURDATE()
+                        ORDER BY events.date, events.beginTime");
+                
+                // We initialize the "valid" to TRUE, in case the previous Special
+                // event selected is not valid.
+                $this->valid = TRUE;
+                
+                // We initialize an empty array 
                 $this->eventsList = Array();
+                // Each event in that special event
                 foreach ($specialEventsEvents_list as $specialEventsEvent)
                 {
-                    $this->eventsList[] = $specialEventsEvent;
+                    // We pick information of that particular event
+                    $Event = new Event();
+                    $Event->selectById($specialEventsEvent['eventId']);
+                    // If the event will occur in the future, we take it in account
+                    if ($Event->date >= date('Y-m-d'))
+                    {
+                        $this->eventsList[] = $Event->id;
+                        $this->dateEvent = $Event->date;
+                    }
                 }
-                if (empty($this->eventsList)) $this->valid = FALSE;
+                // We test if the array is empty (thus the specialEvent is not valid)
+                if (empty($this->eventsList))
+                {
+                    $this->valid = FALSE;
+                }
                 
+                /* PILOT LIST */
+                // We select all pilots relative to this special event
                 $specialEventPilots_list = $db->query("SELECT * FROM specialEvents_pilots WHERE specialEventsId = $id");
+                // We initialize an empty array
                 $this->pilotsList = Array();
                 foreach ($specialEventPilots_list as $specialEventsPilot)
                 {

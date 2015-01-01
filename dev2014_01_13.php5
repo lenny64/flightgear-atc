@@ -17,7 +17,7 @@ require_once './include/config.php5';
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
 // Version definition
-define("DEV_VERSION","20141213");
+define("DEV_VERSION","20141222");
 // Error codes definitions
 define("WRONG_IDENT", 'The ident you are using is not correct');
 define("ERR_VAR1", 'A variable is missing or is NULL');
@@ -382,7 +382,7 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
 }
 else if (isset($_GET['fileFlightplan']))
 {
-    generateError('ERR_VAR','newAtcSession requires ident, callsign, dateDeparture, departureAirport, departureTime, arrivalAirport and arrivalTime');
+    generateError('ERR_VAR','fileFlightplan requires ident, callsign, dateDeparture, departureAirport, departureTime, arrivalAirport and arrivalTime');
 }
 
 // EDIT A FLIGHTPLAN
@@ -411,8 +411,9 @@ else if (isset($_GET['editFlightplan']) AND isset($_GET['ident']) AND isset($_GE
                     if ($k == "airportTo") { $k = "arrivalAirport"; }
                     if ($k == "aircraft") { $k = "aircraftType"; }
                     // We check if the FP contains this variable and has a correct value
-                    if (isset($Flightplan->$k) AND isset($v) AND $v != NULL)
+                    if (isset($Flightplan->$k) AND isset($v)) // AND $v != NULL
                     {
+                        // We affect to the flightplan every key => value pair
                         $Flightplan->$k = $v;
                     }
                     // If the FP does not contain this variable
@@ -425,10 +426,10 @@ else if (isset($_GET['editFlightplan']) AND isset($_GET['ident']) AND isset($_GE
                         }
                     }
                     // If the FP contains this variable but the value is not set
-                    else
+                    /*else
                     {
                         $fpWrongValue[] = $k;
-                    }
+                    }*/
                 }
                 
                 // If there was unknown vars we generate an error
@@ -439,11 +440,11 @@ else if (isset($_GET['editFlightplan']) AND isset($_GET['ident']) AND isset($_GE
                 }
                 
                 // If a value was null
-                else if (isset($fpWrongValue) AND $fpWrongValue != NULL)
+                /*else if (isset($fpWrongValue) AND $fpWrongValue != NULL)
                 {
                     $errors = implode(' ',$fpWrongValue);
                     generateError('WRONG_VAL', 'Those variables should not be null : '.$errors);
-                }
+                }*/
                 
                 // No errors ? We continue : we edit flightplan and show it
                 else

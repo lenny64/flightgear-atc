@@ -6,12 +6,13 @@
 
 <?php include('./include/log.php5'); ?>
 
-<a href="./download.php5?file=Newsletter-201411.pdf" target="_blank" style="margin-left: 30px; font-weight: bold; color: #3C71B2; padding: 10px 10px; border: solid 1px #e0e0e0; background-color: #f5f5f5;"><img src="./img/logo_pdf.png" width="25" style="position: relative; top: 8px; margin-right: 10px;"/> November newsletter</a>
-<br/>
-<br/>
-<br/>
-
 <?php
+// D O W N L O A D S   P A R T
+// echo '<a href="./download.php5?file=Newsletter-201411.pdf" target="_blank" style="margin-left: 30px; font-weight: bold; color: #3C71B2; padding: 10px 10px; border: solid 1px #e0e0e0; background-color: #f5f5f5;"><img src="./img/logo_pdf.png" width="25" style="position: relative; top: 8px; margin-right: 10px;"/> November newsletter</a>';
+// echo '<br/>';
+// echo '<br/>';
+// echo '<br/>';
+
 // F L I G H T P L A N    F O R M    V I S I B I L I T Y
 // If the user is connected
 if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))

@@ -61,7 +61,7 @@ foreach ($specialEvents_list as $specialEvents)
 
             <div class="specialEvent mini">
                 <div class="specialEventContent">
-                    <h4>Special Flightgear ATC Event - <?php echo $SpecialEvent->title; ?></h4>
+                    <h4>Special Flightgear ATC Event - <?php echo $SpecialEvent->title." on ".date('D M jS', strtotime($SpecialEvent->dateEvent)); ?></h4>
                     <span class="participants">You and <?php echo $nbParticipants[$SpecialEvent->id]; ?> other people are going</span>
                 </div>
             </div>
@@ -90,23 +90,29 @@ foreach ($specialEvents_list as $specialEvents)
                 </p>
                 <div class="specialEventDate">
                     <h5>Date</h5>
-                    <?php foreach($SpecialEvent->eventsList as $specialEventDate)
+                    <?php foreach($SpecialEvent->eventsList as $specialEventId)
                     {
-                        echo $specialEventDate['date']."<br/>";
+                        $Event = new Event();
+                        $Event->selectById($specialEventId);
+                        echo $Event->date."<br/>";
                     } ?>
                 </div>
                 <div class="specialEventAirport">
                     <h5>Airport</h5>
-                    <?php foreach($SpecialEvent->eventsList as $specialEventAirport)
+                    <?php foreach($SpecialEvent->eventsList as $specialEventId)
                     {
-                        echo $specialEventAirport['airportICAO']."<br/>";
+                        $Event = new Event();
+                        $Event->selectById($specialEventId);
+                        echo $Event->airportICAO."<br/>";
                     } ?>
                 </div>
                 <div class="specialEventTime">
                     <h5>Time</h5>
-                    <?php foreach($SpecialEvent->eventsList as $specialEventTime)
+                    <?php foreach($SpecialEvent->eventsList as $specialEventId)
                     {
-                        echo "From ".$specialEventTime['beginTime']." to ".$specialEventTime['endTime']."<br/>";
+                        $Event = new Event();
+                        $Event->selectById($specialEventId);
+                        echo "From ".$Event->beginTime." to ".$Event->endTime."<br/>";
                     } ?>
                 </div>
                 <br style="clear: both;"/>
