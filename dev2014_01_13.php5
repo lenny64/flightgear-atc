@@ -400,8 +400,8 @@ else if (isset($_GET['editFlightplan']) AND isset($_GET['ident']) AND isset($_GE
             $Flightplan->selectById($flightplanId);
             
             // If the flight plan is correct
-            // This means has a date and callsign -> should be managed by classes.php in the future !
-            if ($Flightplan->dateDeparture != NULL AND $Flightplan->callsign != NULL)
+            // This means has a date and id -> should be managed by classes.php in the future !
+            if ($Flightplan->dateDeparture != NULL AND $Flightplan->id != NULL)
             {
                 // We list every GET variable given
                 foreach ($_GET as $k => $v)
@@ -527,7 +527,7 @@ else if (isset($_GET['openFlightplan']) OR isset($_GET['closeFlightplan']))
 // MODIFY THE VARIABLE/VALUE OF A FLIGHTPLAN
 else if (isset($_GET['setVar']) AND isset($_GET['ident']) AND isset($_GET['flightplanId']) AND isset($_GET['variable']) AND isset($_GET['value']))
 {
-    if ($_GET['ident'] != NULL AND $_GET['flightplanId'] != NULL AND $_GET['variable'] != NULL AND $_GET['value'] != NULL)
+    if ($_GET['ident'] != NULL AND $_GET['flightplanId'] != NULL AND $_GET['variable'] != NULL)
     {
         $inject_ident = $_GET['ident'];
         $inject_flightplanId = $_GET['flightplanId'];

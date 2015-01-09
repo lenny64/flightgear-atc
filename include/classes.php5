@@ -625,7 +625,7 @@ class Flightplan
                 // Otherwise i assume the arrival date is the same than the departure one
                 else $this->dateArrival = $this->dateDeparture;
                 $this->waypoints = ($waypoints != NULL ? $waypoints : '');
-                $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : -1);
+                $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : '');
                 $this->fuelTime = ($fuelTime != NULL ? $fuelTime : '');
                 $this->pilotName = ($pilotName != NULL ? $pilotName : '');
                 $this->comments = ($comments != NULL ? $comments : '');
@@ -977,7 +977,7 @@ class Flightplan
     {
 	if (isset($userId) AND isset($flightplanId) AND isset($variable) AND isset($value))
         {
-            if ($userId != NULL AND $flightplanId != NULL AND $variable != NULL AND $value != NULL)
+            if ($userId != NULL AND $flightplanId != NULL AND $variable != NULL)
             {
                 global $db;
                 

@@ -55,6 +55,10 @@
                 <li><b>LEBL Barcelona El-Prat (Barcelona, Spain)</b></li>
                     - Controlled weekly from 16:00 to 22:00 UTC<br/>
                     - More info on the forum <a href="http://forum.flightgear.org/viewtopic.php?f=10&t=24739" target="_blank">the Flightgear official topic</a>
+                <li><b>EDNY Friedrichshafen (Friedrichshafen, Germany)</b></li>
+                    - Controlled on Mondays, Tuesdays, Fridays and weekend<br/>
+                    - From 15 UTC to 17UTC
+                    - Custom scenery available <a href="https://gitorious.org/fgfs-custom-scenery/custom-scenery-overlay/source/a01eb0ee7ed690f68512c32a7a6b6b561948ad47" target="_blank">here</a>.
 	</ul>
 </p>
 
