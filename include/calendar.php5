@@ -1,9 +1,10 @@
 
+<!-- FILTER FORM - NOT VERY USED ACTUALLY !
 <form class="calendar_filter" method="get" action="./index.php5">
     Show only :
     <input type="text" name="filterICAO" placeholder="ICAO" size="5"/> <input type="submit" value="Filter"/>
 </form>
-
+-->
 <?php
 
 // We open the calendar DIV, master

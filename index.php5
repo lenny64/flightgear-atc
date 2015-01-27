@@ -4,6 +4,8 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
+<img id="abstract" src="./img/abstract1.png"/>
+
 <?php include('./include/log.php5'); ?>
 
 <?php

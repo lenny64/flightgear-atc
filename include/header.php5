@@ -65,9 +65,6 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 
 <body>
     
-    <div id="body_container">
-    
-    <img src="./img/banniere10.png" alt="Flightgear ATC events"/>
     
     <?php
         

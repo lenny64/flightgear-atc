@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <form class="flightplanSuggestionForm">
-                    <h4>File your flight plan now!</h4>
+                    <h4>Download the <a href="<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank">Flight plan Suggestion</a><br/>and File your flight plan now!</h4>
                     <script type="text/javascript" language="javascript">
                         
                         function calculateNewArrivalTime()

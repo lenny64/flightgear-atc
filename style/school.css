@@ -10,6 +10,7 @@ div.flightplanSuggestionList { margin-left: 4%; padding: 0%; }
             div.flightplanSuggestionDocs img { margin-right: 15px; margin-bottom: 10px; position: relative; top: 15px; }
     form.flightplanSuggestionForm { float: right; width: 50%; color: #3c71b2; border: solid 1px #3c71b2; padding: 10px; }
         form.flightplanSuggestionForm h4 { margin: -10px -10px 10px -10px; background-color: #3c71b2; color: #fff; padding: 10px;}
+            form.flightplanSuggestionForm h4 a { color: #ccc; }
         form.flightplanSuggestionForm table { width: 100%;}
         form.flightplanSuggestionForm input { padding: 5px; margin: 5px 0; color: #666; }
         form.flightplanSuggestionForm input.flightplanSuggestionSubmit { padding: 10px; background-color: #3c71b2; color: #fff; font-weight: bold;}
