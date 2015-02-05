@@ -13,7 +13,7 @@ echo "<a name='calendar_anchor'> </a>";
 for ($monthNumber = 0; $monthNumber < 2; $monthNumber++)
 {
     $today = date('Y-m-d');
-    $dayCursor = date('Y-m-d',strtotime('+'.$monthNumber.' month'));
+    $dayCursor = date('Y-m-d',strtotime(date('Y-m-01').'+ '.$monthNumber.' month'));
     $firstDayCurrentMonth = date('Y-m-01',strtotime($dayCursor));
     $lastDayCurrentMonth = date('Y-m-t',strtotime($dayCursor));
     $totalDaysCurrentMonth = date('t',strtotime($dayCursor));
@@ -114,7 +114,15 @@ for ($monthNumber = 0; $monthNumber < 2; $monthNumber++)
         }
         
         // Was there a link because it is today or a future date ?
-        if ($dayCounter >= $today) { echo "</a>"; }
+        if ($dayCounter >= $today)
+        {
+            echo "</a>";
+            // If an ATC is connected, we show a little "+" button to let him plan an event at this date
+            if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected')
+            {
+                echo "<br/><a href='./new_event.php5?date=".$dayCounter."'>+</a>";
+            }
+        }
         // WE CLOSE THE CELL DAY
         echo "</td>";
 

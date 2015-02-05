@@ -337,7 +337,7 @@ class Event
             }
             else
             {
-                $this->userId = 36;
+                $this->userId = 1;
             }
         }
         

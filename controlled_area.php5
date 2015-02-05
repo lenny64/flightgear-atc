@@ -59,6 +59,8 @@
                     - Controlled on Mondays, Tuesdays, Fridays and weekend<br/>
                     - From 15 UTC to 17UTC
                     - Custom scenery available <a href="https://gitorious.org/fgfs-custom-scenery/custom-scenery-overlay/source/a01eb0ee7ed690f68512c32a7a6b6b561948ad47" target="_blank">here</a>.
+                <li><b>EETN Talinn (Talinn, Estonia)</b></li>
+                    - Controlled on Wednesdays from 18:00 to 22:00 UTC<br/>
 	</ul>
 </p>
 

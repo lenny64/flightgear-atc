@@ -88,8 +88,8 @@ span.input_example {
     text-align: center;
     margin: 0;
     margin-bottom: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     padding-left: 20px;
     padding-right: 20px;
     background-color: #333;
@@ -102,8 +102,8 @@ span.input_example {
     position: relative;
     top: -5px;
     display: inline-block;
-    padding: 4px 4px 4px 4px;
-    margin: 0px 25px 0px 25px;
+    padding: 3px 4px 3px 4px;
+    margin: 0px 15px 0px 15px;
 }
 
 #menu a div.menu_entry:hover {

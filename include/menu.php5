@@ -4,6 +4,7 @@
     echo '<a href="index.php5"><div class="menu_entry">Flightgear ATC Events</div></a>';
     echo '<a href="lfml_event.php5"><div class="menu_entry">Phraseology</div></a>';
     echo '<a href="controlled_area.php5"><div class="menu_entry">Controlled area</div></a>';
+    echo '<a href="downloads.php5"><div class="menu_entry">Downloads</div></a>';
     echo '<a href="contact.php5"><div class="menu_entry">Contact</div></a>';
     echo '<a href="faq.php5"><div class="menu_entry">FAQ</div></a>';
     if ($_SESSION['mode'] == 'connected' AND isset($_SESSION['id']))

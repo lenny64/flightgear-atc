@@ -17,7 +17,7 @@ require_once './include/config.php5';
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
 // Version definition
-define("DEV_VERSION","20141222");
+define("DEV_VERSION","20150129");
 // Error codes definitions
 define("WRONG_IDENT", 'The ident you are using is not correct');
 define("ERR_VAR1", 'A variable is missing or is NULL');
@@ -279,45 +279,56 @@ else if (isset($_GET['request_auth']))
 }
 
 // NEW LIVE ATC SESSION FROM OPENRADAR
-else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET['date']) AND isset($_GET['time']) AND isset($_GET['airportICAO']))
+else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET['date']) AND isset($_GET['beginTime']) AND isset($_GET['endTime']) AND isset($_GET['airportICAO']))
 {
-    if ($_GET['ident'] != NULL AND $_GET['date'] != NULL AND $_GET['time'] != NULL AND $_GET['airportICAO'] != NULL)
+    if ($_GET['ident'] != NULL AND $_GET['date'] != NULL AND $_GET['beginTime'] != NULL AND $_GET['endTime'] != NULL AND $_GET['airportICAO'] != NULL)
     {
         $inject_ident = $_GET['ident'];
         $inject_date = $_GET['date'];
             $inject_year = date("Y",strtotime($inject_date));
             $inject_month = date("m",strtotime($inject_date));
             $inject_day = date("d",strtotime($inject_date));
-        $inject_time = $_GET['time'];
-            $inject_hour = date("H",strtotime($inject_time));
-            $inject_minute = date("i",strtotime($inject_time));
+        $inject_beginTime = $_GET['beginTime'];
+            $inject_beginHour = date("H",strtotime($inject_beginTime));
+            $inject_beginMinute = date("i",strtotime($inject_beginTime));
+        $inject_endTime = $_GET['endTime'];
+            $inject_endHour = date("H",strtotime($inject_endTime));
+            $inject_endMinute = date("i",strtotime($inject_endTime));
         $inject_airportICAO = $_GET['airportICAO'];
+        $inject_fgcom = $_GET['fgcom'];
 
         // We check if ident is fine
         if (checkIdent($inject_ident) != true)
         {
             $Event = new Event();
-            $Event->create($inject_year,$inject_month,$inject_day,$inject_hour,$inject_minute,'23','59',$inject_airportICAO,'','','','openradar');
+            $Event->create($inject_year,$inject_month,$inject_day,$inject_beginHour,$inject_beginMinute,$inject_endHour,$inject_endMinute,$inject_airportICAO,$inject_fgcom,'','','openradar');
+            
+            if ($Event->error === 0)
+            {
+                $XMLEvent = new SimpleXMLElement("<event></event>");
+                $XMLEvent->addAttribute('version',DEV_VERSION);
 
-            $XMLEvents = new SimpleXMLElement("<events></events>");
-            $XMLEvents->addAttribute('version',DEV_VERSION);
-
-            $XMLEvent = $XMLEvents->addChild('event');
-            $XMLEvent->addChild('eventId',$Event->id);
-            $XMLEvent->addChild('airportICAO',$Event->airportICAO);
-            $XMLEvent->addChild('date',$Event->date);
-            $XMLEvent->addChild('beginTime',$Event->beginTime);
-            $XMLEvent->addChild('endTime',$Event->endTime);
-            $XMLEvent->addChild('fgcom',$Event->fgcom);
-            $XMLEvent->addChild('teamspeak',$Event->teamspeak);
-            $XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
-            $XMLEvent->addChild('runways',$Event->runways);
-            $XMLEvent->addChild('ILS',$Event->ils);
-            $XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
-            $XMLEvent->addChild('remarks',$Event->remarks);
-
-            header('Content-type: application/xml');
-            echo $XMLEvents->asXML();
+                $XMLEvent->addChild('eventId',$Event->id);
+                $XMLEvent->addChild('airportICAO',$Event->airportICAO);
+                $XMLEvent->addChild('date',$Event->date);
+                $XMLEvent->addChild('beginTime',$Event->beginTime);
+                $XMLEvent->addChild('endTime',$Event->endTime);
+                $XMLEvent->addChild('fgcom',$Event->fgcom);
+                $XMLEvent->addChild('teamspeak',$Event->teamspeak);
+                $XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
+                $XMLEvent->addChild('runways',$Event->runways);
+                $XMLEvent->addChild('ILS',$Event->ils);
+                $XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
+                $XMLEvent->addChild('remarks',$Event->remarks);
+            
+                header('Content-type: application/xml');
+                echo $XMLEvent->asXML();
+            }
+            
+            else
+            {
+                generateError('ERR_EVENT',$Event->error);
+            }
         }
         // If the ident is not fine we generate an error
         else
@@ -333,7 +344,7 @@ else if (isset($_GET['newAtcSession']) AND isset($_GET['ident']) AND isset($_GET
 }
 else if (isset($_GET['newAtcSession']))
 {
-    generateError('ERR_VAR','newAtcSession requires ident, date, time, and airportICAO');
+    generateError('ERR_VAR','newAtcSession requires ident, date, beginTime, endTime and airportICAO');
 }
 
 // FILE A FLIGHTPLAN
