@@ -61,6 +61,9 @@
                     - Custom scenery available <a href="https://gitorious.org/fgfs-custom-scenery/custom-scenery-overlay/source/a01eb0ee7ed690f68512c32a7a6b6b561948ad47" target="_blank">here</a>.
                 <li><b>EETN Talinn (Talinn, Estonia)</b></li>
                     - Controlled on Wednesdays from 18:00 to 22:00 UTC<br/>
+                <li><b>EIDW (Dublin, Germany)</b></li>
+                    - Controlled on Saturdays from 14:00 to 18:00 UTC<br/>
+                    - Controlled on Sundays from 12:00 to 18:00 UTC<br/>
 	</ul>
 </p>
 

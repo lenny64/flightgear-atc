@@ -19,16 +19,42 @@ foreach ($allContacts['pilots'] as $pilot)
     foreach($pilot as $information => $value)
     {
         // We focus on the pilot's aircraft
-        if ($information == "aircraft")
+        if ($information == "aircraft" AND (array_search(strtolower($value), $atc_models) !== FALSE))
         {
-            // We compare the lowercase value to our atc models
-            if (array_search(strtolower($value), $atc_models) !== FALSE)
-            {
-                $atcs[] = strtoupper($pilot['callsign']);
-            }
+            $atcs[$pilot['callsign']]['callsign'] = strtoupper($pilot['callsign']);
+            $atcs[$pilot['callsign']]['latitude'] = $pilot['latitude'];
+            $atcs[$pilot['callsign']]['longitude'] = $pilot['longitude'];
         }
     }
 }
+
+function getAirportByCoordinates($lon,$lat)
+{
+    global $db;
+    
+    $precision = 20;
+    
+    $airportInformation = Array();
+    if (isset($lon) AND isset($lat))
+    {
+        $longitude = floor($lon*$precision);
+        $latitude = floor($lat*$precision);
+        
+        $airports = $db->query("SELECT globalAirportICAO,globalAirportCity,globalAirportCountry FROM airports_global WHERE FLOOR(globalAirportLat*$precision) = '$latitude' AND FLOOR(globalAirportLon*$precision) = '$longitude'");
+        if ($airports != NULL)
+        {
+            foreach($airports as $airport)
+            {
+                $airportInformation['ICAO'] = $airport['globalAirportICAO'];
+                $airportInformation['city'] = $airport['globalAirportCity'];
+                $airportInformation['country'] = $airport['globalAirportCountry'];
+            }
+        }
+    }
+    
+    return $airportInformation;
+}
+
 ?>
 
 <div class="liveATC">
@@ -40,7 +66,13 @@ foreach ($allContacts['pilots'] as $pilot)
             {
                 foreach($atcs as $atc)
                 {
-                    echo "<li>".$atc."</li>";
+                    $airportInformation = getAirportByCoordinates($atc['longitude'], $atc['latitude']);
+                    echo "<li>".$atc['callsign'];
+                    if ($airportInformation != NULL)
+                    {
+                        echo " (".$airportInformation['city'].",".$airportInformation['country'].")";
+                    }
+                    echo "</li>";
                 }
             }
             else

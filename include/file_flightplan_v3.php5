@@ -147,7 +147,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
         {
             ?>
             <div class="flightplan empty showall">
-                See all
+                See all (<?php echo $nbFlightplans; ?>)
             </div>
             <?php
         }
