@@ -4,7 +4,10 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
-<img id="abstract" src="./img/abstract1.png"/>
+<img id="abstract" src="./img/abstract3.jpg"/>
+<!-- Live ATC session part -->
+<?php include('./include/liveATC.php5'); ?>
+
 
 <?php include('./include/log.php5'); ?>
 

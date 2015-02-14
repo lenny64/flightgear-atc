@@ -47,6 +47,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	<title>Flightgear ATC Events</title>
 
 	<!-- STYLES -->
+        <link href='http://fonts.googleapis.com/css?family=Arvo:700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="./style/general.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/event.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/dashboard.css"/>
