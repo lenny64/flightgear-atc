@@ -589,115 +589,169 @@ class Flightplan
     public $departureATCpresence = true;
     public $arrivalATCpresence = true;
     public $dataMissing = true;
+    public $error = Array();
     
-    function create($dateDeparture,$departureAirport,$arrivalAirport,$alternateDestination,$cruiseAltitude,$trueAirspeed,$callsign,$pilotName,$airline,$flightNumber,$category,$aircraftType,$departureTime,$arrivalTime,$waypoints,$soulsOnBoard,$fuelTime,$comments)
+    function checkInformation()
     {
-        // We check if the information were given
-        if (isset($departureAirport) AND isset($arrivalAirport) AND isset($callsign) AND isset($departureTime) AND isset($arrivalTime) AND isset($dateDeparture))
+        // We check if all the information was given
+        if (!isset($this->departureAirport) OR !isset($this->arrivalAirport) OR !isset($this->callsign) OR !isset($this->departureTime) OR !isset($this->arrivalTime) OR !isset($this->dateDeparture))
+        {
+            // In this case we have data missing
+            $this->error[] = 'data is missing';
+        }
+        else
         {
             // We check wether the information is fine
             // In particular, the airport must contain 4 letters
-            if (preg_match("#^[a-zA-z]{4}$#",$departureAirport) AND preg_match("#^[a-zA-z]{4}$#",$arrivalAirport) AND $callsign != NULL AND $callsign != 'Callsign' AND $departureTime != NULL AND $arrivalTime != NULL AND $dateDeparture != NULL)
+            if (preg_match("#^[a-zA-z]{4}$#",$this->departureAirport) == FALSE)
             {
-                
-                global $db;
-                
-                // We can generate some alerts
-                $alert_departureATC = true;
-                $alert_arrivalATC = true;
-                
-                // We gather the information
-                $this->departureAirport = $departureAirport;
-                $this->arrivalAirport = $arrivalAirport;
-                $this->alternateDestination = ($alternateDestination != NULL ? $alternateDestination : '');
-                $this->cruiseAltitude = ($cruiseAltitude != NULL ? $cruiseAltitude : '');
-                $this->trueAirspeed = ($trueAirspeed != NULL ? $trueAirspeed : '');
-                $this->callsign = $callsign;
-                $this->airline = ($airline != NULL ? $airline : '');
-                $this->flightNumber = ($flightNumber != NULL ? $flightNumber : '');
-                $this->category = ($category != NULL ? $category : '');
-                $this->aircraftType = ($aircraftType != NULL ? $aircraftType : '');
-                $this->departureTime = $departureTime;
-                $this->arrivalTime = $arrivalTime;
-                $this->dateDeparture = $dateDeparture;
-                // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
-                if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
-                // Otherwise i assume the arrival date is the same than the departure one
-                else $this->dateArrival = $this->dateDeparture;
-                $this->waypoints = ($waypoints != NULL ? $waypoints : '');
-                $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : '');
-                $this->fuelTime = ($fuelTime != NULL ? $fuelTime : '');
-                $this->pilotName = ($pilotName != NULL ? $pilotName : '');
-                $this->comments = ($comments != NULL ? $comments : '');
-                $this->status = 'filled';
-				
-                // If the airport is not controlled, we advise the pilot
-                if (isAirportControlled($departureAirport, $this->dateDeparture, $departureTime) == false)
-                {
-                    $alert_departureATC = false;
-                    $this->departureATCpresence = false;
-                }
-                if (isAirportControlled($arrivalAirport, $this->dateArrival, $arrivalTime) == false)
-                {
-                    $alert_arrivalATC = false;
-                    $this->arrivalATCpresence = false;
-                }
-                
-                // I insert the flightplan into DB
-                $preparedQuery = $db->prepare("INSERT INTO flightplans20140113 VALUES('','',:callsign,:airline,:flightNumber,:departureAirport,:arrivalAirport,:alternateDestination,:cruiseAltitude,:trueAirspeed,:dateDeparture,:dateArrival,:departureTime,:arrivalTime,:aircraftType,:soulsOnBoard,:fuelTime,:pilotName,:waypoints,:category,:comments,'','');");
-                $preparedQuery->execute(array(
-                    ":callsign"             =>  $this->callsign,
-                    ":airline"              =>  $this->airline,
-                    ":flightNumber"         =>  $this->flightNumber,
-                    ":departureAirport"     =>  $this->departureAirport,
-                    ":arrivalAirport"       =>  $this->arrivalAirport,
-                    ":alternateDestination" =>  $this->alternateDestination,
-                    ":cruiseAltitude"       =>  $this->cruiseAltitude,
-                    ":trueAirspeed"         =>  $this->trueAirspeed,
-                    ":dateDeparture"        =>  $this->dateDeparture,
-                    ":dateArrival"          =>  $this->dateArrival,
-                    ":departureTime"        =>  $this->departureTime,
-                    ":arrivalTime"          =>  $this->arrivalTime,
-                    ":aircraftType"         =>  $this->aircraftType,
-                    ":soulsOnBoard"         =>  $this->soulsOnBoard,
-                    ":fuelTime"             =>  $this->fuelTime,
-                    ":pilotName"            =>  $this->pilotName,
-                    ":waypoints"            =>  $this->waypoints,
-                    ":category"             =>  $this->category,
-                    ":comments"             =>  $this->comments,
-                ));
-                $this->id = $db->lastInsertId();
-                // I also insert the default comment entered by the pilot
-                $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:callsign,:comments,'".date("Y-m-d H:i:s")."');");
-                $preparedQuery->execute(array(":id" => $this->id, ":callsign" => $this->callsign, ":comments" => $this->comments));
-                // I also insert the status of the flightplan
-                $preparedQuery = $db->prepare("INSERT INTO flightplan_status VALUES('','9999',:id,:status,'".date("Y-m-d H:i:s")."');");
-                $preparedQuery->execute(array(":id" => $this->id, ":status" => $this->status));
-                
-                // We get the ATC user ID
-                $dep_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1");
-                $dep_ATCiD =$dep_ATCiD->fetch(PDO::FETCH_ASSOC);
-                $dep_ATCiD = $dep_ATCiD[0];
-                
-                $arr_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1");
-                $arr_ATCiD = $arr_ATCiD->fetch(PDO::FETCH_ASSOC);
-                $arr_ATCiD = $arr_ATCiD[0];
-                
-                // If the user wants to, we can send him the alert
-                if (getInfo("notifications", "users", "userId", $dep_ATCiD) == 1)
-                {
-                    $dep_ATCMail = getInfo('mail', 'users', 'userId', $dep_ATCiD);
-                    mail($dep_ATCMail, 'New flightplan : '.$this->callsign, $this->callsign.' wants to take off at '.$this->departureTime.' from your airport '.$this->departureAirport.' -- http://lenny64.free.fr/edit_flightplan.php5?idFlightplan='.$this->id);
-                }
-                if (getInfo("notifications", "users", "userId", $arr_ATCiD) == 1)
-                {
-                    $arr_ATCMail = getInfo('mail', 'users', 'userId', $arr_ATCiD);
-                    mail($arr_ATCMail, 'New flightplan : '.$this->callsign, $this->callsign.' wants to land at '.$this->arrivalTime.' on your airport '.$this->arrivalAirport.' -- http://lenny64.free.fr/edit_flightplan.php5?idFlightplan='.$this->id);
-                }
-                // There is no data missing
-                $this->dataMissing = false;
-                
+                $this->error[] = 'invalid departure airport';
             }
+            if (preg_match("#^[a-zA-z]{4}$#",$this->arrivalAirport) == FALSE)
+            {
+                $this->error[] = 'invalid arrival airport';
+            }
+            if ($this->callsign == NULL OR $this->callsign == 'Callsign')
+            {
+                $this->error[] = 'invalid callsign';
+            }
+            if ($this->departureTime == NULL OR preg_match("#^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]((:[0-5][0-9])?)$#", $this->departureTime) == FALSE)
+            {
+                $this->error[] = 'invalid departure time '.$this->departureTime;
+            }
+            if ($this->arrivalTime == NULL OR preg_match("#^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]((:[0-5][0-9])?)$#", $this->arrivalTime) == FALSE)
+            {
+                $this->error[] = 'invalid arrival time '.$this->arrivalTime;
+            }
+            if ($this->dateDeparture == NULL)
+            {
+                $this->error[] = 'invalid departure date';
+            }
+        }
+        return $this->error;
+    }
+    
+    function create($dateDeparture,$departureAirport,$arrivalAirport,$alternateDestination,$cruiseAltitude,$trueAirspeed,$callsign,$pilotName,$airline,$flightNumber,$category,$aircraftType,$departureTime,$arrivalTime,$waypoints,$soulsOnBoard,$fuelTime,$comments)
+    {
+        
+        // We gather the information
+        $this->departureAirport = $departureAirport;
+        $this->arrivalAirport = $arrivalAirport;
+        $this->alternateDestination = ($alternateDestination != NULL ? $alternateDestination : '');
+        $this->cruiseAltitude = ($cruiseAltitude != NULL ? $cruiseAltitude : '');
+        $this->trueAirspeed = ($trueAirspeed != NULL ? $trueAirspeed : '');
+        $this->callsign = $callsign;
+        $this->airline = ($airline != NULL ? $airline : '');
+        $this->flightNumber = ($flightNumber != NULL ? $flightNumber : '');
+        $this->category = ($category != NULL ? $category : '');
+        $this->aircraftType = ($aircraftType != NULL ? $aircraftType : '');
+        $this->departureTime = $departureTime;
+        $this->arrivalTime = $arrivalTime;
+        $this->dateDeparture = $dateDeparture;
+        // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
+        if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
+        // Otherwise i assume the arrival date is the same than the departure one
+        else $this->dateArrival = $this->dateDeparture;
+        $this->waypoints = ($waypoints != NULL ? $waypoints : '');
+        $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : '');
+        $this->fuelTime = ($fuelTime != NULL ? $fuelTime : '');
+        $this->pilotName = ($pilotName != NULL ? $pilotName : '');
+        $this->comments = ($comments != NULL ? $comments : '');
+        $this->status = 'filed';
+        
+        // We check if all information given is fine
+        $this->checkInformation();
+        
+        global $db;
+        
+        // We check if there is another flightplan with the same information
+        $similarFlightplanList = $db->query("SELECT flightplanId FROM flightplans20140113 WHERE dateDeparture='".$this->dateDeparture."' AND callsign='".$this->callsign."' AND departureTime='".$this->departureTime."' AND airportICAOFrom='".$this->departureAirport."' AND arrivalTime='".$this->arrivalTime."' AND airportICAOTo='".$this->arrivalAirport."'");
+        $similarFlightplans = Array();
+        if (isset($similarFlightplanList) AND $similarFlightplanList != NULL)
+        {
+            foreach ($similarFlightplanList as $similarFlightplan)
+            {
+                $similarFlightplans[] = $similarFlightplanList->fetch(PDO::FETCH_ASSOC);
+            }
+        }
+        if (sizeof($similarFlightplans) > 0)
+        {
+            $this->error[] = "a similar flight plan has already been filed";
+        }
+        
+        // If there are no error
+        if (sizeof($this->error) == 0)
+        {
+
+            // We can generate some alerts
+            $alert_departureATC = true;
+            $alert_arrivalATC = true;
+
+            // If the airport is not controlled, we advise the pilot
+            if (isAirportControlled($departureAirport, $this->dateDeparture, $departureTime) == false)
+            {
+                $alert_departureATC = false;
+                $this->departureATCpresence = false;
+            }
+            if (isAirportControlled($arrivalAirport, $this->dateArrival, $arrivalTime) == false)
+            {
+                $alert_arrivalATC = false;
+                $this->arrivalATCpresence = false;
+            }
+
+            // I insert the flightplan into DB
+            $preparedQuery = $db->prepare("INSERT INTO flightplans20140113 VALUES('','',:callsign,:airline,:flightNumber,:departureAirport,:arrivalAirport,:alternateDestination,:cruiseAltitude,:trueAirspeed,:dateDeparture,:dateArrival,:departureTime,:arrivalTime,:aircraftType,:soulsOnBoard,:fuelTime,:pilotName,:waypoints,:category,:comments,'','');");
+            $preparedQuery->execute(array(
+                ":callsign"             =>  $this->callsign,
+                ":airline"              =>  $this->airline,
+                ":flightNumber"         =>  $this->flightNumber,
+                ":departureAirport"     =>  $this->departureAirport,
+                ":arrivalAirport"       =>  $this->arrivalAirport,
+                ":alternateDestination" =>  $this->alternateDestination,
+                ":cruiseAltitude"       =>  $this->cruiseAltitude,
+                ":trueAirspeed"         =>  $this->trueAirspeed,
+                ":dateDeparture"        =>  $this->dateDeparture,
+                ":dateArrival"          =>  $this->dateArrival,
+                ":departureTime"        =>  $this->departureTime,
+                ":arrivalTime"          =>  $this->arrivalTime,
+                ":aircraftType"         =>  $this->aircraftType,
+                ":soulsOnBoard"         =>  $this->soulsOnBoard,
+                ":fuelTime"             =>  $this->fuelTime,
+                ":pilotName"            =>  $this->pilotName,
+                ":waypoints"            =>  $this->waypoints,
+                ":category"             =>  $this->category,
+                ":comments"             =>  $this->comments,
+            ));
+            $this->id = $db->lastInsertId();
+            // I also insert the default comment entered by the pilot
+            $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:callsign,:comments,'".date("Y-m-d H:i:s")."');");
+            $preparedQuery->execute(array(":id" => $this->id, ":callsign" => $this->callsign, ":comments" => $this->comments));
+            // I also insert the status of the flightplan
+            $preparedQuery = $db->prepare("INSERT INTO flightplan_status VALUES('','9999',:id,:status,'".date("Y-m-d H:i:s")."');");
+            $preparedQuery->execute(array(":id" => $this->id, ":status" => $this->status));
+
+            // We get the ATC user ID
+            $dep_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1");
+            $dep_ATCiD =$dep_ATCiD->fetch(PDO::FETCH_ASSOC);
+            $dep_ATCiD = $dep_ATCiD[0];
+
+            $arr_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1");
+            $arr_ATCiD = $arr_ATCiD->fetch(PDO::FETCH_ASSOC);
+            $arr_ATCiD = $arr_ATCiD[0];
+
+            // If the user wants to, we can send him the alert
+            if (getInfo("notifications", "users", "userId", $dep_ATCiD) == 1)
+            {
+                $dep_ATCMail = getInfo('mail', 'users', 'userId', $dep_ATCiD);
+                mail($dep_ATCMail, 'New flightplan : '.$this->callsign, $this->callsign.' wants to take off at '.$this->departureTime.' from your airport '.$this->departureAirport.' -- http://lenny64.free.fr/edit_flightplan.php5?idFlightplan='.$this->id);
+            }
+            if (getInfo("notifications", "users", "userId", $arr_ATCiD) == 1)
+            {
+                $arr_ATCMail = getInfo('mail', 'users', 'userId', $arr_ATCiD);
+                mail($arr_ATCMail, 'New flightplan : '.$this->callsign, $this->callsign.' wants to land at '.$this->arrivalTime.' on your airport '.$this->arrivalAirport.' -- http://lenny64.free.fr/edit_flightplan.php5?idFlightplan='.$this->id);
+            }
+            // There is no data missing
+            $this->dataMissing = false;
         }
     }
     
@@ -795,53 +849,61 @@ class Flightplan
     {
         global $db;
         
-        // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
-        if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
+        // We check the information
+        $this->checkInformation();
         
-        $preparedQuery = $db->prepare("UPDATE flightplans20140113 SET
-                callsign = :callsign,
-                airline = :airline,
-                flightnumber = :flightNumber,
-                airportICAOFrom = :departureAirport,
-                airportICAOTo = :arrivalAirport,
-                alternateDestination = :alternateDestination,
-                cruiseAltitude = :cruiseAltitude,
-                trueAirspeed = :trueSpeed,
-                dateDeparture = :dateDeparture,
-                dateArrival = :dateArrival,
-                departureTime = :departureTime,
-                arrivalTime = :arrivalTime,
-                aircraft = :aircraftType,
-                soulsOnBoard = :soulsOnBoard,
-                fuelTime = :fuelTime,
-                pilotName = :pilotName,
-                waypoints = :waypoints,
-                category = :category,
-                comments = :comments 
-                WHERE flightplanId = :flightplanId;");
-        
-        $preparedQuery->execute(array(
-            ":callsign"             =>  $this->callsign,
-            ":airline"              =>  $this->airline,
-            ":flightNumber"         =>  $this->flightNumber,
-            ":departureAirport"     =>  $this->departureAirport,
-            ":arrivalAirport"       =>  $this->arrivalAirport,
-            ":alternateDestination" =>  $this->alternateDestination,
-            ":cruiseAltitude"       =>  $this->cruiseAltitude,
-            ":trueSpeed"            =>  $this->trueAirspeed,
-            ":dateDeparture"        =>  $this->dateDeparture,
-            ":dateArrival"          =>  $this->dateArrival,
-            ":departureTime"        =>  $this->departureTime,
-            ":arrivalTime"          =>  $this->arrivalTime,
-            ":aircraftType"         =>  $this->aircraftType,
-            ":soulsOnBoard"         =>  $this->soulsOnBoard,
-            ":fuelTime"             =>  $this->fuelTime,
-            ":pilotName"            =>  $this->pilotName,
-            ":waypoints"            =>  $this->waypoints,
-            ":category"             =>  $this->category,
-            ":comments"             =>  $this->comments,
-            ":flightplanId"         =>  $this->id
-        ));
+        // If no error were detected
+        if (sizeof($this->error) == 0)
+        {
+
+            // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
+            if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
+
+            $preparedQuery = $db->prepare("UPDATE flightplans20140113 SET
+                    callsign = :callsign,
+                    airline = :airline,
+                    flightnumber = :flightNumber,
+                    airportICAOFrom = :departureAirport,
+                    airportICAOTo = :arrivalAirport,
+                    alternateDestination = :alternateDestination,
+                    cruiseAltitude = :cruiseAltitude,
+                    trueAirspeed = :trueSpeed,
+                    dateDeparture = :dateDeparture,
+                    dateArrival = :dateArrival,
+                    departureTime = :departureTime,
+                    arrivalTime = :arrivalTime,
+                    aircraft = :aircraftType,
+                    soulsOnBoard = :soulsOnBoard,
+                    fuelTime = :fuelTime,
+                    pilotName = :pilotName,
+                    waypoints = :waypoints,
+                    category = :category,
+                    comments = :comments 
+                    WHERE flightplanId = :flightplanId;");
+
+            $preparedQuery->execute(array(
+                ":callsign"             =>  $this->callsign,
+                ":airline"              =>  $this->airline,
+                ":flightNumber"         =>  $this->flightNumber,
+                ":departureAirport"     =>  $this->departureAirport,
+                ":arrivalAirport"       =>  $this->arrivalAirport,
+                ":alternateDestination" =>  $this->alternateDestination,
+                ":cruiseAltitude"       =>  $this->cruiseAltitude,
+                ":trueSpeed"            =>  $this->trueAirspeed,
+                ":dateDeparture"        =>  $this->dateDeparture,
+                ":dateArrival"          =>  $this->dateArrival,
+                ":departureTime"        =>  $this->departureTime,
+                ":arrivalTime"          =>  $this->arrivalTime,
+                ":aircraftType"         =>  $this->aircraftType,
+                ":soulsOnBoard"         =>  $this->soulsOnBoard,
+                ":fuelTime"             =>  $this->fuelTime,
+                ":pilotName"            =>  $this->pilotName,
+                ":waypoints"            =>  $this->waypoints,
+                ":category"             =>  $this->category,
+                ":comments"             =>  $this->comments,
+                ":flightplanId"         =>  $this->id
+            ));
+        }
     }
     
     // Function to select a flight plan with it's ID

@@ -17,7 +17,7 @@ require_once './include/config.php5';
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
 // Version definition
-define("DEV_VERSION","20150129");
+define("DEV_VERSION","20150301");
 // Error codes definitions
 define("WRONG_IDENT", 'The ident you are using is not correct');
 define("ERR_VAR1", 'A variable is missing or is NULL');
@@ -42,6 +42,22 @@ function generateError($errno,$message)
     
     $XMLerror->addChild("code",$errno);
     $XMLerror->addChild("message",$message);
+    
+    header('Content-type: application/xml');
+    echo $XMLerror->asXML();
+}
+
+function generateErrors($errno,$messages)
+{
+    $XMLerror = new SimpleXMLElement("<error></error>");
+    
+    $XMLerror->addAttribute('version', DEV_VERSION);
+    
+    foreach($messages as $message)
+    {
+        $XMLerror->addChild("code",$errno);
+        $XMLerror->addChild("message",$message);
+    }
     
     header('Content-type: application/xml');
     echo $XMLerror->asXML();
@@ -378,7 +394,15 @@ else if (isset($_GET['fileFlightplan']) AND isset($_GET['ident']) AND isset($_GE
             $injectFlightplan = new Flightplan();
             $injectFlightplan->create($inject_dateDeparture, $inject_departureAirport, $inject_arrivalAirport, $inject_alternateDestination, $inject_cruiseAltitude, $inject_trueAirspeed, $inject_callsign, $inject_pilotName, $inject_airline, $inject_flightNumber, $inject_category, $inject_aircraftType, $inject_departureTime, $inject_arrivalTime, $inject_waypoints, $inject_soulsOnBoard, $inject_fuelTime, $inject_comments);
             
-            flightplanToXML($injectFlightplan);
+            // If the flight plan has not been accepted (we did not emit any ID)
+            if ($injectFlightplan->id == FALSE)
+            {
+                    generateErrors('ERROR',$injectFlightplan->error);
+            }
+            else
+            {
+                flightplanToXML($injectFlightplan);
+            }
         }
         // If the ident is not fine we generate an error
         else

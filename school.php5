@@ -34,7 +34,7 @@
                     <span class="flightplanSuggestionTitle"><?php echo $flightplanSuggestion['title'];?></span>
                     <div class="flightplanSuggestionDescription">
                         <div class="flightplanSuggestionDocs">
-                            <a href="<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank"><img src="./img/logo_pdf.png" width="25"/> Flight plan Suggestion document</a>
+                            <a href="./download.php5?file=<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank"><img src="./img/logo_pdf.png" width="25"/> Flight plan Suggestion document</a>
                             <br/>
                             <a href="<?php echo $flightplanSuggestion['skyVector'];?>" target="_blnak"><img src="./img/scheme_waypoints.png" width="25"/> SkyVector route</a>
                         </div>
@@ -51,14 +51,14 @@
                         </p>
                     </div>
                 </div>
-                <form class="flightplanSuggestionForm">
-                    <h4>Download the <a href="<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank">Flight plan Suggestion</a><br/>and File your flight plan now!</h4>
+                <form class="flightplanSuggestionForm" action="./index.php5" method="post">
+                    <h4>Download the <a href="./download.php5?file=<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank">Flight plan Suggestion</a><br/>and File your flight plan now!</h4>
                     <script type="text/javascript" language="javascript">
                         
-                        function calculateNewArrivalTime()
+                        function calculateNewArrivalTime(flightplanSuggestionId)
                         {
-                            var speed = document.getElementById('inputSpeed').value;
-                            var departureTime = document.getElementById('inputDepartureTime').value;
+                            var speed = document.getElementById('inputSpeed'+flightplanSuggestionId).value;
+                            var departureTime = document.getElementById('file_flightplan-departureTimeHours'+flightplanSuggestionId).value+':'+document.getElementById('file_flightplan-departureTimeMinutes'+flightplanSuggestionId).value;
                             var departureTimeArray = departureTime.split(':');
                             var floatDuration = <?php echo ($flightplanSuggestion['distance'] * 60); ?> / speed;
                             var hours = Math.floor(floatDuration/60);
@@ -79,7 +79,8 @@
                             }
                             else var arrivalMinutes = ArrivalTime.getMinutes();
                             
-                            document.getElementById('inputArrivalTime').value = arrivalHours+':'+arrivalMinutes;
+                            document.getElementById('inputArrivalHours'+flightplanSuggestionId).value = arrivalHours;
+                            document.getElementById('inputArrivalMinutes'+flightplanSuggestionId).value = arrivalMinutes;
                         }
                         
                         calculateNewArrivalTime();
@@ -96,25 +97,66 @@
                     <table>
                         <tr>
                             <td>Departure date</td>
-                            <td><input type="text" size="8" value="<?php echo date('Y-m-d');?>"/></td>
+                            <td><input type="text" name="date" size="8" value="<?php echo date('Y-m-d');?>"/></td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td>Departure airport</td>
+                            <input type="hidden" name="departureAirport" value="<?php echo $flightplanSuggestion['departureAirport'];?>"/>
                             <td><b><?php echo $flightplanSuggestion['departureAirport'];?></b></td>
                             <td>Arrival airport</td>
+                            <input type="hidden" name="arrivalAirport" value="<?php echo $flightplanSuggestion['arrivalAirport'];?>"/>
                             <td><b><?php echo $flightplanSuggestion['arrivalAirport'];?></b></td>
                         </tr>
                         <tr>
                             <td>Departure time</td>
-                            <td><input type="text" size="4" id="inputDepartureTime" value="<?php echo $flightplanSuggestion['departureTime'];?>" onKeyUp="calculateNewArrivalTime();"/></td>
+                            <td>
+                                <select name="departureTimeHours" id="file_flightplan-departureTimeHours<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" class="time" onchange="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);">
+                                <?php
+                                for ($h = 0; $h < 24; $h++)
+                                {
+                                    if ($h == date('H'))
+                                    {
+                                        echo "<option value='".$h."' selected='selected'>".sprintf("%02d",$h)."</option>";
+                                    }
+                                    else
+                                    {
+                                        echo "<option value='".$h."'>".sprintf("%02d",$h)."</option>";
+                                    }
+                                }
+                                ?>
+                                </select>
+                                :
+                                <select name="departureTimeMinutes" id="file_flightplan-departureTimeMinutes<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" class="time" onchange="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);">
+                                <?php
+                                for ($m = 0; $m < 60; $m+=5)
+                                {
+                                    // Calculation of the nearest 5 minutes
+                                    $currentM = date('i');
+                                    $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
+
+                                    if ($roundM == $m)
+                                    {
+                                        echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)."</option>";
+                                    }
+                                    else
+                                    {
+                                        echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)."</option>";
+                                    }
+                                }
+                                ?>
+                                </select> UTC
+                            </td>
                             <td>Arrival time</td>
-                            <td><input type="text" size="4" id="inputArrivalTime" value="<?php echo $flightplanSuggestion['arrivalTime'];?>" disabled="disabled"/></td>
+                            <td>
+                                <input type="text" size="2" name="arrivalTimeHours" id="inputArrivalHours<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="?" readonly="readonly"/>:
+                                <input type="text" size="2" name="arrivalTimeMinutes" id="inputArrivalMinutes<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="?" readonly="readonly"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>Airspeed</td>
-                            <td><input type="text" size="3" id="inputSpeed" value="<?php echo $flightplanSuggestion['speed'];?>" onKeyUp="calculateNewArrivalTime();"/> kts</td>
+                            <td><input type="text" size="3" id="inputSpeed<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="<?php echo $flightplanSuggestion['speed'];?>" onKeyUp="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);"/> kts</td>
                             <td>Cruise level</td>
                             <td><input type="text" size="4" value="<?php echo $flightplanSuggestion['cruiseAltitude'];?>" disabled="disabled"/></td>
                         </tr>

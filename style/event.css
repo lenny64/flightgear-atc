@@ -32,7 +32,7 @@ div.flightplan_list_area { width: 100%; margin: 0 0px 0 10px; }
             td span.aircraft { color: #999999; }
             td span.time { font-family: Courier, "Courier New", monospace; background-color: #aaa; color: #fff; font-size: 1.0em; padding: 3px 9px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
             td span.status { font-size: 0.9em; text-transform: capitalize; }
-                span.status.filled { color: #666; }
+                span.status.filed { color: #666; }
                 span.status.open { color: #89a02c; }
                 span.status.close { color: #666; }
                 span.status.abort { color: #ff2a2a; }
@@ -50,7 +50,7 @@ form.file_flightplan { clear: both; display: none; position: fixed; top: 6px; le
     form.file_flightplan input.email { color: #666; border: solid 2px #aaa; background-color: #fff; width: auto; }
     form.file_flightplan input.date { color: #666; background: #fff url('../img/scheme_date.png') no-repeat 3px 6px; padding: 7px 7px 7px 30px;}
     form.file_flightplan input.airport { font-family: Courier, "Courier New", monospace; font-size: 1.3em; width: auto; padding: 7px 7px 7px 30px; color: #3C71B2; border: solid 1px #ccc; background: #fff url('../img/scheme_airport.png') no-repeat 3px 6px; }
-    form.file_flightplan input.time { font-family: Courier, "Courier New", monospace; font-size: 1.1em; padding: 7px; width: auto; background-color: #666; color: #fff; border: solid 1px #ccc; }
+    form.file_flightplan .time { font-family: Courier, "Courier New", monospace; font-size: 1.0em; padding: 5px; width: auto; background-color: #666; color: #fff; border: solid 1px #ccc; }
     form.file_flightplan input.altitude { font-size: 1.3em; padding: 7px 7px 7px 30px; color: #3C71B2; border: solid 1px #ccc; background: #fff url('../img/scheme_flightLevel.png') no-repeat 3px 6px; }
     form.file_flightplan input.airline { background: #fff url('../img/scheme_flight.png') no-repeat 3px 6px; padding: 7px 7px 7px 30px; }
     form.file_flightplan input.aircraft { background: #fff url('../img/scheme_plane.png') no-repeat 3px 6px; padding: 7px 7px 7px 30px; }

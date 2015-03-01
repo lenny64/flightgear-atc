@@ -21,19 +21,17 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     // We create the Flightplan
     $NewFlightplan->create($date, $departureAirport, $arrivalAirport, $alternateDestination, $cruiseAltitude, $trueAirspeed, $callsign, $pilotName, $airline, $flightNumber, $category, $aircraftType, $departureTime, $arrivalTime, $waypoints, $soulsOnBoard, $fuelTime, $comments);
     
-    // If there are some erors due to data missing, we display this
-    if ($NewFlightplan->dataMissing != false)
+    // If there has not been an ID due to data missing and/or wrong data, we display errors
+    if ($NewFlightplan->id == FALSE)
     {
         echo "<div class='warning'>
-            Warning : some information is missing.
-            <br/>Your flightplan requires a minima these info :
-            <ul>
-                <li>Callsign</li>
-                <li>Departure and arrival airport</li>
-                <li>Departure and arrival time</li>
-            </ul>
-            Please make sure you filled these fields. Otherwise <a href='./contact.php5' style='color: #ccc;'>contact the admin</a>.
-            </div>";
+            Please note that ";
+        // We display each error separately
+        foreach($NewFlightplan->error as $error)
+        {
+            echo $error;
+        }
+        echo "</div>";
     }
     // If there are no errors, we then create an email address.
     else
@@ -180,8 +178,45 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             <label>Airport</label><input type="text" name="departureAirport" id="file_flightplan-departureAirport" class="airport" size="6" placeholder="ICAO" required/>
             <br/>
             <label>Time</label>
+            <select name="departureTimeHours" id="file_flightplan-departureTimeHours" class="time" required>
+            <?php
+            for ($h = 0; $h < 24; $h++)
+            {
+                if ($h == date('H'))
+                {
+                    echo "<option value='".$h."' selected='selected'>".sprintf("%02d",$h)."</option>";
+                }
+                else
+                {
+                    echo "<option value='".$h."'>".sprintf("%02d",$h)."</option>";
+                }
+            }
+            ?>
+            </select>
+            :
+            <select name="departureTimeMinutes" id="file_flightplan-departureTimeMinutes" class="time" required>
+            <?php
+            for ($m = 0; $m < 60; $m+=5)
+            {
+                // Calculation of the nearest 5 minutes
+                $currentM = date('i');
+                $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
+                
+                if ($roundM == $m)
+                {
+                    echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)."</option>";
+                }
+                else
+                {
+                    echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)."</option>";
+                }
+            }
+            ?>
+            </select> UTC
+            <!--
             <input type="text" placeholder="hh" name="departureTimeHours" id="file_flightplan-departureTimeHours" class="time" size="2" required/>:
             <input type="text" placeholder="mm" name="departureTimeMinutes" id="file_flightplan-departureTimeMinutes" class="time" size="2" required/>UTC
+            -->
             <br/>
             <label>Date</label><input type="text" value="" name="date" id="file_flightplan-date" class="date" size="8" required/>
             <span class="subtitle">En-route</span>
@@ -194,8 +229,45 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             <label>Airport</label><input type="text" name="arrivalAirport" id="file_flightplan-arrivalAirport" class="airport" size="6" placeholder="ICAO" required/>
             <br/>
             <label>Time</label>
+            <select name="arrivalTimeHours" id="file_flightplan-arrivalTimeHours" class="time" required>
+            <?php
+            for ($h = 0; $h < 24; $h++)
+            {
+                if ($h == date('H'))
+                {
+                    echo "<option value='".sprintf("%02d",$h)."' selected='selected'>".sprintf("%02d",$h)."</option>";
+                }
+                else
+                {
+                    echo "<option value='".sprintf("%02d",$h)."'>".sprintf("%02d",$h)."</option>";
+                }
+            }
+            ?>
+            </select>
+            :
+            <select name="arrivalTimeMinutes" id="file_flightplan-arrivalTimeMinutes" class="time" required>
+            <?php
+            for ($m = 0; $m < 60; $m+=5)
+            {
+                // Calculation of the nearest 5 minutes
+                $currentM = date('i');
+                $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
+                
+                if ($roundM == $m)
+                {
+                    echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)."</option>";
+                }
+                else
+                {
+                    echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)."</option>";
+                }
+            }
+            ?>
+            </select> UTC
+            <!--
             <input type="text" placeholder="hh" name="arrivalTimeHours" id="file_flightplan-arrivalTimeHours" class="time" size="2" required/>:
             <input type="text" placeholder="mm" name="arrivalTimeMinutes" id="file_flightplan-arrivalTimeMinutes" class="time" size="2" required/>UTC
+            -->
         </div>
     </div>
     <div class="category" id="file_flightplan-optionalInformation">

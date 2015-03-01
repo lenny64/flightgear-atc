@@ -18,23 +18,23 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
         $flightplanId = $_POST['flightplanId'];
         $Flightplan->selectById($flightplanId);
         
-        $departureAirport = $_POST['departureAirport'];
-        $departureTime = $_POST['departureTime'];
-        $date = $_POST['date'];
-        $cruiseAltitude = $_POST['cruiseAltitude'];
-        $waypoints = $_POST['waypoints'];
-        $arrivalAirport = $_POST['arrivalAirport'];
-        $arrivalTime = $_POST['arrivalTime'];
-        $pilotName = $_POST['pilotName'];
-        $airline = $_POST['airline'];
-        $flightNumber = $_POST['flightNumber'];
-        $category = $_POST['category'];
-        $aircraftType = $_POST['aircraftType'];
-        $alternateDestination = $_POST['alternateDestination'];
-        $trueSpeed = $_POST['trueSpeed'];
-        $soulsOnBoard = $_POST['soulsOnBoard'];
-        $fuelTime = $_POST['fuelTime'];
-        $comments = $_POST['comments'];
+        $Flightplan->departureAirport = $_POST['departureAirport'];
+        $Flightplan->departureTime = $_POST['departureTime'];
+        $Flightplan->date = $_POST['date'];
+        $Flightplan->cruiseAltitude = $_POST['cruiseAltitude'];
+        $Flightplan->waypoints = $_POST['waypoints'];
+        $Flightplan->arrivalAirport = $_POST['arrivalAirport'];
+        $Flightplan->arrivalTime = $_POST['arrivalTime'];
+        $Flightplan->pilotName = $_POST['pilotName'];
+        $Flightplan->airline = $_POST['airline'];
+        $Flightplan->flightNumber = $_POST['flightNumber'];
+        $Flightplan->category = $_POST['category'];
+        $Flightplan->aircraftType = $_POST['aircraftType'];
+        $Flightplan->alternateDestination = $_POST['alternateDestination'];
+        $Flightplan->trueSpeed = $_POST['trueSpeed'];
+        $Flightplan->soulsOnBoard = $_POST['soulsOnBoard'];
+        $Flightplan->fuelTime = $_POST['fuelTime'];
+        $Flightplan->comments = $_POST['comments'];
         
         // We pick the email and key
         $entered_email = $_POST['email'];
@@ -43,48 +43,23 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
         // We check if those info correspond to those inside the flightplan
         if ($entered_email == $Flightplan->email AND $entered_privateKey == $Flightplan->privateKey)
         {
-            // If it's ok then we update the table
-            $preparedQuery = $db->prepare("UPDATE flightplans20140113 SET
-                airline = :airline,
-                flightnumber = :flightNumber,
-                airportICAOFrom = :departureAirport,
-                airportICAOTo = :arrivalAirport,
-                alternateDestination = :alternateDestination,
-                cruiseAltitude = :cruiseAltitude,
-                trueAirspeed = :trueSpeed,
-                dateDeparture = :date,
-                departureTime = :departureTime,
-                arrivalTime = :arrivalTime,
-                aircraft = :aircraftType,
-                soulsOnBoard = :soulsOnBoard,
-                fuelTime = :fuelTime,
-                pilotName = :pilotName,
-                waypoints = :waypoints,
-                category = :category,
-                comments = :comments
-                WHERE flightplanId = :flightplanId;");
-            $preparedQuery->execute(array(
-                ":airline"                  =>  $airline,
-                ":flightNumber"             =>  $flightNumber,
-                ":departureAirport"         =>  $departureAirport,
-                ":arrivalAirport"           =>  $arrivalAirport,
-                ":alternateDestination"     =>  $alternateDestination,
-                ":cruiseAltitude"           =>  $cruiseAltitude,
-                ":trueSpeed"                =>  $trueSpeed,
-                ":date"                     =>  $date,
-                ":departureTime"            =>  $departureTime,
-                ":arrivalTime"              =>  $arrivalTime,
-                ":aircraftType"             =>  $aircraftType,
-                ":soulsOnBoard"             =>  $soulsOnBoard,
-                ":fuelTime"                 =>  $fuelTime,
-                ":pilotName"                =>  $pilotName,
-                ":waypoints"                =>  $waypoints,
-                ":category"                 =>  $category,
-                ":comments"                 =>  $comments,
-                ":flightplanId"             =>  $Flightplan->id
-            ));
+            $Flightplan->editFlightplan();
             
-            echo "<div class='information'>Your flightplan has been successfully edited !</div>";
+            if (sizeof($Flightplan->error) == 0)
+            {
+                echo "<div class='information'>Your flightplan has been successfully edited !</div>";
+            }
+            else
+            {
+                foreach($Flightplan->error as $error)
+                {
+                    echo "<div class='information'>WARNING : " . $error . "</div>";
+                }
+            }
+        }
+        else
+        {
+            echo "<div class='information'>WARNING : incorrect email or/and key.</div>";
         }
     }
 }
