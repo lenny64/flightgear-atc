@@ -16,8 +16,8 @@
         </tr>
         <tr>
             <td>Download</td>
-            <td><a href="http://wiki.flightgear.org/OpenRadarDownload">Latest stable</a></td>
-            <td><a href="https://gitorious.org/atc-pie/atc-pie/archive/master.tar.gz">Latest stable (.tar.gz)</a></td>
+            <td><a href="http://wiki.flightgear.org/OpenRadarDownload" target="_blank">Latest stable</a></td>
+            <td><a href="https://gitlab.com/atc-pie/atc-pie/repository/archive.tar.gz" target="_blank">Latest stable (.tar.gz)</a></td>
         </tr>
         <tr>
             <td>Developer</td>
@@ -26,8 +26,8 @@
         </tr>
         <tr>
             <td>Wiki page</td>
-            <td><a href="http://wiki.flightgear.org/OpenRadar">Flightgear Wiki</a></td>
-            <td><a href="http://wiki.flightgear.org/ATC-pie">Flightgear Wiki</a></td>
+            <td><a href="http://wiki.flightgear.org/OpenRadar" target="_blank">Flightgear Wiki</a></td>
+            <td><a href="http://wiki.flightgear.org/ATC-pie" target="_blank">Flightgear Wiki</a></td>
         </tr>
     </table>
 </p>

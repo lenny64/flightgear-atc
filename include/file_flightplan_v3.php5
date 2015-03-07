@@ -184,11 +184,11 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             {
                 if ($h == date('H'))
                 {
-                    echo "<option value='".$h."' selected='selected'>".sprintf("%02d",$h)."</option>";
+                    echo "<option value='".sprintf("%02d",$h)."' selected='selected'>".sprintf("%02d",$h)."</option>";
                 }
                 else
                 {
-                    echo "<option value='".$h."'>".sprintf("%02d",$h)."</option>";
+                    echo "<option value='".sprintf("%02d",$h)."'>".sprintf("%02d",$h)."</option>";
                 }
             }
             ?>

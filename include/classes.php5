@@ -623,6 +623,10 @@ class Flightplan
             {
                 $this->error[] = 'invalid arrival time '.$this->arrivalTime;
             }
+            if ($this->departureTime == $this->arrivalTime)
+            {
+                $this->error[] = "arrival time can't be the same than departure time";
+            }
             if ($this->dateDeparture == NULL)
             {
                 $this->error[] = 'invalid departure date';
