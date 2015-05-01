@@ -468,7 +468,8 @@ class SpecialEvent
     public $title;
     public $description;
     public $url;
-    public $dateTimeCreation;
+    public $dateBegin;
+    public $dateEnd;
     public $dateEvent;
     public $valid = TRUE;
     public $eventsList = Array();
@@ -490,6 +491,38 @@ class SpecialEvent
         }
     }
     
+    public function addEventToSpecialEvent($eventId, $userId)
+    {
+        if (isset($eventId) AND isset($userId))
+        {
+            if ($eventId != NULL AND $userId != NULL)
+            {
+                global $db;
+                
+                // We check if the event is already listed
+                if (array_search($eventId, $this->eventsList) === false)
+                {
+                    $preparedQuery = $db->prepare("INSERT INTO specialEvents_airports VALUES('','$this->id','$eventId','$userId','1');");
+                    $preparedQuery->execute();
+                }
+            }
+        }
+    }
+    
+    public function removeEventFromSpecialEvent($eventId)
+    {
+        if (isset($eventId))
+        {
+            if ($eventId != NULL)
+            {
+                global $db;
+                
+                $preparedQuery = $db->prepare("DELETE FROM specialEvents_airports WHERE eventId = $eventId;");
+                $preparedQuery->execute();
+            }
+        }
+    }
+    
     public function selectById($id)
     {
         if (isset($id))
@@ -507,7 +540,8 @@ class SpecialEvent
                 $this->title = $specialEvent['title'];
                 $this->description = $specialEvent['description'];
                 $this->url = $specialEvent['url'];
-                $this->dateTimeCreation = $specialEvent['dateTime'];
+                $this->dateBegin = $specialEvent['dateBegin'];
+                $this->dateEnd = $specialEvent['dateEnd'];
                 
                 /* EVENT LIST */
                 // We make a query returning specialEventId and eventId

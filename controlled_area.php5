@@ -31,27 +31,21 @@
 					LIME : Usually on weekdays
 				</li>
 				<li>
-					LIPA : Sat. afternoon, sunday evening and some weekdays
+					LIPA : Sat. and Thu. evenings
 				</li>
 				<li>
-					LIPQ : Sat. afternoon
+					LIPQ : Sun. evenings
 				</li>
 				<li>
 					LIPX : Sat. evening, Sunday afternoon
-				</li>
-				<li>
-					LIPZ : Evening
-				</li>
-				<li>
-					LSZS : On weekdays
 				</li>
 			</ul>
 			- For more info please visit : <a href="http://forum.flightgear.org/viewtopic.php?f=10&t=21959" target="_blank">the Flightgear official topic</a> and <a href="https://plus.google.com/113151232487920064268/about" target="_blank">the Google+ page</a>
 		<li><b>PANC Ted Stevens Anchorage (Alaska, USA)</b></li>
 			- Controlled on Saturdays and Sundays
                 <li><b>KLSV Nellis Air Force Base (Nevada, USA)</b></li>
-                    - Controlled on wednesday evenings<br/>
-                    - For more info visit : <a href="http://www.nellis.af.mil" target="_blank">www.nellis.af.mil</a>
+                    - Usually controlled on Wednesday evenings<br/>
+                    - For more info visit : <a href="http://www.nellis.af.mil" target="_blank">www.nellis.af.mil</a> (official website) and <a href="http://wiki.flightgear.org/KLSV" target="_blank">the Flightgear wiki page</a>
                 <li><b>LEBL Barcelona El-Prat (Barcelona, Spain)</b></li>
                     - Controlled weekly from 16:00 to 22:00 UTC<br/>
                     - More info on the forum <a href="http://forum.flightgear.org/viewtopic.php?f=10&t=24739" target="_blank">the Flightgear official topic</a>
@@ -64,6 +58,14 @@
                 <li><b>EIDW (Dublin, Ireland)</b></li>
                     - Controlled on Saturdays from 14:00 to 18:00 UTC<br/>
                     - Controlled on Sundays from 12:00 to 18:00 UTC<br/>
+                <li><b>EDDK (Cologne, Germany)</b></li>
+                    - Controlled at least on Fridays and Saturdays from 17:00 to 19:00 UTC<br/>
+                    - More info on this <a href="http://glidotalks.blogspot.in" target="_blank">website</a><br/>
+                <li><b>ETAR  Ramstein Air Base (Kaiserslautern, Germany)</b></li>
+                    - Usually controlled on Friday evenings.<br/>
+                    - Near to EDDF<br/>
+                    - All sessions are planned by USAF_RS<br/>
+                    - For more info visit <a href="http://www.ramstein.af.mil" target="_blank">www.ramstein.af.mil</a> (official website) and <a href="http://wiki.flightgear.org/ETAR" target="_blank">the Flightgear wiki page</a><br/>
 	</ul>
 </p>
 

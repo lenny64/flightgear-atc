@@ -21,6 +21,33 @@ if (isset($_GET['changeFlightplan']) AND isset($_GET['status']))
     }
 }
 
+// SPECIAL EVENTS
+if (isset($_POST['specialEventId']) AND isset($_POST['eventId']))
+{
+    if ($_POST['specialEventId'] != NULL AND $_POST['eventId'] != NULL)
+    {
+        $specialEventId = $_POST['specialEventId'];
+        $eventId = $_POST['eventId'];
+        $userId = $User->id;
+        
+        $SpecialEvent = new SpecialEvent();
+        $SpecialEvent->selectById($specialEventId);
+        
+        if ($_POST['operation'] == 'add')
+        {
+            $SpecialEvent->addEventToSpecialEvent($eventId, $userId);
+            echo "<div class='information'>Your event has successfully been added to ".$SpecialEvent->title.".</div>";
+        }
+        
+        else if ($_POST['operation'] == 'remove')
+        {
+            $SpecialEvent->removeEventFromSpecialEvent($eventId);
+            echo "<div class='information'>Your event has successfully been removed from ".$SpecialEvent->title.".</div>";
+        }
+        
+    }
+}
+
 // If the notifications or parameters are changing
 if (isset($_POST['change_settings']))
 {	
@@ -52,6 +79,7 @@ if (isset($_POST['change_settings']))
 ?>
 
 <div class="new">
+    <h1>Settings</h1>
     <form action="./dashboard.php5" method="post">
         <input type="hidden" name="change_settings"/>
         <input type="checkbox" name="flightplan_notification" value="1" <?php if ($User->notifications == true) echo "checked";?>/> I want to be notified once a flightplan is filed (<?php echo $User->mail;?>)
@@ -83,7 +111,7 @@ foreach ($events as $event)
     
     ?>
 <div class="dashboard_atcSession">
-	<span class="event_location"><?php echo $Event->date;?> at <?php echo $airport['ICAO'];?></span> 
+	<span class="event_location"><?php echo $airport['ICAO'];?></span> 
 	<a href="./edit_event.php5?eventId=<?php echo $Event->id;?>">Edit event</a>
 	<div class='event_flightplan' style='display:block;'>
 		<h5>Date</h5>
@@ -101,6 +129,65 @@ foreach ($events as $event)
 		<br/>
 		<?php echo $Event->remarks; ?>
 	</div>
+        <br/>
+        <div class="event_specialEvents">
+            <h3>Special Events</h3>
+            <?php
+            // PART RELATIVE TO SPECIAL EVENTS
+
+            // We limit the airports associated to a special event to 2 days
+            $limitDateEvent = date('Y-m-d', strtotime($Event->date." +3 days"));
+            // In any case we select all the special events
+            $specialEvents_list = $db->query("SELECT specialEventsId FROM specialEvents_events WHERE dateBegin <= '$Event->date' AND dateEnd >= '$Event->date'");
+            // We go through them
+            if ($specialEvents_list->rowCount() > 0)
+            {
+                foreach ($specialEvents_list as $specialEvents)
+                {
+                    echo "<div class='event_specialEvent'>";
+                    // We select the specialEvent
+                    $SpecialEvent = new SpecialEvent();
+                    $SpecialEvent->selectById($specialEvents['specialEventsId']);
+                    
+                    echo "<h4>".$SpecialEvent->title."</h4>";
+
+                    echo "A special event occurs on ".date('l F d', strtotime($SpecialEvent->dateBegin))." with the title '".$SpecialEvent->title."'.<br/>";
+
+                    // We check if the event is already listed
+                    if (array_search($Event->id, $SpecialEvent->eventsList) === false)
+                    { ?>
+                    Would you like to add your event to this gig?
+                    <form method="post" action="./dashboard.php5">
+                        <input type="hidden" name="specialEventId" value="<?php echo $SpecialEvent->id;?>"/>
+                        <input type="hidden" name="eventId" value="<?php echo $Event->id;?>"/>
+                        <input type="hidden" name="operation" value="add"/>
+                        <input type="submit" value="+ Add to the <?php echo $SpecialEvent->title; ?> Special Event"/>
+                    </form>
+                    <?php
+                    }
+                    else
+                    { ?>
+                    Would you like to remove your event from this gig?
+                    <form method="post" action="./dashboard.php5">
+                        <input type="hidden" name="specialEventId" value="<?php echo $SpecialEvent->id;?>"/>
+                        <input type="hidden" name="eventId" value="<?php echo $Event->id;?>"/>
+                        <input type="hidden" name="operation" value="remove"/>
+                        <input type="submit" value="- Remove from the Special Event : <?php echo $SpecialEvent->title; ?>" class="remove"/>
+                    </form>
+                    <?php
+                    }
+                    echo "</div>";
+                }
+            }
+            else
+            {
+                echo "<div class='event_specialEvent'>";
+                echo "Sorry, there are no Special Events occurring at this date. <a href='./contact.php5'>Contact us</a> to propose a new Special Event.";
+                echo "</div>";
+            }
+            ?>
+            <a href="./faq.php5"/>What's this ?</a>
+        </div>
 
 	<ul>
 		

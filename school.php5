@@ -7,6 +7,13 @@
 
 <h3>Flight School</h3>
 
+<h4>Short PDF Tutorials</h4>
+<h5>Communication</h5>
+<div class="tutorial_list">
+    <div class="tutorial_item">Hello grdrsfdrfrfdsfdf grsdfds desdqd fdsqf dsqf</div><div class="tutorial_item">Hello fsdfdsf dsfds fds fds fdsf dsfd sf</div><div class="tutorial_item">Hello dsfqdsfq dqfd sqfdsqf dsqfd qfd qfdsq fqdsf</div>
+</div>
+
+
 <h4>Introducing Flight plan Suggestions</h4>
 <p class="normal_content">
     Flight plan Suggestions aim to help pilots increasing their skills and knowledge. They are short documents trying focusing on simple courses while guiding pilots flying from an airport to an other.

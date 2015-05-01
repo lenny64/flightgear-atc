@@ -17,7 +17,7 @@
         <tr>
             <td>Download</td>
             <td><a href="http://wiki.flightgear.org/OpenRadarDownload" target="_blank">Latest stable</a></td>
-            <td><a href="https://gitlab.com/atc-pie/atc-pie/repository/archive.tar.gz" target="_blank">Latest stable (.tar.gz)</a></td>
+            <td><a href="http://sourceforge.net/projects/atc-pie/" target="_blank">Latest stable (.tar.gz)</a></td>
         </tr>
         <tr>
             <td>Developer</td>

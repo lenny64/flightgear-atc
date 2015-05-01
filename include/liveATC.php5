@@ -12,20 +12,24 @@ $allContacts = json_decode($rawContent, TRUE);
 // List of ATCS
 $atcs = Array();
 
-// For each "pilot" we see
-foreach ($allContacts['pilots'] as $pilot)
+// If there are contacts
+if ($allContacts != NULL)
 {
-    // We gather all info relevant to this pilot
-    foreach($pilot as $information => $value)
-    {
-        // We focus on the pilot's aircraft
-        if ($information == "aircraft" AND (array_search(strtolower($value), $atc_models) !== FALSE))
-        {
-            $atcs[$pilot['callsign']]['callsign'] = strtoupper($pilot['callsign']);
-            $atcs[$pilot['callsign']]['latitude'] = $pilot['latitude'];
-            $atcs[$pilot['callsign']]['longitude'] = $pilot['longitude'];
-        }
-    }
+	// For each "pilot" we see
+	foreach ($allContacts['pilots'] as $pilot)
+	{
+		// We gather all info relevant to this pilot
+		foreach($pilot as $information => $value)
+		{
+			// We focus on the pilot's aircraft
+			if ($information == "aircraft" AND (array_search(strtolower($value), $atc_models) !== FALSE))
+			{
+				$atcs[$pilot['callsign']]['callsign'] = strtoupper($pilot['callsign']);
+				$atcs[$pilot['callsign']]['latitude'] = $pilot['latitude'];
+				$atcs[$pilot['callsign']]['longitude'] = $pilot['longitude'];
+			}
+		}
+	}
 }
 
 function getAirportByCoordinates($lon,$lat)

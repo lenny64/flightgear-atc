@@ -52,9 +52,7 @@ h3 { color: #71c837; font-size: 1.6em; clear: both; margin-left: 4%;}
 
 h4 { margin-left: 4%; color: #333; font-size: 1.1em; }
 
-h5 {
-    margin-bottom: 0.5%;
-}
+h5 { margin-bottom: 0.5%; margin-left: 5%; }
 
 input, textarea {
     border: solid 1px #a0c0ff;
@@ -171,12 +169,14 @@ form.daySelection {
 
 /* NEW */
 .new {
-    background-color: #F0F0FF;
-    padding: 0.5% 0% 0.5% 4%;
+    background-color: #ddddff;
+    padding: 1% 0% 1% 4%;
     font-size: 0.8em;
     color: #666;
-    border-left: solid 1px #C0C0ee;
-    margin: 0 0 5% 0%;
+    margin: 0 1% 5% 1%;
+    -moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .warning {

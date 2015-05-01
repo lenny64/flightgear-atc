@@ -300,7 +300,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
         <input type="text" size="2" id="apt_endMinutes" name="<?php echo $requiredFields[10];?>"/> UTC
         
         <h2>Communication</h2>
-        <span class="new_event_entry_field">FGCom frequency</span> <input type="text" size="4" name="newSessionFGCOM" id="apt_fgcom"/> <span class="input_example">e.g. 120.50</span>
+        <span class="new_event_entry_field">FGCom frequency</span> <input type="text" size="25" name="newSessionFGCOM" id="apt_fgcom"/> <span class="input_example">e.g. 120.50</span>
         <br/>
         and/or
         <br/>
