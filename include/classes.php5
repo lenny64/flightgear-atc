@@ -36,7 +36,7 @@ class User
         {
             // We put it inside the "cookie" column
             $preparedQuery = $db->prepare("UPDATE users SET `cookie` = :userCookieId WHERE `userId` = :userId;");
-            $preparedQuery->execute(array(":userCookieId" => $this->userCookieId, ":userId" => $this->id));
+            $preparedQuery->execute(array(":userCookieId" => purgeInputs($this->userCookieId), ":userId" => purgeInputs($this->id)));
         }
     }
 
@@ -76,9 +76,12 @@ class User
         }
     }
     
-    public function create($Mail,$Password,$IP)
+    public function create($submittedMail,$submittedPassword,$IP)
     {
         global $db;
+        
+        $Mail = purgeInputs($submittedMail);
+        $Password = purgeInputs($submittedPassword);
         
         // We get the list of users
         $users_list = $db->query("SELECT userId, mail, password FROM users");
@@ -104,7 +107,7 @@ class User
                     {
                         $this->ip = $IP;
                         $preparedQuery = $db->prepare("UPDATE users SET ip = :ip WHERE userId = :userId;");
-                        $preparedQuery->execute(array(":ip" => $IP, ":userId" => $this->id));
+                        $preparedQuery->execute(array(":ip" => purgeInputs($IP), ":userId" => purgeInputs($this->id)));
                     }
                     
                     $_SESSION['id'] = $this->id;
@@ -134,7 +137,7 @@ class User
         if ($this->requestNewUser == true)
         {
             $preparedQuery = $db->prepare("INSERT INTO `users` VALUES('',:Mail,:Password,:IP,'0','','');");
-            $preparedQuery->execute(array(":Mail" => $Mail, ":Password" => $Password, ":IP" => $IP));
+            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs($Password), ":IP" => purgeInputs($IP)));
             $_SESSION['mode'] = 'connected';
             $_SESSION['id'] = getInfo('userId', 'users', 'mail', $Mail);
             $this->id = $_SESSION['id'];
@@ -197,7 +200,7 @@ class User
         global $db;
         
         $preparedQuery = $db->prepare("UPDATE users SET notifications=:notification WHERE userId=:userId;");
-        $preparedQuery->execute(array(":notification" => $notification, ":userId" => $this->id));
+        $preparedQuery->execute(array(":notification" => purgeInputs($notification), ":userId" => purgeInputs($this->id)));
         $this->notifications = $notification;
     }
     
@@ -207,9 +210,13 @@ class User
     {
         global $db;
         
-	$jsonUserParameters = json_encode($parameters);
+        foreach ($parameters as $parameter => $value)
+        {
+            $checkedParameters[$parameter] = purgeInputs($value);
+        }
+	$jsonUserParameters = json_encode($checkedParameters);
         $preparedQuery = $db->prepare("UPDATE users SET userParameters=:jsonUserParameters WHERE userId=:userId;");
-        $preparedQuery->execute(array(":jsonUserParameters" => $jsonUserParameters, ":userId" => $this->id));
+        $preparedQuery->execute(array(":jsonUserParameters" => $jsonUserParameters, ":userId" => purgeInputs($this->id)));
         $this->parameters = $parameters;
     }
     
@@ -217,9 +224,10 @@ class User
      * it would appear when a session is shown on the main page
      * /!\ Requires the "users_names" table
      */
-    public function changeName($name)
+    public function changeName($submittedName)
     {
         global $db;
+        $name = purgeInputs($submittedName);
         $preparedQuery = $db->prepare("INSERT INTO users_names VALUES ('',:userId,:name)");
         $preparedQuery->execute(array(":userId" => $this->id, ":name" => $name));
         $this->name = $name;
@@ -239,8 +247,8 @@ class Airport
     {
         global $db;
         
-        $this->name         =   $AirportName;
-        $this->icao         =   $AirportICAO;
+        $this->name         =   purgeInputs($AirportName);
+        $this->icao         =   purgeInputs($AirportICAO);
         
         // We get the list of airports
         $airports_list = $db->query("SELECT * FROM airports");
@@ -393,15 +401,15 @@ class Event
                 :remarks);");
             
             $statement->execute(array(
-                ':airportICAO'      =>  $this->airportICAO,
-                ':userId'           =>  $this->userId,
-                ':date'             =>  $this->date,
-                ':beginTime'        =>  $this->beginTime,
-                ':endTime'          =>  $this->endTime,
-                ':fgcom'            =>  $this->fgcom,
-                ':teamspeak'        =>  $this->teamspeak,
-                ':docsLink'         =>  $this->docsLink,
-                ':remarks'          =>  $this->remarks));
+                ':airportICAO'      =>  purgeInputs($this->airportICAO),
+                ':userId'           =>  purgeInputs($this->userId),
+                ':date'             =>  purgeInputs($this->date),
+                ':beginTime'        =>  purgeInputs($this->beginTime),
+                ':endTime'          =>  purgeInputs($this->endTime),
+                ':fgcom'            =>  purgeInputs($this->fgcom),
+                ':teamspeak'        =>  purgeInputs($this->teamspeak),
+                ':docsLink'         =>  purgeInputs($this->docsLink),
+                ':remarks'          =>  purgeInputs($this->remarks)));
             
             $this->id = $db->lastInsertId();
             $this->eventCreated = true;
@@ -440,24 +448,84 @@ class Event
         }
     }
     
-    public function updateEvent($infos)
+    public function updateEvent()
     {
-        $string = '';
         if ($_SESSION['mode'] == 'connected')
         {
             global $db;
             
-            $nbInfos = sizeof($infos);
-            $i = 1;
-            foreach ($infos as $info => $value)
+            $this->id = purgeInputs($this->id);
+            $this->airportICAO = purgeInputs($this->airportICAO);
+            $this->date = purgeInputs($this->date);
+            $this->beginTime = purgeInputs($this->beginTime);
+            $this->endTime = purgeInputs($this->endTime);
+            $this->fgcom = purgeInputs($this->fgcom);
+            $this->teamspeak = purgeInputs($this->teamspeak);
+            $this->transitionLevel = purgeInputs($this->transitionLevel);
+            $this->runways = purgeInputs($this->runways);
+            $this->ils = purgeInputs($this->ils);
+            $this->docsLink = purgeInputs($this->docsLink);
+            $this->remarks = purgeInputs($this->remarks);
+            
+            $query = "UPDATE `events` SET
+                `airportICAO` = :airportICAO,
+                `date` = :date,
+                `beginTime` = :beginTime,
+                `endTime` = :endTime,
+                `fgcom` = :fgcom,
+                `teamspeak` = :teamspeak,
+                `transitionLevel` = :transitionLevel,
+                `runways` = :runways,
+                `ILS` = :ils,
+                `docsLink` = :docsLink,
+                `remarks` = :remarks 
+                WHERE `eventId` = :eventId ;";
+            
+            $preparedQuery = $db->prepare($query);
+            
+            $preparedQuery->bindValue(":airportICAO",$this->airportICAO);
+            $preparedQuery->bindValue(":date",$this->date);
+            $preparedQuery->bindValue(":beginTime",$this->beginTime);
+            $preparedQuery->bindValue(":endTime",$this->endTime);
+            $preparedQuery->bindValue(":fgcom",$this->fgcom);
+            $preparedQuery->bindValue(":teamspeak",$this->teamspeak);
+            $preparedQuery->bindValue(":transitionLevel",$this->transitionLevel);
+            $preparedQuery->bindValue(":runways",$this->runways);
+            $preparedQuery->bindValue(":ils",$this->ils);
+            $preparedQuery->bindValue(":docsLink",$this->docsLink);
+            $preparedQuery->bindValue(":remarks",$this->remarks);
+            $preparedQuery->bindValue(":eventId",$this->id);
+            
+            if ($preparedQuery->execute())
             {
-                if ($i == $nbInfos) $string .= "`".$info."`='".$value."'";
-                else $string .= "`".$info."`='".htmlspecialchars($value)."',";
-                $i++;
+                return true;
             }
-            $preparedQuery = $db->prepare("UPDATE events SET $string WHERE `eventId`=".$infos['eventId'].";");
-            $preparedQuery->execute();
+            else
+            {
+                return false;
+            }
+            
         }
+    }
+    
+    public function getATCSessions($beginDate,$limitDate)
+    {
+        // Return the Ids' of events between beginDate and endDate
+        global $db;
+        
+        $events = Array();
+        
+        $eventsList = $db->query("SELECT eventId FROM events WHERE date >= '$beginDate' AND date <= '$limitDate'");
+        
+        if ($eventsList != NULL)
+        {
+            foreach ($eventsList as $event)
+            {
+                $events[] = $event['eventId'];
+            }
+        }
+        
+        return $events;
     }
 }
 
@@ -483,7 +551,12 @@ class SpecialEvent
             {
                 global $db;
                 
-                $preparedQuery = $db->prepare("INSERT INTO specialEvents_pilots VALUES('','$this->id','$callsign','$participation',NOW());");
+                $preparedQuery = $db->prepare("INSERT INTO specialEvents_pilots VALUES('',:id,:callsign,:participation,NOW());");
+                
+                $preparedQuery->bindValue(':id',purgeInputs($this->id));
+                $preparedQuery->bindValue(':callsign',purgeInputs($callsign));
+                $preparedQuery->bindValue(':participation',purgeInputs($participation));
+                
                 $preparedQuery->execute();
                 $this->pilotsList = Array();
                 $this->selectById($this->id);
@@ -502,7 +575,12 @@ class SpecialEvent
                 // We check if the event is already listed
                 if (array_search($eventId, $this->eventsList) === false)
                 {
-                    $preparedQuery = $db->prepare("INSERT INTO specialEvents_airports VALUES('','$this->id','$eventId','$userId','1');");
+                    $preparedQuery = $db->prepare("INSERT INTO specialEvents_airports VALUES('',:id,:eventId,:userId,'1');");
+                    
+                    $preparedQuery->bindValue(':id',purgeInputs($this->id));
+                    $preparedQuery->bindValue(':callsign',purgeInputs($eventId));
+                    $preparedQuery->bindValue(':participation',purgeInputs($userId));
+                    
                     $preparedQuery->execute();
                 }
             }
@@ -740,33 +818,33 @@ class Flightplan
             // I insert the flightplan into DB
             $preparedQuery = $db->prepare("INSERT INTO flightplans20140113 VALUES('','',:callsign,:airline,:flightNumber,:departureAirport,:arrivalAirport,:alternateDestination,:cruiseAltitude,:trueAirspeed,:dateDeparture,:dateArrival,:departureTime,:arrivalTime,:aircraftType,:soulsOnBoard,:fuelTime,:pilotName,:waypoints,:category,:comments,'','');");
             $preparedQuery->execute(array(
-                ":callsign"             =>  $this->callsign,
-                ":airline"              =>  $this->airline,
-                ":flightNumber"         =>  $this->flightNumber,
-                ":departureAirport"     =>  $this->departureAirport,
-                ":arrivalAirport"       =>  $this->arrivalAirport,
-                ":alternateDestination" =>  $this->alternateDestination,
-                ":cruiseAltitude"       =>  $this->cruiseAltitude,
-                ":trueAirspeed"         =>  $this->trueAirspeed,
-                ":dateDeparture"        =>  $this->dateDeparture,
-                ":dateArrival"          =>  $this->dateArrival,
-                ":departureTime"        =>  $this->departureTime,
-                ":arrivalTime"          =>  $this->arrivalTime,
-                ":aircraftType"         =>  $this->aircraftType,
-                ":soulsOnBoard"         =>  $this->soulsOnBoard,
-                ":fuelTime"             =>  $this->fuelTime,
-                ":pilotName"            =>  $this->pilotName,
-                ":waypoints"            =>  $this->waypoints,
-                ":category"             =>  $this->category,
-                ":comments"             =>  $this->comments,
+                ":callsign"             => purgeInputs($this->callsign),
+                ":airline"              =>  purgeInputs($this->airline),
+                ":flightNumber"         =>  purgeInputs($this->flightNumber),
+                ":departureAirport"     =>  purgeInputs($this->departureAirport),
+                ":arrivalAirport"       =>  purgeInputs($this->arrivalAirport),
+                ":alternateDestination" =>  purgeInputs($this->alternateDestination),
+                ":cruiseAltitude"       =>  purgeInputs($this->cruiseAltitude),
+                ":trueAirspeed"         =>  purgeInputs($this->trueAirspeed),
+                ":dateDeparture"        =>  purgeInputs($this->dateDeparture),
+                ":dateArrival"          =>  purgeInputs($this->dateArrival),
+                ":departureTime"        =>  purgeInputs($this->departureTime),
+                ":arrivalTime"          =>  purgeInputs($this->arrivalTime),
+                ":aircraftType"         =>  purgeInputs($this->aircraftType),
+                ":soulsOnBoard"         =>  purgeInputs($this->soulsOnBoard),
+                ":fuelTime"             =>  purgeInputs($this->fuelTime),
+                ":pilotName"            =>  purgeInputs($this->pilotName),
+                ":waypoints"            =>  purgeInputs($this->waypoints),
+                ":category"             =>  purgeInputs($this->category),
+                ":comments"             =>  purgeInputs($this->comments),
             ));
             $this->id = $db->lastInsertId();
             // I also insert the default comment entered by the pilot
             $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:callsign,:comments,'".date("Y-m-d H:i:s")."');");
-            $preparedQuery->execute(array(":id" => $this->id, ":callsign" => $this->callsign, ":comments" => $this->comments));
+            $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":callsign" => purgeInputs($this->callsign), ":comments" => purgeInputs($this->comments)));
             // I also insert the status of the flightplan
             $preparedQuery = $db->prepare("INSERT INTO flightplan_status VALUES('','9999',:id,:status,'".date("Y-m-d H:i:s")."');");
-            $preparedQuery->execute(array(":id" => $this->id, ":status" => $this->status));
+            $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":status" => purgeInputs($this->status)));
 
             // We get the ATC user ID
             $dep_ATCiD = $db->query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1");
@@ -920,26 +998,26 @@ class Flightplan
                     WHERE flightplanId = :flightplanId;");
 
             $preparedQuery->execute(array(
-                ":callsign"             =>  $this->callsign,
-                ":airline"              =>  $this->airline,
-                ":flightNumber"         =>  $this->flightNumber,
-                ":departureAirport"     =>  $this->departureAirport,
-                ":arrivalAirport"       =>  $this->arrivalAirport,
-                ":alternateDestination" =>  $this->alternateDestination,
-                ":cruiseAltitude"       =>  $this->cruiseAltitude,
-                ":trueSpeed"            =>  $this->trueAirspeed,
-                ":dateDeparture"        =>  $this->dateDeparture,
-                ":dateArrival"          =>  $this->dateArrival,
-                ":departureTime"        =>  $this->departureTime,
-                ":arrivalTime"          =>  $this->arrivalTime,
-                ":aircraftType"         =>  $this->aircraftType,
-                ":soulsOnBoard"         =>  $this->soulsOnBoard,
-                ":fuelTime"             =>  $this->fuelTime,
-                ":pilotName"            =>  $this->pilotName,
-                ":waypoints"            =>  $this->waypoints,
-                ":category"             =>  $this->category,
-                ":comments"             =>  $this->comments,
-                ":flightplanId"         =>  $this->id
+                ":callsign"             =>  purgeInputs($this->callsign),
+                ":airline"              =>  purgeInputs($this->airline),
+                ":flightNumber"         =>  purgeInputs($this->flightNumber),
+                ":departureAirport"     =>  purgeInputs($this->departureAirport),
+                ":arrivalAirport"       =>  purgeInputs($this->arrivalAirport),
+                ":alternateDestination" =>  purgeInputs($this->alternateDestination),
+                ":cruiseAltitude"       =>  purgeInputs($this->cruiseAltitude),
+                ":trueSpeed"            =>  purgeInputs($this->trueAirspeed),
+                ":dateDeparture"        =>  purgeInputs($this->dateDeparture),
+                ":dateArrival"          =>  purgeInputs($this->dateArrival),
+                ":departureTime"        =>  purgeInputs($this->departureTime),
+                ":arrivalTime"          =>  purgeInputs($this->arrivalTime),
+                ":aircraftType"         =>  purgeInputs($this->aircraftType),
+                ":soulsOnBoard"         =>  purgeInputs($this->soulsOnBoard),
+                ":fuelTime"             =>  purgeInputs($this->fuelTime),
+                ":pilotName"            =>  purgeInputs($this->pilotName),
+                ":waypoints"            =>  purgeInputs($this->waypoints),
+                ":category"             =>  purgeInputs($this->category),
+                ":comments"             =>  purgeInputs($this->comments),
+                ":flightplanId"         =>  purgeInputs($this->id)
             ));
         }
     }
@@ -1048,9 +1126,12 @@ class Flightplan
             {
                 global $db;
                 
+                $pseudo = purgeInputs($pseudo);
+                $comment = purgeInputs($comment);
+                
                 // We insert the comment
                 $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:pseudo,:comment,:date);");
-                $preparedQuery->execute(array(":id" => $this->id, ":pseudo" => $pseudo, ":comment" => $comment, ":date" => date('Y-m-d H:i:s')));
+                $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":pseudo" => $pseudo, ":comment" => $comment, ":date" => date('Y-m-d H:i:s')));
                 echo "Comment added<br/>";
             }
         }
@@ -1065,8 +1146,8 @@ class Flightplan
                 global $db;
                 
                 $dateTime = date("Y-m-d H:i:s");
-                $this->lastUpdated = $dateTime;
-                $this->status = $status;
+                $this->lastUpdated = purgeInputs($dateTime);
+                $this->status = purgeInputs($status);
                 $preparedQuery = $db->prepare("INSERT INTO flightplan_status VALUES('',:userId,:flightplanId,:status,:dateTime);");
                 $preparedQuery->execute(array(":userId" => $userId, ":flightplanId" => $flightplanId, ":status" => $status, ":dateTime" => $dateTime));
             }
@@ -1082,10 +1163,10 @@ class Flightplan
                 global $db;
                 
                 $dateTime = date("Y-m-d H:i:s");
-                $this->lastUpdated = $dateTime;
-                $this->history[$variable] = array('value' => $value, 'dateTime' => $dateTime);
+                $this->lastUpdated = purgeInputs($dateTime);
+                $this->history[$variable] = array('value' => purgeInputs($value), 'dateTime' => purgeInputs($dateTime));
                 $preparedQuery = $db->prepare("INSERT INTO flightplan_history VALUES('',:flightplanId,:userId,:variable,:value,:dateTime);");
-                $preparedQuery->execute(array(":flightplanId" => $flightplanId, ":userId" => $userId, ":variable" => $variable, ":value" => $value, ":dateTime" => $dateTime));
+                $preparedQuery->execute(array(":flightplanId" => purgeInputs($flightplanId), ":userId" => purgeInputs($userId), ":variable" => purgeInputs($variable), ":value" => purgeInputs($value), ":dateTime" => $dateTime));
             }
         }
     }
@@ -1101,7 +1182,7 @@ class Flightplan
                 $this->email = $email;
                 $this->privateKey = substr(md5($email.$this->id),0,6);
                 $preparedQuery = $db->prepare("INSERT INTO flightplan_emails VALUES('', :id, :email, :privateKey, NOW());");
-                $preparedQuery->execute(array(":id" => $this->id, ":email" => $this->email, ":privateKey" => $this->privateKey));
+                $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":email" => purgeInputs($this->email), ":privateKey" => purgeInputs($this->privateKey)));
                 mail($this->email, $this->callsign.' : Your key to modify the flightplan '.$this->id, 'Good day ! To modify your flightplan, this is the key you will need : '.$this->privateKey);
             }
         }
@@ -1218,7 +1299,7 @@ class Poll
         {
                 // Insertion of the vote
                 $preparedQuery = $db->prepare("INSERT INTO polls_results VALUES('', :id, :answer, '', :ip, :date);");
-                $preparedQuery->execute(array(":id" => $this->id, ":answer" => $answer, ":ip" => $ip, ":date" => date('Y-m-d H:i:s')));
+                $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":answer" => purgeInputs($answer), ":ip" => purgeInputs($ip), ":date" => date('Y-m-d H:i:s')));
                 // We display a message
                 echo "<div class='warning'>Your vote has been accepted. Thank you.
                 <br/><br/>
@@ -1270,6 +1351,295 @@ class Cookie
 			return false;
 		}
 	}
+}
+
+class Depeche
+{
+    public $depecheId;
+    public $title;
+    public $content;
+    public $abstractImg;
+    public $type;
+    public $importance;
+    public $maxOccurences;
+    public $occurences; // For a selected depeche
+    public $dateValidated; // For a selected depeche
+    public $limitDateValidity; // For a selected depeche
+    public $validFrom;
+    public $validTo;
+    public $minNbControlledAirports;
+    public $maxNbControlledAirports;
+    public $controlledAirports; // To know which airports are controlled
+    public $conditions;
+    private $depecheList = Array();
+    public $validatedDepechesList = Array();
+        
+    public function selectDepecheById($id)
+    {
+        global $db;
+        
+        $listDepeches = $db->query("SELECT * FROM `depecheList`
+                LEFT JOIN depecheValidation ON depecheList.depecheId = depecheValidation.depecheIdValidated
+                WHERE depecheList.depecheId = $id
+                ORDER BY depecheValidation.depecheValidationId DESC LIMIT 0,1");
+        
+        if ($listDepeches != NULL)
+        {
+            $depeche = $listDepeches->fetch(PDO::FETCH_ASSOC);
+
+            $this->depecheId = $depeche['depecheId'];
+            $this->title = $depeche['title'];
+            $this->content = $depeche['content'];
+            $this->abstractImg = $depeche['abstractImg'];
+            $this->type = $depeche['type'];
+            $this->importance = $depeche['importance'];
+            $this->maxOccurences = $depeche['maxOccurences'];
+            $this->occurences = $depeche['occurences'];
+            $this->dateValidated = $depeche['dateValidated'];
+            $this->limitDateValidity = $depeche['limitDateValidity'];
+            $this->validFrom = $depeche['validFrom'];
+            $this->validTo = $depeche['validTo'];
+            $this->minNbControlledAirports = $depeche['minNbControlledAirports'];
+            $this->maxNbControlledAirports = $depeche['maxNbControlledAirports'];
+            $this->controlledAirports = explode(',',$depeche['controlledAirports']);
+            $this->conditions = $depeche['conditions'];
+        }
+    }
+    
+    public function listAvailableDepeches()
+    {
+        global $db;
+        
+        $listSqlDepeches = $db->query("SELECT * FROM depecheList WHERE
+                (validFrom >= DATE(NOW()) OR validFrom IS NULL)
+                AND (validTo >= DATE(NOW()) OR validTo IS NULL)");
+        
+        $this->depecheList = Array();
+        
+        if ($listSqlDepeches != NULL)
+        {
+            foreach ($listSqlDepeches as $depeche)
+            {
+                $this->depecheList[] = $depeche['depecheId'];
+            }
+        }
+        
+        return $this->depecheList;
+    }
+    
+    public function validateDepeche()
+    {
+        global $db;
+        
+        // We first list available depeches
+        $this->listAvailableDepeches();
+        
+        // We initialize an array with potential depeches
+        $potentialDepeche = Array();
+        
+        // If there are no depeches, we can't do anything ...
+        if (empty($this->depecheList))
+        {
+        }
+        
+        
+        // If there is at least one depeche
+        else
+        {
+            // Get number of controlled airports
+            $ATCSessions = new Event();
+            $controlledAirports = $ATCSessions->getATCSessions(date('Y-m-d'), date('Y-m-d'));
+            $nbControlledAirports = sizeof($controlledAirports);
+
+            // We list all depeches available
+            // !!! WARNING THIS IS THE ENGINE OF DEPECHE GENERATION !!!
+            foreach ($this->depecheList as $depeche)
+            {
+                $this->selectDepecheById($depeche);
+                
+                /*
+                // STEP 1 : number of controlled airports
+                if ($nbControlledAirports >= $this->minNbControlledAirports AND $nbControlledAirports <= $this->maxNbControlledAirports)
+                {
+                    // STEP 2 : occurences < maxOccurences
+                    // The occurence can be > maxOccurences if the validation date is prior to 1 week
+                    if ($this->occurences <= $this->maxOccurences OR ($this->occurences > $this->maxOccurences AND $this->dateValidated <= date('Y-m-d',strtotime(date('Y-m-d')." - 7 days"))))
+                    {
+                        // We put this data into the potentialDepeche array
+                        $potentialDepeche['depecheId'][$this->depecheId] = $this->depecheId;
+                        $potentialDepeche['importance'][$this->depecheId] = $this->importance;
+                        $potentialDepeche['conditions'][$this->depecheId] = $this->conditions;
+                        $potentialDepeche['occurences'][$this->depecheId] = $this->occurences;
+                        $potentialDepeche['maxOccurences'][$this->depecheId] = $this->maxOccurences;
+                        $potentialDepeche['occurenceRatio'][$this->depecheId] = $this->occurences/$this->maxOccurences;
+                        
+                        $ponderationOccurences = 5;
+                        $ponderationImportance = 7;
+                        $score[$this->depecheId] = ((1/($this->occurences/$this->maxOccurences+1)*$ponderationOccurences) + (($this->importance/10)*$ponderationImportance))/($ponderationImportance+$ponderationOccurences);
+                        
+                        $potentialDepeche['score'][$this->depecheId] = $score[$this->depecheId];
+                    }
+                }
+                 */
+                
+                /**************************************
+                 * ********** NEW SCORE DEBUG *********/
+                
+                // We put this data into the potentialDepeche array
+                $debugDepeche['depecheId'][$this->depecheId] = $this->depecheId;
+                $debugDepeche['importance'][$this->depecheId] = $this->importance;
+                $debugDepeche['conditions'][$this->depecheId] = $this->conditions;
+                $debugDepeche['occurences'][$this->depecheId] = $this->occurences;
+                $debugDepeche['maxOccurences'][$this->depecheId] = $this->maxOccurences;
+                $debugDepeche['occurenceRatio'][$this->depecheId] = $this->occurences/$this->maxOccurences;
+                // Defining the timelapse
+                $lastValidationDate = $db->query("SELECT `dateValidated` FROM depecheValidation WHERE depecheIdValidated = $this->depecheId ORDER BY dateValidated DESC LIMIT 0,1");
+                foreach ($lastValidationDate as $validationDate)
+                {
+                    $dateValidated = new DateTime($validationDate[0]);
+                    $dateToday = new DateTime(date("Y-m-d H:i:s"));
+                    $interval = $dateValidated->diff($dateToday);
+                    $timelapse = $interval->d;
+                }
+                
+                $ponderationImportance = 7;
+                $ponderationOccurences = 5;
+                
+                $importance = $this->importance/10;
+                
+                $factor1 = 1-1/(1+($timelapse-$this->occurences+1)/($this->occurences+1*10));
+                $factor2 = (($factor1*$ponderationOccurences)+($importance*$ponderationImportance))/($ponderationImportance+$ponderationOccurences);
+                $score2[$this->depecheId] = abs($factor2);
+                
+                // STEP 1 : number of controlled airports
+                if ($nbControlledAirports >= $this->minNbControlledAirports AND $nbControlledAirports <= $this->maxNbControlledAirports)
+                {
+                    $potentialDepeche['score'][$this->depecheId] = $score2[$this->depecheId];
+                }
+                
+            }
+            
+            // FOR DEBUG
+            if ($score2 != NULL)
+            {
+                $insertScoreQuery = $db->prepare("INSERT INTO depecheStats VALUES('',:date,:score);");
+                $insertScoreQuery->execute(array(":date"=>date('Y-m-d'),":score"=>serialize($score2)));
+            }
+            
+            // If there are some potential depeches
+            if (!empty($potentialDepeche))
+            {
+                // We initialize the validated depeche and maxImportance variables
+                $validatedDepeche = 0;
+                $minScore = 0;
+                
+                ksort($potentialDepeche['score']);
+                foreach ($potentialDepeche['score'] as $depecheId => $value)
+                {
+                    if ($value > $minScore)
+                    {
+                        $validatedDepeche = $depecheId;
+                        $minScore = $value;
+                    }
+                }
+                
+                // We select the validated depeche
+                $this->selectDepecheById($validatedDepeche);
+                
+                // We increment the occurence
+                $this->occurences = $this->occurences + 1;
+                
+                // Date validated = limitDateValidity = today
+                //  (this can change !)
+                $this->dateValidated = date('Y-m-d');
+                $this->limitDateValidity = date('Y-m-d');
+                
+                // Controlled airports
+                $this->controlledAirports = $controlledAirports;
+                
+                // We insert the validated depeche into the table depecheValidation
+                $preparedQuery = $db->prepare("INSERT INTO depecheValidation VALUES('',:depecheId,:dateValidated,:limitDateValidity,:controlledAirports,:occurences);");
+                
+                $preparedQuery->bindValue(':depecheId',$this->depecheId);
+                $preparedQuery->bindValue(':dateValidated',$this->dateValidated);
+                $preparedQuery->bindValue(':limitDateValidity',$this->limitDateValidity);
+                // Implode is mandatory as it is an array
+                $preparedQuery->bindValue(':controlledAirports',implode(',',$this->controlledAirports));
+                $preparedQuery->bindValue(':occurences',$this->occurences);
+                $preparedQuery->execute();
+                
+            }
+        }
+    }
+    
+    public function listValidatedDepeche($day = NULL)
+    {
+        global $db;
+        
+        // If no day has been specified we select for today
+        if ($day == NULL)
+        {
+            $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE dateValidated = DATE(NOW())");
+        }
+        // Otherwise we select for the date that has been specified
+        else
+        {
+            $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE dateValidated = DATE($day)");
+        }
+        
+        // Are there some results ?
+        if ($listSqlValidatedDepeche != NULL)
+        {
+            $this->validatedDepechesList = $listSqlValidatedDepeche->fetch(PDO::FETCH_ASSOC);
+            // We select the depeche that is validated
+            $this->selectDepecheById($this->validatedDepechesList['depecheIdValidated']);
+        }
+        
+    }
+    
+    public function listAllAvailableDepeches()
+    {
+        global $db;
+        
+        $listAllAvailableDepeches = $db->query("SELECT depecheId FROM depecheList ORDER BY validFrom DESC");
+        
+        // We initialize the array
+        $this->depecheList = Array();
+        
+        if ($listAllAvailableDepeches != NULL)
+        {
+            // We select all the depecheId into the array
+            foreach ($listAllAvailableDepeches as $availableDepeche)
+            {
+                $this->depecheList[] = $availableDepeche['depecheId'];
+            }
+        }
+    }
+    
+    public function displayDepeche($content)
+    {
+        $controlledAirports = Array();
+        
+        if ($this->controlledAirports != NULL)
+        {
+            foreach ($this->controlledAirports as $eventId)
+            {
+                $controlledAirports[] = getInfo('airportICAO','events','eventId',$eventId);
+                $beginTime[] = getInfo('beginTime','events','eventId',$eventId);
+                $endTime[] = getInfo('endTime','events','eventId',$eventId);
+            }
+        }
+        
+        // Replaces AIRPORT with the single controlled airport
+        if (sizeof($controlledAirports) > 0)
+        {
+            $content = str_replace("AIRPORT",$controlledAirports[0],$content);
+            $content = str_replace("BEGIN_TIME",$beginTime[0],$content);
+            $content = str_replace("END_TIME",$endTime[0],$content);
+        }
+        
+        return $content;
+    }
 }
 
 ?>

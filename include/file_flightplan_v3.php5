@@ -65,16 +65,17 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
         <div class="flightplan_add_button" onclick="document.getElementById('file_flightplan-form').style.display='block'; document.getElementById('file_flightplan-date').value='<?php echo $currentDate;?>';">+ NEW FLIGHTPLAN</div>
         <?php
         
-        $events[$currentDate] = returnEvents($currentDate);
+        $flightplanEvents[$currentDate] = filterEvents('date', $currentDate, $events);
+        
         // Anyway we also show ATC events
         echo '<div class="flightplan_atcevents">';
         echo 'Controlled airports<br/>';
-        if ($events[$currentDate] != NULL)
+        if ($flightplanEvents[$currentDate] != NULL)
         {
-            foreach ($events[$currentDate] as $event)
+            foreach ($flightplanEvents[$currentDate] as $event)
             {
                 $Event = new Event();
-                $Event->selectById($event['Id']);
+                $Event->selectById($event);
                 echo "<b>".$Event->airportICAO."</b>";
                 echo " ";
             }

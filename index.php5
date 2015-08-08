@@ -4,7 +4,9 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
-<img id="abstract" src="./img/abstract3.jpg"/>
+<!-- DEPECHE AFP PART (including abstract picture) -->
+<?php include('./include/depeche.php5'); ?>
+
 <!-- Live ATC session part -->
 <?php include('./include/liveATC.php5'); ?>
 

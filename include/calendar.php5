@@ -94,19 +94,20 @@ for ($monthNumber = 0; $monthNumber < 2; $monthNumber++)
         }
         else
         {
-            // In the case there is no filter, i gather all the events
-            $events = array();
-            $events[$dayCounter] = returnEvents($dayCounter);
+            if (isset($events))
+            {
+                $filteredEvents = filterEvents('date', $dayCounter, $events);
+            }
         }
         // If there are no events for this day we don't show anything
-        if (sizeof($events[$dayCounter]) < 1) { echo "<br/>&nbsp;"; }
+        if (isset($filteredEvents) AND sizeof($filteredEvents) < 1) { echo "<br/>&nbsp;"; }
         // Otherwise we show the number of events occuring this day
-        else {
-            
+        else if (isset($filteredEvents) AND sizeof($filteredEvents) >= 1)
+        {
             // Number of events
-            echo "<br/><span class='number_events'>".sizeof($events[$dayCounter])." ";
+            echo "<br/><span class='number_events'>".sizeof($filteredEvents)." ";
             // Several events ?
-            if (sizeof($events[$dayCounter]) > 1) { echo "events"; }
+            if (sizeof($filteredEvents) > 1) { echo "events"; }
             // Single event ?
             else { echo "event"; }
             echo "</span>";

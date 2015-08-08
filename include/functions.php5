@@ -53,20 +53,35 @@ function returnEvents($date = NULL)
     global $db;
     
     $events = array();
-    if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT eventId,airportICAO FROM events WHERE date = '$date' ORDER BY beginTime");   
-    else $events_list = $db->query("SELECT eventId,airportICAO FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime"); 
+    if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT eventId,airportICAO,date FROM events WHERE date = '$date' ORDER BY beginTime");   
+    else $events_list = $db->query("SELECT eventId,airportICAO,date FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime"); 
     $i = 0;
     
     foreach ($events_list as $row)
     {
         $events[$i]['Id'] = $row['eventId'];
         $events[$i]['airportICAO'] = $row['airportICAO'];
+        $events[$i]['date'] = $row['date'];
         $i++;
     }
 
     return $events;
 }
 
+// Function to filter events with a particular field
+function filterEvents($filter,$filterValue,$events)
+{
+    $outputEvents = Array();
+    foreach ($events as $event)
+    {
+        if ($event[$filter] == $filterValue)
+        {
+            $outputEvents[] = $event['Id'];
+        }
+    }
+    
+    return $outputEvents;
+}
 
 function isAirportControlled($ICAO,$date,$time)
 {
@@ -212,6 +227,14 @@ function flightplansToXML($flightplans_list)
 	header('Content-type: application/xml');
 	echo $XMLflightplans->asXML();
 		
+}
+
+// This function will treat input values against code injection
+function purgeInputs($inputValue)
+{
+    $value = htmlspecialchars($inputValue);
+    
+    return $value;
 }
 
 ?>

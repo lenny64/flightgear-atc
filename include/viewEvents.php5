@@ -22,8 +22,7 @@ else
 }
         
 // I load every event occuring on this date
-$eventsSelectedDate = returnEvents($viewSelectedDate);
-
+$eventsSelectedDate = filterEvents('date', $viewSelectedDate, $events);
         ?>
 
 <div class="viewEvents">
@@ -54,7 +53,7 @@ $eventsSelectedDate = returnEvents($viewSelectedDate);
         {
             // We select the event
             $Event = new Event();
-            $Event->selectById($event['Id']);
+            $Event->selectById($event);
             ?>
         
         <div class="event">
