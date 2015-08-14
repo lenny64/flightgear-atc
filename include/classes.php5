@@ -1631,9 +1631,18 @@ class Depeche
         }
         
         // Replaces AIRPORT with the single controlled airport
-        if (sizeof($controlledAirports) > 0)
+        if (sizeof($controlledAirports) == 1)
         {
             $content = str_replace("AIRPORT",$controlledAirports[0],$content);
+            $content = str_replace("BEGIN_TIME",$beginTime[0],$content);
+            $content = str_replace("END_TIME",$endTime[0],$content);
+        }
+        
+        // More than one airport controlled
+        else if (sizeof($controlledAirports) > 1)
+        {
+            $content = str_replace("DEPARTURE_AIRPORT",$controlledAirports[0],$content);
+            $content = str_replace("ARRIVAL_AIRPORT",$controlledAirports[1],$content);
             $content = str_replace("BEGIN_TIME",$beginTime[0],$content);
             $content = str_replace("END_TIME",$endTime[0],$content);
         }
