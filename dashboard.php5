@@ -104,10 +104,14 @@ foreach ($events as $event)
     
     // We pick the airport ID to ident it
     $airportId = getInfo('airportId', 'airports', 'ICAO', $Event->airportICAO);
-    // We list the airport which is concerned
-    $airports = $db->query("SELECT * FROM airports WHERE airportId = $airportId");
-    // We gather the information
-    $airport = $airports->fetch(PDO::FETCH_ASSOC);
+    
+    if ($airportId != NULL)
+    {
+        // We list the airport which is concerned
+        $airports = $db->query("SELECT * FROM airports WHERE airportId = $airportId");
+        // We gather the information
+        $airport = $airports->fetch(PDO::FETCH_ASSOC);
+      
     
     ?>
 <div class="dashboard_atcSession">
@@ -227,7 +231,7 @@ echo "</div>";
     /*
      *  // FLIGHTPLANS
      */
-
+    }
 }
 ?>
     

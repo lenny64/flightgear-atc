@@ -7,8 +7,27 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
     {
         if ($_POST['airportICAO'] != NULL AND $_POST['date'] != NULL AND $_POST['beginTime'] != NULL AND $_POST['endTime'] != NULL)
         {
-            $Event->updateEvent($_POST);
-            echo "The event has been successfully edited ! <a href='./edit_event.php5?eventId=$Event->id'>Refresh the page</a>";
+            $Event->id = $_GET['eventId'];
+            $Event->airportICAO = $_POST['airportICAO'];
+            $Event->userId = $_POST['userId'];
+            $Event->date = $_POST['date'];
+            $Event->beginTime = $_POST['beginTime'];
+            $Event->endTime = $_POST['endTime'];
+            $Event->fgcom = $_POST['fgcom'];
+            $Event->teamspeak = $_POST['teamspeak'];
+            $Event->transitionLevel = $_POST['transitionLevel'];
+            $Event->runways = $_POST['runways'];
+            $Event->ils = $_POST['ils'];
+            $Event->docsLink = $_POST['docsLink'];
+            $Event->remarks = $_POST['remarks'];
+            if ($Event->updateEvent() === true)
+            {
+                echo "The event has been successfully edited ! <a href='./edit_event.php5?eventId=$Event->id'>Refresh the page</a>";
+            }
+            else
+            {
+                echo "Sorry there was an error, please try again.";
+            }
         }
     }
 }

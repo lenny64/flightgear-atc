@@ -48,7 +48,7 @@ if (isset($_GET['newSession']))
             $permissionToCreate = false;
         }
         
-        eval ( '$' . substr($field,10) . ' = "' . $_POST[$field] . '";');
+        eval ( '$' . substr($field,10) . ' = "' . htmlspecialchars($_POST[$field]) . '";');
     }
     
     // If there is a missing information ...
@@ -65,10 +65,10 @@ if (isset($_GET['newSession']))
 	}
 			
     // We copy less important values by default
-    $FGCOM = $_POST['newSessionFGCOM'];
-    $TeamSpeak = $_POST['newSessionTeamSpeak'];
-    $DocsLink = $_POST['newSessionDocsLink'];
-    $Remarks = $_POST['newSessionRemarks'];
+    $FGCOM = htmlspecialchars($_POST['newSessionFGCOM']);
+    $TeamSpeak = htmlspecialchars($_POST['newSessionTeamSpeak']);
+    $DocsLink = htmlspecialchars($_POST['newSessionDocsLink']);
+    $Remarks = htmlspecialchars($_POST['newSessionRemarks']);
     
     // Is it okay to create a new session ?
     if ($permissionToCreate == true)
@@ -119,7 +119,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
 {
     if ($_GET['date'] != NULL)
     {
-        $getDate = $_GET['date'];
+        $getDate = htmlspecialchars($_GET['date']);
     }
 }
 
@@ -132,7 +132,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
     {
         if ($_GET['date'] != NULL)
         {
-            $getDate = $_GET['date'];
+            $getDate = htmlspecialchars($_GET['date']);
             $inputDate = true;
             $getYear = date("Y",strtotime($getDate));
             $getMonth = date("m", strtotime($getDate));
