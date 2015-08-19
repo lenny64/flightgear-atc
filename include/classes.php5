@@ -308,9 +308,15 @@ class Event
         $this->remarks      =   ($Remarks != NULL ? $Remarks : 'N/A');
         
         // We check if there is an airport called
-        if (isset($AirportICAO) AND $AirportICAO != NULL) $this->airportICAO = $AirportICAO;
+        if (isset($AirportICAO) AND $AirportICAO != NULL)
+        {
+            $this->airportICAO = strtoupper($AirportICAO);
+        }
         // Otherwise we do not create an event
-        else            $this->requestNewEvent = false;
+        else
+        {
+            $this->requestNewEvent = false;
+        }
         
         // We check if there is a date called
         if (isset($Year) AND isset($Month) AND isset($Day) AND $Year != NULL AND $Month != NULL AND $Day != NULL)
@@ -432,7 +438,7 @@ class Event
                 $event = $events_list->fetch(PDO::FETCH_ASSOC);
                 
                 $this->id = $event['eventId'];
-                $this->airportICAO = $event['airportICAO'];
+                $this->airportICAO = strtoupper($event['airportICAO']);
                 $this->userId = $event['userId'];
                 $this->date = $event['date'];
                 $this->beginTime = $event['beginTime'];
