@@ -1515,7 +1515,7 @@ class Depeche
                 
                 $factor1 = 1-1/(1+($timelapse-$this->occurences+1)/($this->occurences+1*10));
                 $factor2 = (($factor1*$ponderationOccurences)+($importance*$ponderationImportance))/($ponderationImportance+$ponderationOccurences);
-                $score2[$this->depecheId] = abs($factor2);
+                $score2[$this->depecheId] = round(abs($factor2),3);
                 
                 // STEP 1 : number of controlled airports
                 if ($nbControlledAirports >= $this->minNbControlledAirports AND $nbControlledAirports <= $this->maxNbControlledAirports)
@@ -1529,7 +1529,7 @@ class Depeche
             if ($score2 != NULL)
             {
                 $insertScoreQuery = $db->prepare("INSERT INTO depecheStats VALUES('',:date,:score);");
-                $insertScoreQuery->execute(array(":date"=>date('Y-m-d'),":score"=>serialize($score2)));
+                $insertScoreQuery->execute(array(":date"=>date('Y-m-d'),":score"=>var_export($score2,true)));
             }
             
             // If there are some potential depeches
@@ -1557,7 +1557,7 @@ class Depeche
                 
                 // Date validated = limitDateValidity = today
                 //  (this can change !)
-                $this->dateValidated = date('Y-m-d');
+                $this->dateValidated = date('Y-m-d H:i:s');
                 $this->limitDateValidity = date('Y-m-d');
                 
                 // Controlled airports
@@ -1574,6 +1574,10 @@ class Depeche
                 $preparedQuery->bindValue(':occurences',$this->occurences);
                 $preparedQuery->execute();
                 
+                // FOR DEBUG
+                // TO REMOVE !!!
+                mail('thibault.armengaud@gmail.com','New depeche','A new depeche appeared today! DepecheId:'.$this->depecheId.' ; Occurences:'.$this->occurences.' ; DateTime:'.date('d-m-Y H:i:s').' ; -.');
+                
             }
         }
     }
@@ -1585,12 +1589,12 @@ class Depeche
         // If no day has been specified we select for today
         if ($day == NULL)
         {
-            $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE dateValidated = DATE(NOW())");
+            $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE DATE(dateValidated) = '".date("Y-m-d")."' LIMIT 0,1");
         }
         // Otherwise we select for the date that has been specified
         else
         {
-            $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE dateValidated = DATE($day)");
+            $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE DATE(dateValidated) = DATE($day) LIMIT 0,1");
         }
         
         // Are there some results ?
