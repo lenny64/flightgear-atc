@@ -5,8 +5,8 @@ div.tutorial_list { margin: 2% 30px; }
     div.tutorial_item { font-weight: bold; color: white; width: 250px; height: 160px; vertical-align: top; margin: 0 5px; padding: 1% 10px; display: inline-block; background-color: #000; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 
 div.flightplanSuggestionList { margin-left: 4%; padding: 0%; }
-    div.flightplanSuggestion { background-color: #eee; margin: 15px 0; padding: 15px; width: 800px;}
-    div.flightplanSuggestion div.flightplanSuggestionContent { width: 45%; float: left; }
+    div.flightplanSuggestion { background-color: #eee; }
+    div.flightplanSuggestion div.flightplanSuggestionContent { }
         div.flightplanSuggestionContent span.flightplanSuggestionTitle { display: block; font-weight: bold; font-size: 1.2em; padding: 10px 0; margin: 0px 0 0px 0; color: #333; }
         div.flightplanSuggestionContent div.flightplanSuggestionDescription { display: block; color: #666; line-height: 150%;}
         div.flightplanSuggestionContent div.flightplanSuggestionDocs { font-weight: bold; margin-bottom: 20px; }

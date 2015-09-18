@@ -32,47 +32,52 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
 
 ?>
 
-<h3>Contact</h3>
+<div class="container">
 
-<form action="./contact.php5" method="post">
-    <input type="text" name="mail"/> Your email
-    <br/>
-    <input type="text" name="subject"/> Subject
-    <br/>
-    <textarea rows="7" cols="40" name="content"></textarea>
-    <br/><br/>
-    <input type="submit" value="Send message"/>
-</form>
+    <div class="col-md-6">
+        <h3>Contact</h3>
 
-<h3>Get involved : what could be improved ?</h3>
+        <form role="form" action="./contact.php5" method="post">
+            <div class="form-group">
+                <input type="text" name="mail" class="form-control" id="mail" placeholder="E-mail"/>
+            </div>
+            <div class="form-group">
+                <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject"/>
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea name="content" class="form-control" id="content"></textarea>
+            </div>
+            <input type="submit" value="Send message"/>
+        </form>
+    </div>
 
+    <div class="col-md-6">
+        <h3>Get involved : what could be improved ?</h3>
 
-<form action="./contact.php5" method="post">
-	What is your perception about the website ?
-	<br/>
-	<select name="note">
-		<option value=""> </option>
-		<option value="good"> + Good</option>
-		<option value="medium"> ~ Quite good/Quite bad</option>
-		<option value="bad"> - Bad</option>
-	</select>
-	
-	<br/><br/>
-	
-	Your name :
-	<br/>
-	<input type="text" name="pseudo"/>
-	<br/>
-	Improvements :
-	<br/>
-	<textarea name="improvements" rows="7" cols="40"></textarea>
-	<br/>
-	Your ideas will be shown below
-	<br/><br/>
-	<input type="submit" value="Send"/>
-</form>
+        <form role="form" action="./contact.php5" method="post">
+            <div class="form-group">
+                <label for="note">What is your perception of the website ?</label>
+                <select name="note" class="form-control" id="note">
+                    <option value=""> </option>
+                    <option value="good"> + Good</option>
+                    <option value="medium"> ~ Quite good/Quite bad</option>
+                    <option value="bad"> - Bad</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" name="pseudo" class="form-control" placeholder="Your name"/>
+            </div>
+            <div class="form-group">
+                <label for="improvements">Improvements</label>
+                <textarea name="improvements" class="form-control"></textarea>
+            </div>
+            Your ideas will be shown below
+            <input type="submit" value="Send"/>
+        </form>
+    </div>
 
-<div class="commentaires">
+<div class="commentaires col-md-12">
 	
 	<?php
 

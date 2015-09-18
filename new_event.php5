@@ -4,12 +4,12 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
-<?php include('./include/calendar.php5');?>
-<br style="clear:both;"/>
-<br/>
-<br/>
+<div class="container">
 
 <?php include('./include/form_newEvent.php5');?>
 <br/>
 <br/>
+
+</div>
+
 <?php include('./include/footer.php5'); ?>

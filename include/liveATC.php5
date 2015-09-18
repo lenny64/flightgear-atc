@@ -61,34 +61,30 @@ function getAirportByCoordinates($lon,$lat)
 
 ?>
 
-<div class="liveATC">
-    <div class="liveEvents">
-        <ul>
-            <?php
-            if ($atcs != NULL)
+<ul class="list-group" style="font-size: 0.9em;">
+    <li class='list-group-item list-group-item-info'>
+        Live ATCs availables
+    </li>
+    <?php
+    if ($atcs != NULL)
+    {
+        foreach($atcs as $atc)
+        {
+            $airportInformation = getAirportByCoordinates($atc['longitude'], $atc['latitude']);
+            echo "<li class='list-group-item'>".$atc['callsign'];
+            if ($airportInformation != NULL)
             {
-                foreach($atcs as $atc)
-                {
-                    $airportInformation = getAirportByCoordinates($atc['longitude'], $atc['latitude']);
-                    echo "<li>".$atc['callsign'];
-                    if ($airportInformation != NULL)
-                    {
-                        echo " (".$airportInformation['city'].",".$airportInformation['country'].")";
-                    }
-                    echo "</li>";
-                }
+                echo " (".$airportInformation['city'].",".$airportInformation['country'].")";
             }
-            else
-            {
-                echo "There are no ATC online.";
-            }
-            
-            ?>
-        </ul>
-        <ul>
-            <li>
-                Live ATCs availables (data from <a href="http://mpserver12.flightgear.org">mpserver12.flightgear.org</a>)
-            </li>
-        </ul>
-    </div>
-</div>
+            echo "</li>";
+        }
+    }
+    else
+    {
+        echo "<li class='list-group-item small'>There are no ATC online.</li>";
+    }
+    ?>
+    <li class="list-group-item list-group-item-info">
+        <small>data from <a href="http://mpserver12.flightgear.org">mpserver12.flightgear.org</a></small>
+    </li>
+</ul>

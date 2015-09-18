@@ -6,11 +6,14 @@ div.submenu form.submenu_quick_atc input:hover { border: 0; cursor: default;}
 div.submenu input#submenu_dateTimePicker_submit { background-color: #89a02c; color: #fff; cursor: pointer;}
 	div.submenu input#submenu_dateTimePicker_submit:hover { color: #424D15; }
 
+div#jumbotron_mainPage { position: relative; background-size: cover; width: 100%; height: 100%; overflow: hidden; }
+    div#bg-overlay { width: 100%; background: rgba(0,0,0,0.7); padding: 5%; color: #fff;}
+        
 div.depeche { position: relative; height: 100px; top:-145px; width: 700px; padding:0; margin-bottom: -145px; text-shadow: 0px 0px 6px #000; }
-    div.depeche h1 { height: 10px; margin: 0; margin-left: 30px; padding: 15px 0 0 15px; font-size: 1.8em; font-family: Arvo; font-weight: bold; color: #fff; }
-    div.depeche div.depecheContent { margin: 0; margin-left: 45px; margin-top: 20px; font-size: 0.9em; font-weight: bold; color: #fff; }
+    h2#depecheMainTitle { font-family: Arvo; font-weight: bold; }
+    p#depecheContent { font-size: 1.2em; }
 
-div.liveATC { position: relative; top: -0px; margin-bottom: 30px;background-color: #303030; }
+div.liveATC { margin-bottom: 30px;background-color: #303030; }
     /*div.liveATC h1 { height: 10px; margin: 0; margin-left: 30px; padding: 15px 0 0 15px; font-size: 1.3em; font-family: Arvo; font-weight: bold; color: #fff; }*/
     div.liveATC div.liveEvents { background-color: #303030; color: #fff; padding: 5px; font-size: 0.8em; font-weight: bold; }
         div.liveEvents ul { line-height: 2.5em;}
@@ -20,7 +23,7 @@ div.liveATC { position: relative; top: -0px; margin-bottom: 30px;background-colo
 div.flightplan_banner { width: 600px; margin: 4% auto 4% auto;}
         
 div.flightplan_list_area { width: 100%; margin: 0 0px 0 10px; }
-    div.flightplan_day { float: left; width: 170px; margin: 0 3px 0 3px; }
+    div.flightplan_day { }
         div.flightplan_day span.flightplan_date { display: block; color: #666; font-size: 0.9em; text-align: center; }
         div.flightplan_day div.flightplan_add_button { text-align: center; width: 70%; margin: 5px 15% 10px 15%; font-size: 0.7em; color: #fff; padding: 0px; background-color: #3C71B2; border-radius: 50px; -moz-border-radius: 50px; -webkit-border-radius: 50px; cursor: pointer; }
             div.flightplan_day div.flightplan_add_button:hover { background-color: white; color: #3C71B2; }
@@ -149,3 +152,14 @@ div.specialEvent.mini { padding: 5px 7px; background-color: #e0e0e0; }
     div.specialEvent.mini div.specialEventContent { margin-left: 0; }
         div.specialEvent.mini div.specialEventContent img { margin-right: 10px; }
         div.specialEvent.mini h4 { min-width: 350px; color: #333; margin: 0 0 10px 0; }
+
+div.createEvent { margin: 0; padding: 5px; }
+
+div.createFlightplan { margin: 0; padding: 5px; }
+        
+div.event { margin-top: 0; margin-bottom: 0; margin-left: 0; border-top: solid 1px #337ab7; background-color: #ddd; }
+    div.event span.event-location { margin-left: 10px; font-size: 0.9em; color: #337ab7; font-weight: bold;}
+    div.event span.event-times { font-size: 0.9em; color: #333; font-weight: bold; }
+    div.event span.event-communication { font-size: 0.9em; color: #666; }
+    div.event span.event-documentation { font-size: 0.9em; }
+    div.event span.event-atc { font-size: 0.8em; font-weight: bold; color: #666; }
