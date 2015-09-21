@@ -288,10 +288,10 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
             </div>
         </div>
         
-        <h3>Date and time</h3>
+        <h3><img src="./img/scheme_date.png"/> Date and time</h3>
         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
             <div class="col-xs-12">
-                <label class="control-label" for="newEvent-dateYear"><img src="./img/scheme_date.png"/> Date*</label>
+                <label class="control-label" for="newEvent-dateYear">Date*</label>
             </div>
             <div class="col-xs-3">
                 <select name="<?php echo $requiredFields[4];?>" id="newEvent-dateYear" class="form-control">
@@ -327,20 +327,20 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                 <label class="control-label" for="apt_endHour"><img src="./img/scheme_time.png"/> To*</label>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_beginHour" name="<?php echo $requiredFields[7];?>" required>
+                <input type="text" class="form-control" id="apt_beginHour" name="<?php echo $requiredFields[7];?>" placeholder="hh" required>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_beginMinutes" name="<?php echo $requiredFields[8];?>" required>
+                <input type="text" class="form-control" id="apt_beginMinutes" name="<?php echo $requiredFields[8];?>" placeholder="mm" required>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_endHour" name="<?php echo $requiredFields[9];?>" required>
+                <input type="text" class="form-control" id="apt_endHour" name="<?php echo $requiredFields[9];?>" placeholder="hh" required>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_endMinutes" name="<?php echo $requiredFields[10];?>" required>
+                <input type="text" class="form-control" id="apt_endMinutes" name="<?php echo $requiredFields[10];?>" placeholder="mm" required>
             </div>
         </div>
         
-        <h3>Communication</h3>
+        <h3><img src="./img/scheme_communication.png"/> Communication</h3>
         <div class="col-md-6 form-group">
             <label class="control-label" for="apt_fgcom">FGCom Frequency</label>
             <div class="">

@@ -1,6 +1,4 @@
 
-<div class="container">
-
 <?php
 
 
@@ -35,6 +33,9 @@ else if ($_SESSION['mode'] == 'connected')
 // Finally, if there is an error during the login
 if ($err_noLogin == true OR $userAuthenticated == false)
 {
+    ?>
+    <div class="container">
+    <?php
     if (isset($userAuthenticated) AND $userAuthenticated == false) { echo "<div class='alert alert-info'>Your password and/or e-mail is not correct</div>"; }
     if ($err_noLogin == true) { echo "<div class='alert alert-info'>Please enter your e-mail and password</div>"; }
     ?>
@@ -54,7 +55,7 @@ if ($err_noLogin == true OR $userAuthenticated == false)
         </div>
         <button type="submit" class="btn btn-primary">Connect</button>
     </form>
-    
+    </div>
     <br/>
     <br/>
     <?php
@@ -62,5 +63,3 @@ if ($err_noLogin == true OR $userAuthenticated == false)
     exit;
 }
 ?>
-
-</div>

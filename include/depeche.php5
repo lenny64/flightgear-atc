@@ -54,7 +54,7 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
 
 <!-- Image size 900 x 190 -->
 
-<div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/A380.jpg<?php // echo $Depeche->abstractImg;?>') no-repeat center center;">
+<div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
     <div class="col-md-8">
         <div id='bg-overlay'>
             <h2 id="depecheMainTitle"><?php echo $Depeche->displayDepeche($Depeche->title); ?></h2>

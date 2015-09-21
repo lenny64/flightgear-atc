@@ -35,7 +35,7 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="./index.php5">Flightgear ATC Events</a></li>
+          <li><a href="./index.php5">Flightgear ATC Events</a></li>
           <li><a href="./school.php5">School</a></li>
           <li><a href="controlled_area.php5">Controlled area</a></li>
           <li><a href="downloads.php5">Downloads</a></li>
