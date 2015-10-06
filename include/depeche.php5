@@ -54,17 +54,19 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
 
 <!-- Image size 900 x 190 -->
 
-<div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
-    <div class="col-md-8">
-        <div id='bg-overlay'>
-            <h2 id="depecheMainTitle"><?php echo $Depeche->displayDepeche($Depeche->title); ?></h2>
-            <p id="depecheContent">
-                <?php echo $Depeche->displayDepeche($Depeche->content); ?>
-            </p>
+<div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/a<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
+    <div id='bg-overlay'>
+        <div class="container">
+            <div class="col-md-8">
+                <h2 id="depecheMainTitle"><?php echo $Depeche->displayDepeche($Depeche->title); ?></h2>
+                <p id="depecheContent">
+                    <?php echo $Depeche->displayDepeche($Depeche->content); ?>
+                </p>
+            </div>
+            <div class="col-md-4 hidden-sm hidden-xs">
+                <?php include('./include/liveATC.php5'); ?>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4 hidden-sm hidden-xs">
-        <?php include('./include/liveATC.php5'); ?>
     </div>
 </div>
 

@@ -79,7 +79,7 @@ if (isset($_POST['change_settings']))
 
 ?>
 
-    <h3><span class="glyphicon glyphicon glyphicon-wrench"> Settings</h3>
+    <h3><span class="glyphicon glyphicon glyphicon-wrench"></span> Settings</h3>
     <form role="form" action="./dashboard.php5" method="post">
         <input type="hidden" name="change_settings"/>
         <div class="checkbox">
@@ -102,7 +102,7 @@ if (isset($_POST['change_settings']))
         </div>
     </form>
 
-    
+    <div class="col-xs-12">
 <?php
 
 // We gather every sessions this user made

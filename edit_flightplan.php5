@@ -3,6 +3,8 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
+<div class="container">
+
 <?php
 
 // AUTHENTICATION
@@ -47,19 +49,19 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
             
             if (sizeof($Flightplan->error) == 0)
             {
-                echo "<div class='information'>Your flightplan has been successfully edited !</div>";
+                echo "<div class='alert alert-info'>Your flightplan has been successfully edited !</div>";
             }
             else
             {
                 foreach($Flightplan->error as $error)
                 {
-                    echo "<div class='information'>WARNING : " . $error . "</div>";
+                    echo "<div class='alert alert-danger'>WARNING : " . $error . "</div>";
                 }
             }
         }
         else
         {
-            echo "<div class='information'>WARNING : incorrect email or/and key.</div>";
+            echo "<div class='alert alert-danger'>WARNING : incorrect email or/and key.</div>";
         }
     }
 }
@@ -75,91 +77,139 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
     
     ?>
 
-
-<form class="file_flightplan" id="file_flightplan-form" method="post" action="./edit_flightplan.php5?flightplanId=<?php echo $Flightplan->id; ?>" style="display: block; position: relative; overflow-y: auto; max-height: none; width: 60%;">
-    <div class="category">
-        <br/>
+    <div class="alert alert-info">
         You are about to edit your flightplan number <?php echo $Flightplan->id; ?>.
         <br/>
         Check the key that has been sent when you created your flightplan.
     </div>
-    <div class="category">
-        <span class="title" id="file_flightplan-pilotInformationTitle">Log in</span>
-        <div class="category_content" id="file_flightplan-pilotInformationContent">
-            <input type="text" name="email" id="file_flightplan-email" class="email" size="24" placeholder="Email" required <?php if($entered_email) echo "value='$entered_email'";?>/>
-            <br/>
-            <input type="text" name="privateKey" class="key" size="24" placeholder="Key" required <?php if($entered_privateKey) echo "value='$entered_privateKey'";?>/>
-        </div>
-    </div>
-    <br/><br/><br/>
-    <div class="category" id="file_flightplan-pilotInformation">
-        <span class="title" id="file_flightplan-pilotInformationTitle">Pilot information</span>
-        <div class="category_content" id="file_flightplan-pilotInformationContent">
-            <label>Callsign</label><input type="text" name="callsign" id="file_flightplan-callsign" class="callsign" size="6" value="<?php echo $Flightplan->callsign;?>" required readonly="readonly"/>
-            <input type="hidden" name="flightplanId" value="<?php echo $Flightplan->id;?>"/>
-        </div>
-    </div>
-    <div class="category" id="file_flightplan-flightInformation">
-        <span class="title" id="file_flightplan-flightInformationTitle">Flight information</span>
-        <div class="category_content" id="file_flightplan-flightInformationContent">
-            <span class="subtitle">Departure</span>
-            <label>Airport</label><input type="text" name="departureAirport" id="file_flightplan-departureAirport" class="airport" size="6" value="<?php echo $Flightplan->departureAirport;?>" required/>
-            <br/>
-            <label>Time</label>
-            <input type="text" name="departureTime" id="file_flightplan-departureTime" class="time" size="10" value="<?php echo $Flightplan->departureTime;?>" required/>UTC
-            <br/>
-            <label>Date</label><input type="text" value="<?php echo $Flightplan->dateDeparture;?>" name="date" id="file_flightplan-date" class="date" size="8" required/>
-            <span class="subtitle">En-route</span>
-            <label>Cruise altitude</label><input type="text" value="<?php echo $Flightplan->cruiseAltitude;?>" name="cruiseAltitude" id="file_flightplan-cruiseAltitude" class="altitude" size="4"/>
-            <br/>
-            <label>Route/Waypoints</label>
-            <br/>
-            <textarea name="waypoints" cols="15" rows="4"><?php echo $Flightplan->waypoints;?></textarea>
-            <span class="subtitle">Arrival</span>
-            <label>Airport</label><input type="text" name="arrivalAirport" id="file_flightplan-arrivalAirport" class="airport" size="6" value="<?php echo $Flightplan->arrivalAirport;?>" required/>
-            <br/>
-            <label>Time</label>
-            <input type="text" name="arrivalTime" id="file_flightplan-arrivalTime" class="time" size="10" value="<?php echo $Flightplan->arrivalTime;?>" required/>UTC
-        </div>
-    </div>
-    <div class="category" id="file_flightplan-optionalInformation">
-        <span class="title" id="file_flightplan-optionalInformationTitle">Optional information</span>
-        <div class="category_content" id="file_flightplan-optionalInformationContent">
-            <label>Pilot name</label><input type="text" class="callsign" name="pilotName" id="file_flightplan-pilotName" size="10" value="<?php echo $Flightplan->pilotName;?>"/>
-            <br/>
-            <label>Airline</label><input type="text" class="airline" name="airline" id="file_flightplan-airline" size="10" value="<?php echo $Flightplan->airline;?>"/>
-            <label>Flight number</label><input type="text" class="airline" name="flightNumber" id="file_flightplan-flightNumber" size="10" value="<?php echo $Flightplan->flightNumber;?>"/>
-            <br/>
-            <label>Category</label>
-            <select name="category" id="file_flightplan-category">
-                <option value="IFR">Instrumental (IFR)</option>
-                <option value="VFR" <?php if ($Flightplan->category == 'VFR') { echo "selected"; }?> >Visual (VFR)</option>
-            </select>
-            <br/>
-            <label>Aircraft</label><input type="text" name="aircraftType" class="aircraft" id="file_flightplan-aircraft" size="10" value="<?php echo $Flightplan->aircraftType; ?>"/>
-            <br/><br/>
-            <label>Alternate destination</label><input type="text" class="airport" name="alternateDestination" id="file_flightplan-alternateDestination" size="6" placeholder="ICAO" value="<?php echo $Flightplan->alternateDestination; ?>"/>
-            <br/>
-            <label>Cruise speed</label><input type="text" class="aircraft" name="trueSpeed" id="file_flightplan-trueSpeed" size="4" value="<?php echo $Flightplan->trueAirspeed; ?>"/>
-            <br/>
-            <label>Souls on board</label><input type="text" class="souls" name="soulsOnBoard" id="file_flightplan-soulsOnBoard" size="6" value="<?php echo $Flightplan->soulsOnBoard; ?>"/>
-            <br/>
-            <label>Fuel time</label><input type="text" class="fuel" name="fuelTime" id="file_flightplan-fuelTime" size="6" value="<?php echo $Flightplan->fuelTime; ?>"/>
-            <br/>
-            <label>Additional information</label>
-            <br/>
-            <textarea cols="40" rows="4" name="comments"><?php echo $Flightplan->comments[0][0]; ?></textarea>
-        </div>
-    </div>
-    <input type="submit" value="Edit the flightplan" class="create_flightplan_button"/>
-</form>
+    
+    
+          
+        <form role="form" method="post" class="" action="./index.php5" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
+            
+            <h4>Login information</h4>
+            <div class="col-md-6 form-group">
+                <label class="control-label" for="file_flightplan-email">E-mail</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-email" name="email" placeholder="E-mail" required>
+                </div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label class="control-label" for="file_flightplan-key">Key</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-key" name="privateKey" placeholder="Key" required>
+                </div>
+            </div>
+            
+            <h4>Pilot information</h4>
+            <div class="col-md-12 form-group">
+                <label class="control-label" for="file_flightplan-callsign">Callsign</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-callsign" name="callsign" placeholder="Callsign" value="<?php echo $Flightplan->callsign;?>" required>
+                </div>
+            </div>
+            
+            <h4>Flight information</h4>
+            <div class="col-md-12 form-group">
+                <label class="control-label" for="file_flightplan-date">Date</label>
+                <div class="">
+                    <input type="text" class="form-control" name="date" id="file_flightplan-date" placeholder="Departure date" value="<?php echo $Flightplan->dateDeparture;?>" required>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group">
+                <label class="control-label" for="file_flightplan-departureAirport">Departure airport</label>
+                <div class="">
+                    <input type="text" class="form-control" name="departureAirport" id="file_flightplan-departureAirport" placeholder="Departure airport" value="<?php echo $Flightplan->departureAirport;?>" required>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group" for="file_flightplan-arrivalAirport">
+                <label class="control-label">Arrival airport</label>
+                <div class="">
+                    <input type="text" class="form-control" name="arrivalAirport" id="file_flightplan-arrivalAirport" placeholder="Arrival airport" value="<?php echo $Flightplan->arrivalAirport;?>" required>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label" for="file_flightplan-departureTime">Departure time</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="text" name="departureTime" class="form-control" id="file_flightplan-departureTime" value="<?php echo $Flightplan->departureTime;?>">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group"><div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">Arrival time</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="text" name="arrivalTime" class="form-control" id="file_flightplan-arrivalTime" value="<?php echo $Flightplan->arrivalTime;?>">
+                    </div>
+                </div>
+            </div>
+            
+            <h4>Additional information</h4>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Cruise altitude</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-cruiseAltitude" name="cruiseAltitude" placeholder="Cruise altitude" value="<?php echo $Flightplan->cruiseAltitude;?>">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Route</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-waypoints" name="waypoints" placeholder="Waypoints" value="<?php echo $Flightplan->waypoints;?>">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Pilot name</label>
+                <div class="">
+                    <input type="text" class="form-control" name="pilotName" placeholder="Pilot" value="<?php echo $Flightplan->pilotName;?>">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Airline</label>
+                <div class="">
+                    <input type="text" class="form-control" name="airline" placeholder="Cruise altitude" value="<?php echo $Flightplan->airline;?>">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Flight number</label>
+                <div class="">
+                    <input type="text" class="form-control" name="flightNumber" placeholder="Cruise altitude" value="<?php echo $Flightplan->flightNumber;?>">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Category</label>
+                <div class="">
+                    <select name="category" class="form-control" id="file_flightplan-category">
+                        <option value="ifr" <?php if ($Flightplan->category == "ifr") echo "selected";?>>Instrument (IFR)</option>
+                        <option value="vfr" <?php if ($Flightplan->category == "vfr") echo "selected";?>>Visual (VFR)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Aircraft</label>
+                <div class="">
+                    <input type="text" class="form-control" name="aircraft" placeholder="Aircraft" value="<?php echo $Flightplan->aircraftType;?>">
+                </div>
+            </div>
+            <div class="col-xs-12 form-group">
+                <button type="submit" value="Edit" class="btn btn-success">Edit</button>
+            </div>
+        </form>
 
 <?php
 
 }
 
 ?>
-
+</div>
+    
 <br/>
 <br/>
 <?php include('./include/footer.php5'); ?>

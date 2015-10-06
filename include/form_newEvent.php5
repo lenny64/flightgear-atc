@@ -155,25 +155,28 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
             ?>
             <input type="hidden" name="<?php echo $requiredFields[0];?>" value="<?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>"/>
             <input type="hidden" name="<?php echo $requiredFields[1];?>" value="<?php echo getInfo('password', 'users', 'userId', $_SESSION['id']);?>"/>
-            <div class="alert alert-info"><b>Good news</b> ! You are connected : <?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>.</div>
+            <div class="alert alert-success"><b>Good news</b> ! You are connected : <?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>.</div>
             <?php
         }
         
         // Otherwise
         else {
         ?>
-        <h4>Identification</h4>
+        <h3>Identification</h3>
         
+        <div class="alert alert-info">
+            The ATC Dashboard has been re-designed! Click below if you want to access there.
+            <br/><br/>
+            <a href="./dashboard.php5" class="btn btn-primary">I already have an account</a>
+        </div>
         
-        <div class="alert alert-info">First time you create a session ? Remember this password</div>
-        
-        <div class="col-md-6 form-group">
+        <div class="col-sm-6 form-group">
             <label class="control-label" for="newEvent-email">Your email address*</label>
             <div class="">
                 <input type="text" class="form-control" id="newEvent-email" name="<?php echo $requiredFields[0];?>" placeholder="Email Address" required>
             </div>
         </div>
-        <div class="col-md-6 form-group">
+        <div class="col-sm-6 form-group">
             <label class="control-label" for="newEvent-password">Password*</label>
             <div class="">
                 <input type="password" class="form-control" id="newEvent-password" name="<?php echo $requiredFields[2];?>" placeholder="Remember this password" required>

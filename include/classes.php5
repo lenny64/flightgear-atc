@@ -876,7 +876,7 @@ class Flightplan
             $this->dataMissing = false;
         }
     }
-    
+    /*
     function create_old($dateDeparture,$departureAirport,$arrivalAirport,$cruiseAltitude,$callsign,$category,$aircraftType,$departureTime,$arrivalTime,$waypoints,$comments)
     {
         // We check if the information were given
@@ -964,7 +964,7 @@ class Flightplan
                 
             }
         }
-    }
+    } */
     
     // Function to edit a flight plan
     public function editFlightplan()
@@ -1026,6 +1026,65 @@ class Flightplan
                 ":flightplanId"         =>  purgeInputs($this->id)
             ));
         }
+    }
+    
+    public function getFlightplans()
+    {
+        global $db;
+        
+        // Callsign
+        if (isset($this->callsign) AND $this->callsign != NULL)
+        {
+            $queryCallsign = "FP.callsign = '$this->callsign'";
+        }
+        else
+        {
+            $queryCallsign = "FP.callsign LIKE '%'";
+        }
+        // Date
+        if (isset($this->dateDeparture) AND $this->dateDeparture != NULL)
+        {
+            $queryDate = "FP.dateDeparture = '$this->dateDeparture'";
+        }
+        else
+        {
+            $queryDate = "FP.dateDeparture LIKE '%'";
+        }
+        // Airport
+        if (isset($this->departureAirport) AND $this->departureAirport != NULL)
+        {
+            $queryICAO = "(FP.airportICAOFrom = '$this->departureAirport' OR FP.airportICAOTo = '$this->departureAirport')";
+        }
+        else
+        {
+            $queryICAO = "(FP.airportICAOFrom LIKE '%' OR FP.airportICAOTo LIKE '%')";
+        }
+        // Status
+        if (isset($this->status) AND $this->status != NULL)
+        {
+            $queryStatus = "HAVING FPStatus.status = '".$this->status."'";
+        }
+        else
+        {
+            $queryStatus = "";
+        }
+
+        $query = "SELECT FP.flightplanId
+                    FROM (
+                        SELECT * FROM flightplan_status
+                        ORDER BY flightplan_status.dateTime DESC) AS FPStatus
+                            JOIN (
+                            SELECT * FROM flightplans20140113) AS FP
+                                ON FP.flightplanId = FPStatus.flightplanId
+                    WHERE $queryCallsign AND $queryDate AND $queryICAO
+                    GROUP BY FP.flightplanId
+                    $queryStatus;";
+
+        $queryPrepare = $db->prepare($query);
+        $queryPrepare->execute();
+        $flightplans = $queryPrepare->fetchAll();
+        
+        return $flightplans;
     }
     
     // Function to select a flight plan with it's ID
