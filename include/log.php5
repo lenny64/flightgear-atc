@@ -1,6 +1,6 @@
 <?php /* ?>
-<div class="information" style='text-align: justify; line-height: 1.7em;'>
-    <div class="close_button">X</div>
+<div class="alert alert-info alert-dismissable" role="alert" id="log">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4>MEGA Event on March, 21st</h4>
     Dear ATCs and pilots,
     <br/>
@@ -15,7 +15,7 @@ $(document).ready(function()
 {
 	$(".close_button").click(function()
 	{
-		$(".information").fadeOut();
+		$("#log").fadeOut();
 	});
 });
 </script>

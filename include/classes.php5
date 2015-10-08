@@ -1633,10 +1633,6 @@ class Depeche
                 $preparedQuery->bindValue(':occurences',$this->occurences);
                 $preparedQuery->execute();
                 
-                // FOR DEBUG
-                // TO REMOVE !!!
-                mail('thibault.armengaud@gmail.com','New depeche','A new depeche appeared today! DepecheId:'.$this->depecheId.' ; Occurences:'.$this->occurences.' ; DateTime:'.date('d-m-Y H:i:s').' ; -.');
-                
             }
         }
     }

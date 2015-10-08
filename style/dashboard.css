@@ -20,3 +20,7 @@ li.dashboard_flightplan {
     padding: 1% 0 1% 3%;
     font-weight: bold;
 }
+
+div.dashboard-oneClick {  }
+    div.dashboard-oneClick > div { margin-bottom: 20px;}
+    span.oneClick-time { font-size: 0.9em;}

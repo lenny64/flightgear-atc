@@ -24,7 +24,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     // If there has not been an ID due to data missing and/or wrong data, we display errors
     if ($NewFlightplan->id == FALSE)
     {
-        echo "<div class='warning'>
+        echo "<div class='alert alert-danger'>
             Please note that ";
         // We display each error separately
         foreach($NewFlightplan->error as $error)
@@ -37,155 +37,15 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     else
     {
         $NewFlightplan->createEmail($email);
-        echo "<div class='information'>Your flightplan has been accepted. A key has been sent to $email .</div>";
+        echo "<div class='alert alert-info'>Your flightplan has been accepted. A key has been sent to $email .</div>";
     }
 }
 
 ?>
 
-<!--
-<div class="flightplan_banner">
-    <img src="./img/flightplanBanner.png" alt="flightgear ATC events"/>
-</div>
--->
 
 <a name="flightplan_filling"></a>
 
-<?php
-
-/*
-
-<div class="">
-    <?php
-    // We first show x days (default : 4)
-    for ($flightplanDay = 0; $flightplanDay < 4; $flightplanDay++)
-    {
-        $currentDate = date('Y-m-d',strtotime(date('Y-m-d')." +".$flightplanDay." days"));
-        // We gather all FP for this date
-        $flightplans_query = $db->query("SELECT * FROM flightplans20140113 WHERE dateDeparture='$currentDate' ORDER BY dateDeparture, departureTime");
-        
-        if ($flightplanDay >= 2)
-        {
-            echo '<div class="flightplan_day col-md-3 col-sm-6 col-xs-12 hidden-sm hidden-xs">';
-        }
-        else
-        {
-            echo '<div class="flightplan_day col-md-3 col-sm-6 col-xs-12">';
-        }
-        ?>
-        
-    
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <?php echo date('D j M',strtotime($currentDate));?>
-            </div>
-            <div class="panel-body">
-                <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal" onclick="document.getElementById('file_flightplan-date').value='<?php echo $currentDate;?>';">+ New flightplan</button>
-            </div>
-            <div class="panel-body">
-                <?php        
-            // FP counter
-            $nbFlightplans = 0;
-            // We list all FP for this date
-            foreach ($flightplans_query as $flightplan)
-            {
-                $Flightplan = new Flightplan();
-                $Flightplan->selectById($flightplan['flightplanId']);
-
-                // CAUTION VERY IMPORTANT !
-                // The _TEST callsign is relative to OR and ATCs tests
-                // Those flight plans are available through the API and remain into the DB
-                // but they do not appear on the website graphical interface.
-                if ($Flightplan->callsign != '_TEST')
-                {
-                    $nbFlightplans++;
-                ?>
-
-                <div class="flightplan <?php if ($nbFlightplans >= 4) { echo "flightplanHidden"; } ?>">
-                    <p>
-                        <button class="btn btn-primary btn-sm" type="button">
-                            <?php echo $Flightplan->callsign; ?>
-                            <span class="badge">Flightplan <?php echo $Flightplan->status; ?></span>
-                        </button>
-                        <!--<strong><?php echo $Flightplan->callsign; ?></strong>
-                        <span class="label label-default">Flightplan <?php echo $Flightplan->status; ?></span>-->
-                        <span class="pull-right small"><?php echo $Flightplan->aircraftType; ?></span>
-                    </p>
-                    <p>
-                        <span class="airport"><strong><?php echo $Flightplan->departureAirport; ?></strong></span><span class="label label-default pull-right"><?php echo $Flightplan->departureTime; ?></span>
-                    </p>
-                    <p>
-                        <span class="airport"><strong><?php echo $Flightplan->arrivalAirport; ?></strong></span><span class="label label-default pull-right"><?php echo $Flightplan->arrivalTime; ?></span>
-                    </p>
-                    <p>
-                        <form role="form" action="./edit_flightplan.php5" method="get" class="pull-right">
-                            <input type="hidden" name="flightplanId" value="<?php echo $Flightplan->id;?>"/>
-                            <input type="submit" class="action" value="Edit"/>
-                        </form>
-                    </p>
-                </div>
-
-                <?php
-                }
-            }
-            // Are there no FP this day ?
-            if ($nbFlightplans == 0)
-            {
-                ?>
-                <div class="flightplan empty">
-                    No flightplan yet
-                </div>
-                <?php
-            } ?>
-            </div>
-            <div class="panel-body">
-                <p class="text-muted">
-                    <small>controlled airports</small>
-                </p>
-                <p>
-                    <?php
-                    $flightplanEvents[$currentDate] = filterEvents('date', $currentDate, $events);
-                    
-                    if ($flightplanEvents[$currentDate] != NULL)
-                    {
-                        foreach ($flightplanEvents[$currentDate] as $event)
-                        {
-                            $Event = new Event();
-                            $Event->selectById($event);
-                            echo "<span class='label label-danger'>".$Event->airportICAO."</span>";
-                        }
-                    }
-                    else
-                    {
-                        echo "<span class='label label-default'>None</span>";
-                    }
-                    ?>
-                </p>
-            </div>
-        </div>
-        
-            <?php
-        // More than 4 FP to show ? We can handle that by showing a button
-        if ($nbFlightplans >= 4)
-        {
-            ?>
-            <div class="flightplan empty showall">
-                See all (<?php echo $nbFlightplans; ?>)
-            </div>
-            <?php
-        }
-        ?>
-    </div>
-    
-    <?php
-    }
-    
-    ?>
-    <br style="clear: both;"/>
-    <br/>
-</div>
-*/
-?>
 
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -350,13 +210,13 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Airline</label>
                 <div class="">
-                    <input type="text" class="form-control" name="airline" placeholder="Cruise altitude" value="">
+                    <input type="text" class="form-control" name="airline" placeholder="Airline" value="">
                 </div>
             </div>
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Flight number</label>
                 <div class="">
-                    <input type="text" class="form-control" name="flightNumber" placeholder="Cruise altitude" value="">
+                    <input type="text" class="form-control" name="flightNumber" placeholder="Flight number" value="">
                 </div>
             </div>
             <div class="col-sm-4 col-xs-6 form-group">
@@ -371,7 +231,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Aircraft</label>
                 <div class="">
-                    <input type="text" class="form-control" name="aircraft" placeholder="Aircraft" value="">
+                    <input type="text" class="form-control" name="aircraftType" placeholder="Aircraft" value="">
                 </div>
             </div>
             <div class="col-xs-12 form-group">
