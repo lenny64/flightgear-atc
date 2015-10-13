@@ -1,6 +1,6 @@
 <?php
 
-class DashboardEventsList {
+class DashboardEventsList extends Event {
     
     public $dashboardEvents = Array();
     
@@ -20,10 +20,10 @@ class DashboardEventsList {
         global $db;
         // We pick the event
         $Event = new Event();
-        $Event->selectById($eventId);
+        $LastEvent = $Event->selectById($eventId);
 
         // We pick the airport ID to ident it
-        $airportId = getInfo('airportId', 'airports', 'ICAO', $Event->airportICAO);
+        /*$airportId = getInfo('airportId', 'airports', 'ICAO', $Event->airportICAO);
 
         if ($airportId != NULL)
         {
@@ -31,9 +31,9 @@ class DashboardEventsList {
             $airports = $db->query("SELECT * FROM airports WHERE airportId = $airportId");
             // We gather the information
             $this->airport = $airports->fetch(PDO::FETCH_ASSOC);
-        }
+        }*/
         
-        return $Event;
+        return $LastEvent;
     }
 }
 

@@ -156,7 +156,7 @@
                         <!-- ICAO AND AIRPORT LOCATION -->
                         <div class="col-sm-6">
                             <span class="label label-primary"><?php echo $Event->airportICAO;?></span>
-                            <span class="event-location"><?php echo getInfo('globalAirportName', 'airports_global', 'globalAirportICAO', $Event->airportICAO)." (".getInfo('globalAirportCity', 'airports_global', 'globalAirportICAO', $Event->airportICAO).")"; ?></span>
+                            <span class="event-location"><?php echo $Event->airportName." (".$Event->airportCity.")"; ?></span>
                         </div>
                         <!-- TIMES -->
                         <div class="col-sm-6">

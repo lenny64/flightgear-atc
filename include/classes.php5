@@ -281,6 +281,9 @@ class Airport
 class Event
 {
     public $airportICAO;
+    public $airportName;
+    public $airportCity;
+    public $airportCountry;
     public $date;
     public $beginTime;
     public $endTime;
@@ -434,7 +437,17 @@ class Event
             {
                 global $db;
                 
-                $events_list = $db->query("SELECT * FROM events WHERE eventId = $id");
+                $events_list = $db->query("
+                    SELECT
+                        events.* ,
+                        airports_global.globalAirportName AS airportName,
+                        airports_global.globalAirportCity AS airportCity,
+                        airports_global.globalAirportCountry AS airportCountry
+                    FROM events
+                    LEFT JOIN airports_global
+                    ON events.airportICAO = airports_global.globalAirportICAO
+                    WHERE events.eventId = $id
+                    LIMIT 0, 1");
                 $event = $events_list->fetch(PDO::FETCH_ASSOC);
                 
                 $this->id = $event['eventId'];
@@ -450,6 +463,10 @@ class Event
                 $this->ils = $event['ILS'];
                 $this->docsLink = $event['docsLink'];
                 $this->remarks = $event['remarks'];
+                
+                $this->airportName = $event['airportName'];
+                $this->airportCity = $event['airportCity'];
+                $this->airportCountry = $event['airportCountry'];
             }
         }
     }
