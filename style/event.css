@@ -44,7 +44,8 @@ div.createEvent { margin: 0; padding: 10px; }
 div.createFlightplan { margin: 0; padding: 10px; }
         
 /* EVENT DIV INSIDE THE LIST */
-div.event { margin-top: 0; margin-bottom: 0; margin-left: 0; padding: 13px; }
+div.event { margin-top: 0; margin-bottom: 0; margin-left: 0; }
+    div.event > div { background: rgba(217,237,247,0.8); margin: 0; padding: 13px; }
     div.event span.event-location { margin-left: 10px; font-size: 0.9em; color: #337ab7; font-weight: bold;}
     div.event span.event-times { font-size: 0.9em; color: #333; font-weight: bold; }
     div.event span.event-communication { font-size: 0.9em; color: #666; }

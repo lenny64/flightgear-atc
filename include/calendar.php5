@@ -151,39 +151,46 @@
                 
                 ?>
                 
+                <?php
+                // For later
+                // <div class="event" style="background: url('./img/banniere7.jpg') no-repeat center center;">
+                // 
+                ?>
                 <div class="event">
-                    <div class="row">
-                        <!-- ICAO AND AIRPORT LOCATION -->
-                        <div class="col-sm-6">
-                            <span class="label label-primary"><?php echo $Event->airportICAO;?></span>
-                            <span class="event-location"><?php echo $Event->airportName." (".$Event->airportCity.")"; ?></span>
+                    <div>
+                        <div class="row">
+                            <!-- ICAO AND AIRPORT LOCATION -->
+                            <div class="col-sm-6">
+                                <span class="label label-primary"><?php echo $Event->airportICAO;?></span>
+                                <span class="event-location"><?php echo $Event->airportName." (".$Event->airportCity.")"; ?></span>
+                            </div>
+                            <!-- TIMES -->
+                            <div class="col-sm-6">
+                                <span class="event-times"><?php echo date('H:i', strtotime($Event->beginTime)); ?> UTC &rarr; <?php echo date('H:i', strtotime($Event->endTime)); ?> UTC</span>
+                            </div>
                         </div>
-                        <!-- TIMES -->
-                        <div class="col-sm-6">
-                            <span class="event-times"><?php echo date('H:i', strtotime($Event->beginTime)); ?> UTC &rarr; <?php echo date('H:i', strtotime($Event->endTime)); ?> UTC</span>
+                        <div class="row">
+                            <!-- COMMUNICATION -->
+                            <div class="col-xs-12">
+                                <span class="event-communication"><strong>FGCOM</strong> <?php echo $Event->fgcom; ?></span>
+                                <span class="event-communication"><strong>Mumble</strong> <?php echo $Event->teamspeak; ?></span>
+                            </div>
                         </div>
+                        <div class="row">
+                            <!-- DOCUMENTATION LINK -->
+                            <div class="col-xs-12">
+                                <span class="event-documentation"><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- ATC NAME -->
+                            <div class="col-xs-12">
+                                <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
+                            </div>
+                        </div>
+                        <!-- COMMENTS -->
+                        <?php echo $comments; ?>
                     </div>
-                    <div class="row">
-                        <!-- COMMUNICATION -->
-                        <div class="col-xs-12">
-                            <span class="event-communication"><strong>FGCOM</strong> <?php echo $Event->fgcom; ?></span>
-                            <span class="event-communication"><strong>Mumble</strong> <?php echo $Event->teamspeak; ?></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!-- DOCUMENTATION LINK -->
-                        <div class="col-xs-12">
-                            <span class="event-documentation"><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!-- ATC NAME -->
-                        <div class="col-xs-12">
-                            <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
-                        </div>
-                    </div>
-                    <!-- COMMENTS -->
-                    <?php echo $comments; ?>
                 </div>
                 
                 <?php
