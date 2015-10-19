@@ -5,7 +5,7 @@
 $atc_models = array("atc", "atc2", "atc-ml", "atc-fs", "openradar", "atc-tower", "atc-tower2", "atc-pie");
 
 // Raw content from mpserver12
-$rawContent = file_get_contents('http://mpserver12.flightgear.org/external/airspace_json.php');
+$rawContent = file_get_contents('http://mpserver12.org/external/airspace_json.php');
 
 // We decode the data
 $allContacts = json_decode($rawContent, TRUE);
