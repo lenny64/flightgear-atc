@@ -1,6 +1,6 @@
 <?php
 
-//error_reporting(E_ALL); ini_set("display_errors", 1);
+error_reporting(E_ALL); ini_set("display_errors", 1);
 
 date_default_timezone_set('UTC');
 
@@ -41,7 +41,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	"http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
-    
+
 <head>
 
 	<title>Flightgear ATC Events</title>
@@ -53,23 +53,25 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	<link rel="stylesheet" type="text/css" href="./style/dashboard.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/contact.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/poll.css"/>
+        <link rel="stylesheet" href="./bootstrap-3.3.5/css/bootstrap.min.css">
 
 	<!-- AUTRES -->
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-        
-    <link rel="shortcut icon" href="http://lenny64.free.fr/img/favicon.ico" />
-    
-    <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="./include/jquery-ui-1.10.4.custom.min.js"></script>
-    <!--<script type="text/javascript" src="./include/jquery.validate.min.js"></script>-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="shortcut icon" href="http://lenny64.free.fr/img/favicon.ico" />
+
+        <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="./include/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="./include/jquery.validate.min.js"></script>
+        <script src="./bootstrap-3.3.5/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    
-    
+
     <?php
-        
+
     // A little tracker
     $db->query("INSERT INTO visits VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
-    
+
     ?>

@@ -53,11 +53,45 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
 ?>
 
 <!-- Image size 900 x 190 -->
-<img id="abstract" src="./img/<?php echo $Depeche->abstractImg;?>"/>
 
-<div class="depeche">
-    <h1><?php echo $Depeche->displayDepeche($Depeche->title); ?></h1>
-    <div class="depecheContent">
-        <?php echo $Depeche->displayDepeche($Depeche->content); ?>
+<div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/a<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
+    <div id='bg-overlay'>
+        <div class="container">
+            <div class="col-md-8">
+                <h2 id="depecheMainTitle"><?php echo $Depeche->displayDepeche($Depeche->title); ?></h2>
+                <p id="depecheContent">
+                    <?php echo $Depeche->displayDepeche($Depeche->content); ?>
+                </p>
+            </div>
+            <div class="col-md-4 hidden-sm hidden-xs">
+                <?php include('./include/liveATC.php5'); ?>
+            </div>
+        </div>
     </div>
 </div>
+
+<ul class="list-group visible-xs visible-sm">
+    <li class='list-group-item list-group-item-info'>
+        Live ATCs availables (data from <a href="http://mpserver12.flightgear.org">mpserver12.flightgear.org</a>)
+    </li>
+    <?php
+    if ($atcs != NULL)
+    {
+        foreach($atcs as $atc)
+        {
+            $airportInformation = getAirportByCoordinates($atc['longitude'], $atc['latitude']);
+            echo "<li class='list-group-item'>".$atc['callsign'];
+            if ($airportInformation != NULL)
+            {
+                echo " (".$airportInformation['city'].",".$airportInformation['country'].")";
+            }
+            echo "</li>";
+        }
+    }
+    else
+    {
+        echo "<li class='list-group-item'>There are no ATC online.</li>";
+    }
+
+    ?>
+</ul>

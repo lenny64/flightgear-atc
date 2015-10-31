@@ -1,9 +1,6 @@
+
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 // Variable to see if there is a login entered
 $err_noLogin = true;
@@ -36,23 +33,31 @@ else if ($_SESSION['mode'] == 'connected')
 // Finally, if there is an error during the login
 if ($err_noLogin == true OR $userAuthenticated == false)
 {
-    if (isset($userAuthenticated) AND $userAuthenticated == false) { echo "<div class='information'>Your password and/or e-mail is not correct</div>"; }
-    if ($err_noLogin == true) { echo "<div class='information'>Please enter your e-mail and password</div>"; }
+    ?>
+    <div class="container">
+    <?php
+    if (isset($userAuthenticated) AND $userAuthenticated == false) { echo "<div class='alert alert-info'>Your password and/or e-mail is not correct</div>"; }
+    if ($err_noLogin == true) { echo "<div class='alert alert-info'>Please enter your e-mail and password</div>"; }
     ?>
     <br/>
     <?php
     // If the user wanted to edit the event
-    if ($_GET['eventId'] != NULL) echo '<form action="./edit_event.php5?eventId='.$_GET['eventId'].'" method="post">';
+    if ($_GET['eventId'] != NULL) echo '<form role="form" action="./edit_event.php5?eventId='.$_GET['eventId'].'" method="post">';
     // Else if the user wanted to just log in
-    else echo '<form action="./dashboard.php5" method="post" class="dashboard_connectionForm">'; ?>
-        <label>E-mail</label>
-        <input type="text" name="email"/>
-        <br/>
-        <label>Password</label>
-        <input type="password" name="password"/>
-        <br/>
-        <input type="submit" value="Connect" id="dashboard_connectionSubmit"/>
+    else echo '<form class="dashboard_connectionForm" role="form" action="./dashboard.php5" method="post">'; ?>
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input class="form-control" type="text" name="email" id="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input class="form-control" type="password" name="password" id="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Connect</button>
     </form>
+    </div>
+    <br/>
+    <br/>
     <?php
     include('./include/footer.php5');
     exit;

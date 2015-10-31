@@ -232,7 +232,27 @@ function flightplansToXML($flightplans_list)
 // This function will treat input values against code injection
 function purgeInputs($inputValue)
 {
-    $value = htmlspecialchars($inputValue);
+    if (is_array($inputValue))
+    {
+        foreach ($inputValue as $arrayKey => $arrayValue)
+        {
+            if (is_array($arrayValue))
+            {
+                foreach ($arrayValue as $valueKey => $valueValue)
+                {
+                    $arrayValue[$valueKey] = htmlspecialchars($valueValue);
+                }
+            }
+            else
+            {
+                $inputValue[$arrayKey] = htmlspecialchars($arrayValue);
+            }
+        }
+    }
+    else
+    {
+        $value = htmlspecialchars($inputValue);
+    }
     
     return $value;
 }

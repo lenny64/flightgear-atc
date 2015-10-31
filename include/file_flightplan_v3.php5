@@ -24,7 +24,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     // If there has not been an ID due to data missing and/or wrong data, we display errors
     if ($NewFlightplan->id == FALSE)
     {
-        echo "<div class='warning'>
+        echo "<div class='alert alert-danger'>
             Please note that ";
         // We display each error separately
         foreach($NewFlightplan->error as $error)
@@ -37,259 +37,217 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     else
     {
         $NewFlightplan->createEmail($email);
-        echo "<div class='information'>Your flightplan has been accepted. A key has been sent to $email .</div>";
+        echo "<div class='alert alert-info'>Your flightplan has been accepted. A key has been sent to $email .</div>";
     }
 }
 
 ?>
 
-<!--
-<div class="flightplan_banner">
-    <img src="./img/flightplanBanner.png" alt="flightgear ATC events"/>
-</div>
--->
 
 <a name="flightplan_filling"></a>
-<div class="flightplan_list_area">
-    <?php
-    // We first show x days (default : 5)
-    for ($flightplanDay = 0; $flightplanDay < 5; $flightplanDay++)
-    {
-        $currentDate = date('Y-m-d',strtotime(date('Y-m-d')." +".$flightplanDay." days"));
-        // We gather all FP for this date
-        $flightplans_query = $db->query("SELECT * FROM flightplans20140113 WHERE dateDeparture='$currentDate' ORDER BY dateDeparture, departureTime");
-        ?>
-        
-    <div class="flightplan_day">
-        <span class="flightplan_date"><?php echo date('D j M',strtotime($currentDate));?></span>
-        <div class="flightplan_add_button" onclick="document.getElementById('file_flightplan-form').style.display='block'; document.getElementById('file_flightplan-date').value='<?php echo $currentDate;?>';">+ NEW FLIGHTPLAN</div>
-        <?php
-        
-        $flightplanEvents[$currentDate] = filterEvents('date', $currentDate, $events);
-        
-        // Anyway we also show ATC events
-        echo '<div class="flightplan_atcevents">';
-        echo 'Controlled airports<br/>';
-        if ($flightplanEvents[$currentDate] != NULL)
-        {
-            foreach ($flightplanEvents[$currentDate] as $event)
-            {
-                $Event = new Event();
-                $Event->selectById($event);
-                echo "<b>".$Event->airportICAO."</b>";
-                echo " ";
-            }
-        }
-        else
-        {
-            echo "None";
-        }
-        echo '</div>';
-        
-        // FP counter
-        $nbFlightplans = 0;
-        // We list all FP for this date
-        foreach ($flightplans_query as $flightplan)
-        {
-            $nbFlightplans++;
-            $Flightplan = new Flightplan();
-            $Flightplan->selectById($flightplan['flightplanId']);
+
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">New flightplan</h4>
+      </div>
+      <div class="modal-body">
+          
+          
+        <form role="form" method="post" class="" action="./index.php5" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
             
-            // CAUTION VERY IMPORTANT !
-            // The _TEST callsign is relative to OR and ATCs tests
-            // Those flight plans are available through the API and remain into the DB
-            // but they do not appear on the website graphical interface.
-            if ($Flightplan->callsign != '_TEST')
-            {
-            ?>
-        
-            <div class="flightplan <?php if ($nbFlightplans >= 4) { echo "flightplanHidden"; } ?>">
-                <table>
-                    <tr>
-                        <td class="align-left"><span class="callsign"><?php echo $Flightplan->callsign; ?></span></td>
-                        <td class="align-right"><span class="aircraft"><?php echo $Flightplan->aircraftType; ?></span></td>
-                    </tr>
-                    <tr>
-                        <td class="align-left"><span class="airport"><?php echo $Flightplan->departureAirport; ?></span></td>
-                        <td class="align-right"><span class="time"><?php echo $Flightplan->departureTime; ?></span></td>
-                    </tr>
-                    <tr>
-                        <td class="align-left"><span class="airport"><?php echo $Flightplan->arrivalAirport; ?></span></td>
-                        <td class="align-right"><span class="time"><?php echo $Flightplan->arrivalTime; ?></span></td>
-                    </tr>
-                    <tr>
-                        <td class="align-left"><span class="status <?php echo $Flightplan->status;?>"><img src="./img/flightplan_indicator_<?php echo $Flightplan->status;?>.png"/> Flightplan <?php echo $Flightplan->status; ?></span></td>
-                        <td class="align-right">
-                            <form action="./edit_flightplan.php5" method="get">
-                                <input type="hidden" name="flightplanId" value="<?php echo $Flightplan->id;?>"/>
-                                <input type="submit" class="action" value="Edit"/>
-                            </form>
-                        </td>
-                    </tr>
-                </table>
+            <h4>Personal information</h4>
+            <div class="col-md-6 form-group">
+                <label class="control-label" for="file_flightplan-callsign">Callsign</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-callsign" name="callsign" placeholder="Callsign" required>
+                </div>
             </div>
-        
-            <?php
-            }
-        }
-        // Are there no FP this day ?
-        if ($nbFlightplans == 0)
-        {
-            ?>
-            <div class="flightplan empty">
-                No flightplan yet
+            <div class="col-md-6 form-group">
+                <label class="control-label" for="file_flightplan-email">E-mail</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-email" name="email" placeholder="Email Address" required>
+                </div>
             </div>
-            <?php
-        }
-        // More than 4 FP to show ? We can handle that by showing a button
-        if ($nbFlightplans >= 4)
-        {
-            ?>
-            <div class="flightplan empty showall">
-                See all (<?php echo $nbFlightplans; ?>)
+            
+            <h4>Flight information</h4>
+            <div class="col-md-12 form-group">
+                <label class="control-label">Date</label>
+                <div class="">
+                    <input type="text" class="form-control" name="date" id="file_flightplan-date" placeholder="Departure date" value="" required>
+                </div>
             </div>
-            <?php
-        }
-        ?>
+            <div class="col-xs-6 form-group">
+                <label class="control-label">Departure airport</label>
+                <div class="">
+                    <input type="text" class="form-control" name="departureAirport" id="file_flightplan-departureAirport" placeholder="Departure airport" value="" required>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group">
+                <label class="control-label">Arrival airport</label>
+                <div class="">
+                    <input type="text" class="form-control" name="arrivalAirport" id="file_flightplan-arrivalAirport" placeholder="Arrival airport" value="" required>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">Departure time</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <select name="departureTimeHours" class="form-control" id="file_flightplan-departureTimeHours<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>">
+                        <?php
+                        for ($h = 0; $h < 24; $h++)
+                        {
+                            if ($h == date('H'))
+                            {
+                                echo "<option value='".$h."' selected='selected'>".sprintf("%02d",$h)." h</option>";
+                            }
+                            else
+                            {
+                                echo "<option value='".$h."'>".sprintf("%02d",$h)." h</option>";
+                            }
+                        }
+                        ?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select name="departureTimeMinutes" class="form-control" id="file_flightplan-departureTimeMinutes<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>">
+                        <?php
+                        for ($m = 0; $m < 60; $m+=5)
+                        {
+                            // Calculation of the nearest 5 minutes
+                            $currentM = date('i');
+                            $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
+
+                            if ($roundM == $m)
+                            {
+                                echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)." UTC</option>";
+                            }
+                            else
+                            {
+                                echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)." UTC</option>";
+                            }
+                        }
+                        ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group"><div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">Arrival time</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <select name="arrivalTimeHours" class="form-control" id="file_flightplan-arrivalTimeHours<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>">
+                        <?php
+                        for ($h = 0; $h < 24; $h++)
+                        {
+                            if ($h == date('H'))
+                            {
+                                echo "<option value='".$h."' selected='selected'>".sprintf("%02d",$h)." h</option>";
+                            }
+                            else
+                            {
+                                echo "<option value='".$h."'>".sprintf("%02d",$h)." h</option>";
+                            }
+                        }
+                        ?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select name="arrivalTimeMinutes" class="form-control" id="file_flightplan-arrivalTimeMinutes<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>">
+                        <?php
+                        for ($m = 0; $m < 60; $m+=5)
+                        {
+                            // Calculation of the nearest 5 minutes
+                            $currentM = date('i');
+                            $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
+
+                            if ($roundM == $m)
+                            {
+                                echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)." UTC</option>";
+                            }
+                            else
+                            {
+                                echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)." UTC</option>";
+                            }
+                        }
+                        ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <h4>Additional information</h4>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Cruise altitude</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-cruiseAltitude" name="cruiseAltitude" placeholder="Cruise altitude" value="">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Route</label>
+                <div class="">
+                    <input type="text" class="form-control" id="file_flightplan-waypoints" name="waypoints" placeholder="Waypoints" value="">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Pilot name</label>
+                <div class="">
+                    <input type="text" class="form-control" name="pilotName" placeholder="Pilot" value="">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Airline</label>
+                <div class="">
+                    <input type="text" class="form-control" name="airline" placeholder="Airline" value="">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Flight number</label>
+                <div class="">
+                    <input type="text" class="form-control" name="flightNumber" placeholder="Flight number" value="">
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Category</label>
+                <div class="">
+                    <select name="category" class="form-control" id="file_flightplan-category">
+                        <option value="ifr">Instrument (IFR)</option>
+                        <option value="vfr">Visual (VFR)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-6 form-group">
+                <label class="control-label">Aircraft</label>
+                <div class="">
+                    <input type="text" class="form-control" name="aircraftType" placeholder="Aircraft" value="">
+                </div>
+            </div>
+            <div class="col-xs-12 form-group">
+                <button type="submit" value="Create" class="btn btn-success">Create</button>
+            </div>
+        </form>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
-    
-    <?php
-    }
-    
-    ?>
-    <br style="clear: both;"/>
-    <br/>
+
+  </div>
 </div>
 
-<form class="file_flightplan" id="file_flightplan-form" method="post" action="./index.php5" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
-
-    <div class="category" id="file_flightplan-pilotInformation">
-        <span class="title" id="file_flightplan-pilotInformationTitle">Pilot information</span>
-        <div class="category_content" id="file_flightplan-pilotInformationContent">
-            <label>Callsign</label><input type="text" name="callsign" id="file_flightplan-callsign" class="callsign" size="6" required/>
-            <br/>
-            <label>E-mail address*</label><br/><input type="text" name="email" id="file_flightplan-email" class="email" size="16" required/>
-            <br/>*A code is sent to edit the flightplan (this feature is fresh ! please <a href="./contact.php5">report bugs here</a>)
-        </div>
-    </div>
-    <div class="category" id="file_flightplan-flightInformation">
-        <span class="title" id="file_flightplan-flightInformationTitle">Flight information</span>
-        <div class="category_content" id="file_flightplan-flightInformationContent">
-            <span class="subtitle">Departure</span>
-            <label>Airport</label><input type="text" name="departureAirport" id="file_flightplan-departureAirport" class="airport" size="6" placeholder="ICAO" required/>
-            <br/>
-            <label>Time</label>
-            <select name="departureTimeHours" id="file_flightplan-departureTimeHours" class="time" required>
-            <?php
-            for ($h = 0; $h < 24; $h++)
-            {
-                if ($h == date('H'))
-                {
-                    echo "<option value='".sprintf("%02d",$h)."' selected='selected'>".sprintf("%02d",$h)."</option>";
-                }
-                else
-                {
-                    echo "<option value='".sprintf("%02d",$h)."'>".sprintf("%02d",$h)."</option>";
-                }
-            }
-            ?>
-            </select>
-            :
-            <select name="departureTimeMinutes" id="file_flightplan-departureTimeMinutes" class="time" required>
-            <?php
-            for ($m = 0; $m < 60; $m+=5)
-            {
-                // Calculation of the nearest 5 minutes
-                $currentM = date('i');
-                $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
-                
-                if ($roundM == $m)
-                {
-                    echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)."</option>";
-                }
-                else
-                {
-                    echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)."</option>";
-                }
-            }
-            ?>
-            </select> UTC
-            <!--
-            <input type="text" placeholder="hh" name="departureTimeHours" id="file_flightplan-departureTimeHours" class="time" size="2" required/>:
-            <input type="text" placeholder="mm" name="departureTimeMinutes" id="file_flightplan-departureTimeMinutes" class="time" size="2" required/>UTC
-            -->
-            <br/>
-            <label>Date</label><input type="text" value="" name="date" id="file_flightplan-date" class="date" size="8" required/>
-            <span class="subtitle">En-route</span>
-            <label>Cruise altitude</label><input type="text" value="" name="cruiseAltitude" id="file_flightplan-cruiseAltitude" class="altitude" size="4"/>
-            <br/>
-            <label>Route/Waypoints</label>
-            <br/>
-            <textarea name="waypoints" cols="15" rows="4"></textarea>
-            <span class="subtitle">Arrival</span>
-            <label>Airport</label><input type="text" name="arrivalAirport" id="file_flightplan-arrivalAirport" class="airport" size="6" placeholder="ICAO" required/>
-            <br/>
-            <label>Time</label>
-            <select name="arrivalTimeHours" id="file_flightplan-arrivalTimeHours" class="time" required>
-            <?php
-            for ($h = 0; $h < 24; $h++)
-            {
-                if ($h == date('H'))
-                {
-                    echo "<option value='".sprintf("%02d",$h)."' selected='selected'>".sprintf("%02d",$h)."</option>";
-                }
-                else
-                {
-                    echo "<option value='".sprintf("%02d",$h)."'>".sprintf("%02d",$h)."</option>";
-                }
-            }
-            ?>
-            </select>
-            :
-            <select name="arrivalTimeMinutes" id="file_flightplan-arrivalTimeMinutes" class="time" required>
-            <?php
-            for ($m = 0; $m < 60; $m+=5)
-            {
-                // Calculation of the nearest 5 minutes
-                $currentM = date('i');
-                $roundM = (round($currentM)%5 === 0) ? round($currentM) : round(($currentM+5/2)/5)*5;
-                
-                if ($roundM == $m)
-                {
-                    echo "<option value='".sprintf("%02d",$m)."' selected='selected'>".sprintf("%02d",$m)."</option>";
-                }
-                else
-                {
-                    echo "<option value='".sprintf("%02d",$m)."'>".sprintf("%02d",$m)."</option>";
-                }
-            }
-            ?>
-            </select> UTC
-            <!--
-            <input type="text" placeholder="hh" name="arrivalTimeHours" id="file_flightplan-arrivalTimeHours" class="time" size="2" required/>:
-            <input type="text" placeholder="mm" name="arrivalTimeMinutes" id="file_flightplan-arrivalTimeMinutes" class="time" size="2" required/>UTC
-            -->
-        </div>
-    </div>
-    <div class="category" id="file_flightplan-optionalInformation">
-        <span class="title" id="file_flightplan-optionalInformationTitle">Optional information</span>
-        <div class="category_content" id="file_flightplan-optionalInformationContent">
-            <label>Pilot name</label><input type="text" name="pilotName" id="file_flightplan-pilotName" size="10"/>
-            <br/>
-            <label>Airline</label><input type="text" name="airline" class="airline" id="file_flightplan-airline" size="10"/>
-            <label>Flight number</label><input type="text" name="flightNumber" class="airline" id="file_flightplan-flightNumber" size="10"/>
-            <br/>
-            <label>Category</label>
-            <select name="category" id="file_flightplan-category">
-                <option value="IFR">Instrumental (IFR)</option>
-                <option value="VFR">Visual (VFR)</option>
-            </select>
-            <br/>
-            <label>Aircraft</label><input type="text" name="aircraftType" class="aircraft" id="file_flightplan-aircraft" size="10"/>
-        </div>
-    </div>
-    <input type="submit" value="Create" class="create_flightplan_button"/>
-</form>
 
 <script type="text/javascript" language="javascript">
     $(document).ready(function(){

@@ -3,49 +3,60 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
-<h3>Download ATC resources</h3>
+<div class="jumbotron">
+    <div class="container">
+        <h2>Be part of the ATC crowd</h2>
+        <p>
+            If you want to control an airport, you will need an ATC client to install on your computer. Download one of the two programs below that will fit your needs.
+        </p>
+    </div>
+</div>
 
-<p class="normal_content">
-    You will find below two ATC clients to download.
+<div class="container">
     
-    <table style="margin: 2% 5%; width: 50%;">
-        <tr style="font-weight: bold;">
-            <td></td>
-            <td>OpenRadar</td>
-            <td>ATC-pie</td>
-        </tr>
-        <tr>
-            <td>Download</td>
-            <td><a href="http://wiki.flightgear.org/OpenRadarDownload" target="_blank">Latest stable</a></td>
-            <td><a href="http://sourceforge.net/projects/atc-pie/" target="_blank">Latest stable (.tar.gz)</a></td>
-        </tr>
-        <tr>
-            <td>Developer</td>
-            <td>Wolfram Wagner</td>
-            <td>Michael Filhol</td>
-        </tr>
-        <tr>
-            <td>Wiki page</td>
-            <td><a href="http://wiki.flightgear.org/OpenRadar" target="_blank">Flightgear Wiki</a></td>
-            <td><a href="http://wiki.flightgear.org/ATC-pie" target="_blank">Flightgear Wiki</a></td>
-        </tr>
-    </table>
-</p>
+    <h3>Download ATC clients</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Openradar</th>
+                    <th>ATC-pie</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Download</td>
+                    <td><a href="http://wiki.flightgear.org/OpenRadarDownload" target="_blank">Latest stable</a></td>
+                    <td><a href="http://sourceforge.net/projects/atc-pie/" target="_blank">Latest stable (.tar.gz)</a></td>
+                </tr>
+                <tr>
+                    <td>Developer</td>
+                    <td>Wolfram Wagner</td>
+                    <td>Michael Filhol</td>
+                </tr>
+                <tr>
+                    <td>Wiki page</td>
+                    <td><a href="http://wiki.flightgear.org/OpenRadar" target="_blank">Flightgear Wiki</a></td>
+                    <td><a href="http://wiki.flightgear.org/ATC-pie" target="_blank">Flightgear Wiki</a></td>
+                </tr>
+            </tbody>
+        </table>
 
 
-<h3>Get an ATC ident to file Flight Plans</h3>
+    <h3>Get an ATC ident to file Flight Plans</h3>
 
-<p class="normal_content">
-    <form action="./dev2014_01_13.php5?request_auth" method="post" style="margin: 2% 5%;">
+    <form role="form" action="./dev2014_01_13.php5?request_auth" method="post">
         <input type="hidden" name="userInfo[]" value="virtualAirline"/>
-        Your email address : <input type="text" name="mail" size="35"/>
-        <br/>
-        <br/>
-        <input type="submit" value="Create my ident"/>
+        <div class="form-group">
+            <label for="email">Your email address</label>
+            <input type="text" name="mail" class="form-control" id="email" placeholder="Email address">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
     </form>
-</p>
 
-<br/>
-<br/>
+    <br/>
+    <br/>
+</div>
 
 <?php include('./include/footer.php5'); ?>

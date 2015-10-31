@@ -6,11 +6,15 @@ $db = null;
 
 ?>
 
-<div id="footer">
-    Website designed by lenny64 for Flightgear
-</div>
 
-</div>
+<footer>
+    <div class="container">
+    <p class="text-muted">
+        Website designed by lenny64 for Flightgear
+    </p>
+    </div>
+</footer>
+
 
 </body>
 </html>

@@ -32,64 +32,75 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
 
 ?>
 
-<h3>Contact</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <a class="twitter-timeline" href="https://twitter.com/Flightgear_ATC" data-widget-id="655980709199400960">Tweets by @Flightgear_ATC</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
 
-<form action="./contact.php5" method="post">
-    <input type="text" name="mail"/> Your email
-    <br/>
-    <input type="text" name="subject"/> Subject
-    <br/>
-    <textarea rows="7" cols="40" name="content"></textarea>
-    <br/><br/>
-    <input type="submit" value="Send message"/>
-</form>
+        <div class="col-md-4">
+            <h3>Contact</h3>
 
-<h3>Get involved : what could be improved ?</h3>
+            <form role="form" action="./contact.php5" method="post">
+                <div class="form-group">
+                    <input type="text" name="mail" class="form-control" id="mail" placeholder="E-mail"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject"/>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea name="content" class="form-control" id="content"></textarea>
+                </div>
+                <input type="submit" value="Send message"/>
+            </form>
+        </div>
 
+        <div class="col-md-4">
+            <h3>Get involved : what could be improved ?</h3>
 
-<form action="./contact.php5" method="post">
-	What is your perception about the website ?
-	<br/>
-	<select name="note">
-		<option value=""> </option>
-		<option value="good"> + Good</option>
-		<option value="medium"> ~ Quite good/Quite bad</option>
-		<option value="bad"> - Bad</option>
-	</select>
-	
-	<br/><br/>
-	
-	Your name :
-	<br/>
-	<input type="text" name="pseudo"/>
-	<br/>
-	Improvements :
-	<br/>
-	<textarea name="improvements" rows="7" cols="40"></textarea>
-	<br/>
-	Your ideas will be shown below
-	<br/><br/>
-	<input type="submit" value="Send"/>
-</form>
+            <form role="form" action="./contact.php5" method="post">
+                <div class="form-group">
+                    <label for="note">What is your perception of the website ?</label>
+                    <select name="note" class="form-control" id="note">
+                        <option value=""> </option>
+                        <option value="good"> + Good</option>
+                        <option value="medium"> ~ Quite good/Quite bad</option>
+                        <option value="bad"> - Bad</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="pseudo" class="form-control" placeholder="Your name"/>
+                </div>
+                <div class="form-group">
+                    <label for="improvements">Improvements</label>
+                    <textarea name="improvements" class="form-control"></textarea>
+                </div>
+                Your ideas will be shown below
+                <input type="submit" value="Send"/>
+            </form>
+        </div>
+    </div>
 
-<div class="commentaires">
-	
-	<?php
+    <div class="commentaires col-md-12">
 
-	$liste_commentaires = $db->query("SELECT * FROM improvements ORDER BY improvement_id DESC LIMIT 0,20");
+            <?php
 
-	foreach ($liste_commentaires as $commentaire)
-	{?>
-		<div class="commentaire">
-		<span class="commentaire_pseudo"><?php echo $commentaire['pseudo'];?></span>
-		<span class="commentaire_date"><?php echo $commentaire['datetime'];?></span>
-		<span class="commentaire_improvement"><?php echo nl2br($commentaire['improvement']);?></span>
-		</div>
-	<?php
-	}
+            $liste_commentaires = $db->query("SELECT * FROM improvements ORDER BY improvement_id DESC LIMIT 0,20");
 
-	?>
-</div>
+            foreach ($liste_commentaires as $commentaire)
+            {?>
+                    <div class="commentaire">
+                    <span class="commentaire_pseudo"><?php echo $commentaire['pseudo'];?></span>
+                    <span class="commentaire_date"><?php echo $commentaire['datetime'];?></span>
+                    <span class="commentaire_improvement"><?php echo nl2br($commentaire['improvement']);?></span>
+                    </div>
+            <?php
+            }
+
+            ?>
+    </div>
 
 
 <br/>
