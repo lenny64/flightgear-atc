@@ -12,11 +12,11 @@ class User
     public $userCookieId;
     public $name;
     private $requestNewUser = true;
-    
+
     public function associateCookieToUser()
     {
         global $db;
-        
+
         // We check if the user has a cookie
         if (isset($_COOKIE['lenny64_id']))
         {
@@ -43,7 +43,7 @@ class User
     public function searchUserCookie()
     {
         global $db;
-        
+
         // We check if the user has a cookie
         if (isset($_COOKIE['lenny64_id']))
         {
@@ -75,17 +75,17 @@ class User
             return false;
         }
     }
-    
+
     public function create($submittedMail,$submittedPassword,$IP)
     {
         global $db;
-        
+
         $Mail = purgeInputs($submittedMail);
         $Password = purgeInputs($submittedPassword);
-        
+
         // We get the list of users
         $users_list = $db->query("SELECT userId, mail, password FROM users");
-        
+
         // We see
         foreach ($users_list as $user)
         {
@@ -93,7 +93,7 @@ class User
             if ($user['mail'] == $Mail)
             {
                 $this->mail = $Mail;
-                
+
                 // and if the password is correct
                 if ($user['password'] == $Password)
                 {
@@ -101,7 +101,7 @@ class User
                     $this->password = $Password;
                     // And we get the ID
                     $this->id = $user['userId'];
-                    
+
                     // If the IP differs from the DB, we update
                     if ($user['ip'] != $IP AND $IP != NULL)
                     {
@@ -109,12 +109,12 @@ class User
                         $preparedQuery = $db->prepare("UPDATE users SET ip = :ip WHERE userId = :userId;");
                         $preparedQuery->execute(array(":ip" => purgeInputs($IP), ":userId" => purgeInputs($this->id)));
                     }
-                    
+
                     $_SESSION['id'] = $this->id;
                     $_SESSION['mode'] = 'connected';
                     $this->connected = true;
                     //$this->associateCookieToUser();
-                    
+
                     // We tell there is no need to create another user
                     $this->requestNewUser = false;
                 }
@@ -123,16 +123,16 @@ class User
                     echo "<div class='warning'>Password not correct</div>";
                     $_SESSION['mode'] = 'disconnected';
                     $this->connected = false;
-                    
+
                     // We tell there is no need to create another user
                     $this->requestNewUser = false;
                 }
             }
         }
-        
+
         // We make a last check : is a password and mail entered ?
         if (!isset($Mail) OR !isset($Password) OR $Mail == NULL OR $Password == NULL) $this->requestNewUser = false;
-        
+
         // If we receive the signal to create a new user (by default)
         if ($this->requestNewUser == true)
         {
@@ -145,7 +145,7 @@ class User
             //$this->associateCookieToUser();
         }
     }
-    
+
     /**
      * This function selects every information contained into the user ID
      * @param type $id
@@ -157,24 +157,24 @@ class User
             if ($id != NULL)
             {
                 global $db;
-                
+
                 $users_list = $db->query("SELECT * FROM users WHERE userId = $id");
                 $users = $users_list->fetch(PDO::FETCH_ASSOC);
-                
+
                 $this->ip = $users['ip'];
                 $this->mail = $users['mail'];
                 $this->password = $users['password'];
                 $this->id = $users['userId'];
                 $this->notifications = $users['notifications'];
                 $this->parameters = json_decode($users['userParameters'],true);
-                
+
                 $users_names_list = $db->query("SELECT * FROM users_names WHERE userId = '$id' ORDER BY userNameId DESC LIMIT 0,1");
                 $users_names = $users_names_list->fetch(PDO::FETCH_ASSOC);
                 $this->name = $users_names['userName'];
             }
         }
     }
-    
+
     /* Function to handle connection
      */
     public function connect($id)
@@ -183,7 +183,7 @@ class User
         $_SESSION['mode'] = "connected";
         $this->connected = true;
     }
-    
+
     /* Function to handle disconnection
      */
     public function disconnect($id)
@@ -191,25 +191,25 @@ class User
         $_SESSION['mode'] = 'guest';
         unset($_SESSION['id']);
     }
-    
+
     /* Function to change the way an user wants to receive or not
      * notifications about flightplans filled on his airport.
      */
     public function changeNotification($notification)
     {
         global $db;
-        
+
         $preparedQuery = $db->prepare("UPDATE users SET notifications=:notification WHERE userId=:userId;");
         $preparedQuery->execute(array(":notification" => purgeInputs($notification), ":userId" => purgeInputs($this->id)));
         $this->notifications = $notification;
     }
-    
+
     /* Function to change other parameters
      */
     public function changeParameters($parameters)
     {
         global $db;
-        
+
         foreach ($parameters as $parameter => $value)
         {
             $checkedParameters[$parameter] = purgeInputs($value);
@@ -219,7 +219,7 @@ class User
         $preparedQuery->execute(array(":jsonUserParameters" => $jsonUserParameters, ":userId" => purgeInputs($this->id)));
         $this->parameters = $parameters;
     }
-    
+
     /* Function to add/change the name of the ATC
      * it would appear when a session is shown on the main page
      * /!\ Requires the "users_names" table
@@ -232,7 +232,7 @@ class User
         $preparedQuery->execute(array(":userId" => $this->id, ":name" => $name));
         $this->name = $name;
     }
-    
+
 }
 
 
@@ -242,17 +242,17 @@ class Airport
     public $icao;
     public $id;
     private $requestNewAirport = true;
-    
+
     public function create($AirportName, $AirportICAO)
     {
         global $db;
-        
+
         $this->name         =   purgeInputs($AirportName);
         $this->icao         =   purgeInputs($AirportICAO);
-        
+
         // We get the list of airports
         $airports_list = $db->query("SELECT * FROM airports");
-        
+
         // We see
         foreach ($airports_list as $airport)
         {
@@ -260,14 +260,14 @@ class Airport
             if ($airport['name'] == $AirportName)
             {
                 $this->name = $AirportName;
-                
+
                 $this->id = $airport['airportId'];
-                
+
                 // We tell there is no need to create another airport
                 $this->requestNewAirport = false;
             }
         }
-        
+
         // If we receive the signal to create a new session (by default)
         if ($this->requestNewAirport == true)
         {
@@ -304,12 +304,12 @@ class Event
     public function create($Year, $Month, $Day, $BeginHour, $BeginMinutes, $EndHour, $EndMinutes, $AirportICAO, $FGCOM, $TeamSpeak, $DocsLink, $Remarks)
     {
         global $db;
-        
+
         $this->fgcom        =   ($FGCOM != NULL ? $FGCOM : 'N/A');
         $this->teamspeak    =   ($TeamSpeak != NULL ? $TeamSpeak : 'N/A');
         $this->docsLink     =   ($DocsLink != NULL ? $DocsLink : 'N/A');
         $this->remarks      =   ($Remarks != NULL ? $Remarks : 'N/A');
-        
+
         // We check if there is an airport called
         if (isset($AirportICAO) AND $AirportICAO != NULL)
         {
@@ -320,7 +320,7 @@ class Event
         {
             $this->requestNewEvent = false;
         }
-        
+
         // We check if there is a date called
         if (isset($Year) AND isset($Month) AND isset($Day) AND $Year != NULL AND $Month != NULL AND $Day != NULL)
         {
@@ -329,20 +329,20 @@ class Event
             // We transform each Hour+Minutes into Time format
             $this->beginTime = date('H:i:s',  strtotime($BeginHour.':'.$BeginMinutes));
             $this->endTime = date('H:i:s',  strtotime($EndHour.':'.$EndMinutes));
-            
+
             // Security to avoid "0 hours" events OR if the egin time occurs after the end time
             if ($this->beginTime >= $this->endTime)
             {
                 $this->requestNewEvent = false;
                 $this->error = "Please check your date and times";
             }
-            
+
         }
         // Otherwise we do not create an event
         else            $this->requestNewEvent = false;
-        
+
         $this->userId       =   $_SESSION['id'];
-        
+
         // If the user is not connected (password not correct)
         if ($_SESSION['mode'] != 'connected')
         {
@@ -357,43 +357,43 @@ class Event
                 $this->userId = 1;
             }
         }
-        
+
         // We get the list of events
         $events_list = $db->query("SELECT * FROM events");
-        
-        
+
+
         // We see
         foreach ($events_list as $event)
         {
             /* A V O I D   T W O   A T C S   A T   T H E    S A M E    T I M E */
             // if there is an airport with that name
-            if (    $event['airportICAO'] == $AirportICAO AND 
-                    $event['date'] == $this->date AND 
+            if (    $event['airportICAO'] == $AirportICAO AND
+                    $event['date'] == $this->date AND
                     // If the wished time is between BEGIN and END times, we won't create it
-                    (($this->beginTime >= $event['beginTime'] AND $this->beginTime < $event['endTime']) OR ($this->endTime > $event['beginTime'] AND $this->endTime <= $event['endTime']) OR ($this->beginTime <= $event['beginTime'] AND $this->endTime >= $event['endTime']))                    
+                    (($this->beginTime >= $event['beginTime'] AND $this->beginTime < $event['endTime']) OR ($this->endTime > $event['beginTime'] AND $this->endTime <= $event['endTime']) OR ($this->beginTime <= $event['beginTime'] AND $this->endTime >= $event['endTime']))
                     )
             {
-                
+
                 $this->error = "Sorry, an other session is planned at this moment.";
-                
+
                 // We tell there is no need to create another event
                 $this->requestNewEvent = false;
             }
             /* A V O I D   T W O    A I R P O R T S   F O R   T H E    S A M E   A T C */
-            elseif ( $event['userId'] == $this->userId AND $event['date'] == $this->date AND 
+            elseif ( $event['userId'] == $this->userId AND $event['date'] == $this->date AND
 					(($this->beginTime >= $event['beginTime'] AND $this->beginTime < $event['endTime']) OR ($this->endTime > $event['beginTime'] AND $this->endTime <= $event['endTime']) OR ($this->beginTime <= $event['beginTime'] AND $this->endTime >= $event['endTime']))
 					)
 			{
 				$this->error = "Would you handle two sessions at a time ?<br/>Please specify a time before or after your session at ".$event['airportICAO']." (from ".$event['beginTime']." to ".$event['endTime']." ).";
-				
+
 				// We tell there is no need to create another event
                 $this->requestNewEvent = false;
 			}
         }
-        
-        
-        
-        
+
+
+
+
         // If we receive the signal to create a new session (by default)
         if ($this->requestNewEvent == true)
         {
@@ -408,7 +408,7 @@ class Event
                 :teamspeak,
                 :docsLink,
                 :remarks);");
-            
+
             $statement->execute(array(
                 ':airportICAO'      =>  purgeInputs($this->airportICAO),
                 ':userId'           =>  purgeInputs($this->userId),
@@ -419,12 +419,12 @@ class Event
                 ':teamspeak'        =>  purgeInputs($this->teamspeak),
                 ':docsLink'         =>  purgeInputs($this->docsLink),
                 ':remarks'          =>  purgeInputs($this->remarks)));
-            
+
             $this->id = $db->lastInsertId();
             $this->eventCreated = true;
         }
     }
-    
+
     /**
      * This function selects every information contained into the event ID
      * @param type $id
@@ -436,7 +436,7 @@ class Event
             if ($id != NULL)
             {
                 global $db;
-                
+
                 $events_list = $db->query("
                     SELECT
                         events.* ,
@@ -449,7 +449,7 @@ class Event
                     WHERE events.eventId = $id
                     LIMIT 0, 1");
                 $event = $events_list->fetch(PDO::FETCH_ASSOC);
-                
+
                 $this->id = $event['eventId'];
                 $this->airportICAO = strtoupper($event['airportICAO']);
                 $this->userId = $event['userId'];
@@ -463,20 +463,20 @@ class Event
                 $this->ils = $event['ILS'];
                 $this->docsLink = $event['docsLink'];
                 $this->remarks = $event['remarks'];
-                
+
                 $this->airportName = $event['airportName'];
                 $this->airportCity = $event['airportCity'];
                 $this->airportCountry = $event['airportCountry'];
             }
         }
     }
-    
+
     public function updateEvent()
     {
         if ($_SESSION['mode'] == 'connected')
         {
             global $db;
-            
+
             $this->id = purgeInputs($this->id);
             $this->airportICAO = purgeInputs($this->airportICAO);
             $this->date = purgeInputs($this->date);
@@ -489,7 +489,7 @@ class Event
             $this->ils = purgeInputs($this->ils);
             $this->docsLink = purgeInputs($this->docsLink);
             $this->remarks = purgeInputs($this->remarks);
-            
+
             $query = "UPDATE `events` SET
                 `airportICAO` = :airportICAO,
                 `date` = :date,
@@ -501,11 +501,11 @@ class Event
                 `runways` = :runways,
                 `ILS` = :ils,
                 `docsLink` = :docsLink,
-                `remarks` = :remarks 
+                `remarks` = :remarks
                 WHERE `eventId` = :eventId ;";
-            
+
             $preparedQuery = $db->prepare($query);
-            
+
             $preparedQuery->bindValue(":airportICAO",$this->airportICAO);
             $preparedQuery->bindValue(":date",$this->date);
             $preparedQuery->bindValue(":beginTime",$this->beginTime);
@@ -518,7 +518,7 @@ class Event
             $preparedQuery->bindValue(":docsLink",$this->docsLink);
             $preparedQuery->bindValue(":remarks",$this->remarks);
             $preparedQuery->bindValue(":eventId",$this->id);
-            
+
             if ($preparedQuery->execute())
             {
                 return true;
@@ -527,19 +527,19 @@ class Event
             {
                 return false;
             }
-            
+
         }
     }
-    
+
     public function getATCSessions($beginDate,$limitDate)
     {
         // Return the Ids' of events between beginDate and endDate
         global $db;
-        
+
         $events = Array();
-        
+
         $eventsList = $db->query("SELECT eventId FROM events WHERE date >= '$beginDate' AND date <= '$limitDate'");
-        
+
         if ($eventsList != NULL)
         {
             foreach ($eventsList as $event)
@@ -547,7 +547,7 @@ class Event
                 $events[] = $event['eventId'];
             }
         }
-        
+
         return $events;
     }
 }
@@ -565,7 +565,7 @@ class SpecialEvent
     public $valid = TRUE;
     public $eventsList = Array();
     public $pilotsList = Array();
-    
+
     public function addPilot($callsign, $participation)
     {
         if (isset($callsign) AND isset($participation))
@@ -573,20 +573,20 @@ class SpecialEvent
             if ($callsign != NULL AND $participation != NULL)
             {
                 global $db;
-                
+
                 $preparedQuery = $db->prepare("INSERT INTO specialEvents_pilots VALUES('',:id,:callsign,:participation,NOW());");
-                
+
                 $preparedQuery->bindValue(':id',purgeInputs($this->id));
                 $preparedQuery->bindValue(':callsign',purgeInputs($callsign));
                 $preparedQuery->bindValue(':participation',purgeInputs($participation));
-                
+
                 $preparedQuery->execute();
                 $this->pilotsList = Array();
                 $this->selectById($this->id);
             }
         }
     }
-    
+
     public function addEventToSpecialEvent($eventId, $userId)
     {
         if (isset($eventId) AND isset($userId))
@@ -594,22 +594,22 @@ class SpecialEvent
             if ($eventId != NULL AND $userId != NULL)
             {
                 global $db;
-                
+
                 // We check if the event is already listed
                 if (array_search($eventId, $this->eventsList) === false)
                 {
                     $preparedQuery = $db->prepare("INSERT INTO specialEvents_airports VALUES('',:id,:eventId,:userId,'1');");
-                    
+
                     $preparedQuery->bindValue(':id',purgeInputs($this->id));
                     $preparedQuery->bindValue(':callsign',purgeInputs($eventId));
                     $preparedQuery->bindValue(':participation',purgeInputs($userId));
-                    
+
                     $preparedQuery->execute();
                 }
             }
         }
     }
-    
+
     public function removeEventFromSpecialEvent($eventId)
     {
         if (isset($eventId))
@@ -617,13 +617,13 @@ class SpecialEvent
             if ($eventId != NULL)
             {
                 global $db;
-                
+
                 $preparedQuery = $db->prepare("DELETE FROM specialEvents_airports WHERE eventId = $eventId;");
                 $preparedQuery->execute();
             }
         }
     }
-    
+
     public function selectById($id)
     {
         if (isset($id))
@@ -631,7 +631,7 @@ class SpecialEvent
             if ($id != NULL)
             {
                 global $db;
-    
+
                 // We list every special event
                 $specialEvents_list = $db->query("SELECT * FROM specialEvents_events WHERE specialEventsId = $id");
                 $specialEvent = $specialEvents_list->fetch(PDO::FETCH_ASSOC);
@@ -643,22 +643,22 @@ class SpecialEvent
                 $this->url = $specialEvent['url'];
                 $this->dateBegin = $specialEvent['dateBegin'];
                 $this->dateEnd = $specialEvent['dateEnd'];
-                
+
                 /* EVENT LIST */
                 // We make a query returning specialEventId and eventId
                 $specialEventsEvents_list = $db->query(
                         "SELECT specialEvents_airports.specialEventsId,events.eventId
-                        FROM specialEvents_airports,events 
+                        FROM specialEvents_airports,events
                         WHERE specialEvents_airports.specialeventsId = $id
                         AND specialEvents_airports.eventId = events.eventId
                         AND events.date >= CURDATE()
                         ORDER BY events.date, events.beginTime");
-                
+
                 // We initialize the "valid" to TRUE, in case the previous Special
                 // event selected is not valid.
                 $this->valid = TRUE;
-                
-                // We initialize an empty array 
+
+                // We initialize an empty array
                 $this->eventsList = Array();
                 // Each event in that special event
                 foreach ($specialEventsEvents_list as $specialEventsEvent)
@@ -678,7 +678,7 @@ class SpecialEvent
                 {
                     $this->valid = FALSE;
                 }
-                
+
                 /* PILOT LIST */
                 // We select all pilots relative to this special event
                 $specialEventPilots_list = $db->query("SELECT * FROM specialEvents_pilots WHERE specialEventsId = $id");
@@ -691,7 +691,7 @@ class SpecialEvent
             }
         }
     }
-    
+
 }
 
 class Flightplan
@@ -725,7 +725,7 @@ class Flightplan
     public $arrivalATCpresence = true;
     public $dataMissing = true;
     public $error = Array();
-    
+
     function checkInformation()
     {
         // We check if all the information was given
@@ -769,10 +769,10 @@ class Flightplan
         }
         return $this->error;
     }
-    
+
     function create($dateDeparture,$departureAirport,$arrivalAirport,$alternateDestination,$cruiseAltitude,$trueAirspeed,$callsign,$pilotName,$airline,$flightNumber,$category,$aircraftType,$departureTime,$arrivalTime,$waypoints,$soulsOnBoard,$fuelTime,$comments)
     {
-        
+
         // We gather the information
         $this->departureAirport = $departureAirport;
         $this->arrivalAirport = $arrivalAirport;
@@ -797,12 +797,12 @@ class Flightplan
         $this->pilotName = ($pilotName != NULL ? $pilotName : '');
         $this->comments = ($comments != NULL ? $comments : '');
         $this->status = 'filed';
-        
+
         // We check if all information given is fine
         $this->checkInformation();
-        
+
         global $db;
-        
+
         // We check if there is another flightplan with the same information
         $similarFlightplanList = $db->query("SELECT flightplanId FROM flightplans20140113 WHERE dateDeparture='".$this->dateDeparture."' AND callsign='".$this->callsign."' AND departureTime='".$this->departureTime."' AND airportICAOFrom='".$this->departureAirport."' AND arrivalTime='".$this->arrivalTime."' AND airportICAOTo='".$this->arrivalAirport."'");
         $similarFlightplans = Array();
@@ -817,7 +817,7 @@ class Flightplan
         {
             $this->error[] = "a similar flight plan has already been filed";
         }
-        
+
         // If there are no error
         if (sizeof($this->error) == 0)
         {
@@ -904,11 +904,11 @@ class Flightplan
             if (preg_match("#^[a-zA-z]{4}$#",$departureAirport) AND preg_match("#^[a-zA-z]{4}$#",$arrivalAirport) AND $callsign != NULL AND $departureTime != NULL AND $arrivalTime != NULL AND $dateDeparture != NULL)
             {
                 global $db;
-                
+
                 // We can generate some alerts
                 $alert_departureATC = true;
                 $alert_arrivalATC = true;
-                
+
                 // We gather the information
                 $this->departureAirport = $departureAirport;
                 $this->arrivalAirport = $arrivalAirport;
@@ -925,7 +925,7 @@ class Flightplan
                 else $this->dateArrival = $this->dateDeparture;
                 $this->waypoints = $waypoints;
                 $this->comments = $comments;
-				
+
                 // If the airport is not controlled, we advise the pilot
                 if (isAirportControlled($departureAirport, $this->dateDeparture, $departureTime) == false)
                 {
@@ -937,7 +937,7 @@ class Flightplan
                     $alert_arrivalATC = false;
                     $this->arrivalATCpresence = false;
                 }
-                
+
                 // I insert the flightplan into DB
                 $preparedQuery = $db->prepare("INSERT INTO flightplans20140113 VALUES('','',:callsign,'',:departureAirport,:arrivalAirport,'',:cruiseAltitude,'',:dateDeparture,:dateArrival,:departureTime,:arrivalTime,:aircraftType,'','','',:waypoints,:category,:comments,'','');");
                 $preparedQuery->execute(array(
@@ -955,16 +955,16 @@ class Flightplan
                     ":comments"             =>  $this->comments
                 ));
                 $this->id = $db->lastInsertId();
-                                
+
                 // We get the ATC user ID
                 $dep_ATCiDQuery = $db->query("SELECT userId FROM events WHERE airportICAO='$this->departureAirport' AND date='$this->dateDeparture' AND beginTime<='$this->departureTime' AND endTime>='$this->departureTime' LIMIT 1");
                 $dep_ATCiD = $dep_ATCiDQuery->fetch(PDO::FETCH_ASSOC);
                 $dep_ATCiD = $dep_ATCiD[0];
-                
+
                 $arr_ATCiDQuery = $db->query("SELECT userId FROM events WHERE airportICAO='$this->arrivalAirport' AND date='$this->dateArrival' AND beginTime<='$this->arrivalTime' AND endTime>='$this->arrivalTime' LIMIT 1");
                 $arr_ATCiD = $arr_ATCiDQuery->fetch(PDO::FETCH_ASSOC);
                 $arr_ATCiD = $arr_ATCiD[0];
-                
+
                 // If the user wants to, we can send him the alert
                 if (getInfo("notifications", "users", "userId", $dep_ATCiD) == 1)
                 {
@@ -978,19 +978,19 @@ class Flightplan
                 }
                 // There is no data missing
                 $this->dataMissing = false;
-                
+
             }
         }
     } */
-    
+
     // Function to edit a flight plan
     public function editFlightplan()
     {
         global $db;
-        
+
         // We check the information
         $this->checkInformation();
-        
+
         // If no error were detected
         if (sizeof($this->error) == 0)
         {
@@ -1017,7 +1017,7 @@ class Flightplan
                     pilotName = :pilotName,
                     waypoints = :waypoints,
                     category = :category,
-                    comments = :comments 
+                    comments = :comments
                     WHERE flightplanId = :flightplanId;");
 
             $preparedQuery->execute(array(
@@ -1044,11 +1044,11 @@ class Flightplan
             ));
         }
     }
-    
+
     public function getFlightplans()
     {
         global $db;
-        
+
         // Callsign
         if (isset($this->callsign) AND $this->callsign != NULL)
         {
@@ -1100,10 +1100,10 @@ class Flightplan
         $queryPrepare = $db->prepare($query);
         $queryPrepare->execute();
         $flightplans = $queryPrepare->fetchAll();
-        
+
         return $flightplans;
     }
-    
+
     // Function to select a flight plan with it's ID
     public function selectById($id)
     {
@@ -1112,10 +1112,10 @@ class Flightplan
             if ($id != NULL)
             {
                 global $db;
-                
+
                 $flightplans_list = $db->query("SELECT * FROM flightplans20140113 WHERE flightplanId = $id");
                 $flightplan = $flightplans_list->fetch(PDO::FETCH_ASSOC);
-                
+
                 $this->id = $flightplan['flightplanId'];
                 $this->associatedEvent = $flightplan['eventId'];
                 $this->departureAirport = $flightplan['airportICAOFrom'];
@@ -1136,7 +1136,7 @@ class Flightplan
                 $this->soulsOnBoard = $flightplan['soulsOnBoard'];
                 $this->fuelTime = $flightplan['fuelTime'];
                 $this->pilotName = $flightplan['pilotName'];
-                
+
                 // C O M M E N T S
                 // We retrieve all comments relative to that flight plan
                 $comments_list = $db->query("SELECT * FROM flightplan_comments WHERE flightplanId = $id");
@@ -1154,13 +1154,13 @@ class Flightplan
                         $this->comments[] = array("pseudo" => $pseudo, "comment" => $comment);
                     }
                 }
-                
+
                 // S T A T U S
                 // We retrieve the status if the flightplan
                 $status_list = $db->query("SELECT * FROM flightplan_status WHERE flightplanId = $id ORDER BY flightplanStatusId DESC LIMIT 1");
                 $status = $status_list->fetch(PDO::FETCH_ASSOC);
                 $this->status = $status['status'];
-                
+
                 // H I S T O R Y
                 // We retrieve the flightplan's history
                 $history_list = $db->query("SELECT * FROM flightplan_history WHERE flightplanId = $this->id ORDER BY dateTime DESC");
@@ -1188,18 +1188,18 @@ class Flightplan
                         if ($this->lastUpdated == 0) $this->lastUpdated = $date;
                     }
                 }
-                
+
                 // E M A I L   A N D   P R I V A T E   K E Y
                 // We retrieve the email address
                 $email_list = $db->query("SELECT * FROM flightplan_emails WHERE flightplanId = $id ORDER BY flightplanEmailId DESC LIMIT 1");
                 $email = $email_list->fetch(PDO::FETCH_ASSOC);
                 $this->email = $email['email'];
                 $this->privateKey = $email['privateKey'];
-                
+
             }
         }
     }
-    
+
     public function addComment($pseudo,$comment)
     {
         if (isset($pseudo) AND isset($comment))
@@ -1207,10 +1207,10 @@ class Flightplan
             if ($pseudo != NULL AND $comment != NULL)
             {
                 global $db;
-                
+
                 $pseudo = purgeInputs($pseudo);
                 $comment = purgeInputs($comment);
-                
+
                 // We insert the comment
                 $preparedQuery = $db->prepare("INSERT INTO flightplan_comments VALUES('',:id,:pseudo,:comment,:date);");
                 $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":pseudo" => $pseudo, ":comment" => $comment, ":date" => date('Y-m-d H:i:s')));
@@ -1218,7 +1218,7 @@ class Flightplan
             }
         }
     }
-    
+
     public function changeFlightplanStatus($userId,$flightplanId,$status)
     {
         if (isset($userId) AND isset($flightplanId) AND isset($status))
@@ -1226,7 +1226,7 @@ class Flightplan
             if ($userId != NULL AND $flightplanId != NULL AND $status != NULL)
             {
                 global $db;
-                
+
                 $dateTime = date("Y-m-d H:i:s");
                 $this->lastUpdated = purgeInputs($dateTime);
                 $this->status = purgeInputs($status);
@@ -1235,7 +1235,7 @@ class Flightplan
             }
         }
     }
-    
+
     public function changeFlightplanInfo($userId,$flightplanId,$variable,$value)
     {
 	if (isset($userId) AND isset($flightplanId) AND isset($variable) AND isset($value))
@@ -1243,7 +1243,7 @@ class Flightplan
             if ($userId != NULL AND $flightplanId != NULL AND $variable != NULL)
             {
                 global $db;
-                
+
                 $dateTime = date("Y-m-d H:i:s");
                 $this->lastUpdated = purgeInputs($dateTime);
                 $this->history[$variable] = array('value' => purgeInputs($value), 'dateTime' => purgeInputs($dateTime));
@@ -1252,7 +1252,7 @@ class Flightplan
             }
         }
     }
-    
+
     public function createEmail($email)
     {
         if(isset($email))
@@ -1260,7 +1260,7 @@ class Flightplan
             if ($email != NULL)
             {
                 global $db;
-                
+
                 $this->email = $email;
                 $this->privateKey = substr(md5($email.$this->id),0,6);
                 $preparedQuery = $db->prepare("INSERT INTO flightplan_emails VALUES('', :id, :email, :privateKey, NOW());");
@@ -1269,7 +1269,7 @@ class Flightplan
             }
         }
     }
-    
+
 }
 
 class Poll
@@ -1367,7 +1367,7 @@ class Poll
         if ($this->okToVote != TRUE)
         {
                 // We print an alert message
-                echo "<div class='warning'>You already voted. 
+                echo "<div class='warning'>You already voted.
                 <br/><br/>
                 Note : This feature is in Beta. Please <a href='./contact.php5' style='color: #aaa;'>contact me</a> for :
                 <ul>
@@ -1394,7 +1394,7 @@ class Poll
                 return TRUE;
         }
     }
-	
+
 }
 
 class Cookie
@@ -1403,7 +1403,7 @@ class Cookie
 	public $name;
 	public $value;
 	public $expirDate;
-	
+
 	public function doesExist()
 	{
 		if (isset($_COOKIE[$this->name]) AND $_COOKIE[$this->name] != NULL)
@@ -1417,13 +1417,13 @@ class Cookie
 			return false;
 		}
 	}
-	
+
 	public function create($name_,$value_,$expirDate_)
 	{
 		$this->name = $name_;
 		$this->value = $value_;
 		$this->expirDate = $expirDate_;
-		
+
 		if ($this->doesExist() === false)
 		{
 			setcookie($this->name,$this->value,$this->expirDate);
@@ -1455,16 +1455,16 @@ class Depeche
     public $conditions;
     private $depecheList = Array();
     public $validatedDepechesList = Array();
-        
+
     public function selectDepecheById($id)
     {
         global $db;
-        
+
         $listDepeches = $db->query("SELECT * FROM `depecheList`
                 LEFT JOIN depecheValidation ON depecheList.depecheId = depecheValidation.depecheIdValidated
                 WHERE depecheList.depecheId = $id
                 ORDER BY depecheValidation.depecheValidationId DESC LIMIT 0,1");
-        
+
         if ($listDepeches != NULL)
         {
             $depeche = $listDepeches->fetch(PDO::FETCH_ASSOC);
@@ -1487,17 +1487,17 @@ class Depeche
             $this->conditions = $depeche['conditions'];
         }
     }
-    
+
     public function listAvailableDepeches()
     {
         global $db;
-        
+
         $listSqlDepeches = $db->query("SELECT * FROM depecheList WHERE
                 (validFrom >= DATE(NOW()) OR validFrom IS NULL)
                 AND (validTo >= DATE(NOW()) OR validTo IS NULL)");
-        
+
         $this->depecheList = Array();
-        
+
         if ($listSqlDepeches != NULL)
         {
             foreach ($listSqlDepeches as $depeche)
@@ -1505,26 +1505,26 @@ class Depeche
                 $this->depecheList[] = $depeche['depecheId'];
             }
         }
-        
+
         return $this->depecheList;
     }
-    
+
     public function validateDepeche()
     {
         global $db;
-        
+
         // We first list available depeches
         $this->listAvailableDepeches();
-        
+
         // We initialize an array with potential depeches
         $potentialDepeche = Array();
-        
+
         // If there are no depeches, we can't do anything ...
         if (empty($this->depecheList))
         {
         }
-        
-        
+
+
         // If there is at least one depeche
         else
         {
@@ -1538,7 +1538,7 @@ class Depeche
             foreach ($this->depecheList as $depeche)
             {
                 $this->selectDepecheById($depeche);
-                
+
                 /*
                 // STEP 1 : number of controlled airports
                 if ($nbControlledAirports >= $this->minNbControlledAirports AND $nbControlledAirports <= $this->maxNbControlledAirports)
@@ -1554,19 +1554,19 @@ class Depeche
                         $potentialDepeche['occurences'][$this->depecheId] = $this->occurences;
                         $potentialDepeche['maxOccurences'][$this->depecheId] = $this->maxOccurences;
                         $potentialDepeche['occurenceRatio'][$this->depecheId] = $this->occurences/$this->maxOccurences;
-                        
+
                         $ponderationOccurences = 5;
                         $ponderationImportance = 7;
                         $score[$this->depecheId] = ((1/($this->occurences/$this->maxOccurences+1)*$ponderationOccurences) + (($this->importance/10)*$ponderationImportance))/($ponderationImportance+$ponderationOccurences);
-                        
+
                         $potentialDepeche['score'][$this->depecheId] = $score[$this->depecheId];
                     }
                 }
                  */
-                
+
                 /**************************************
                  * ********** NEW SCORE DEBUG *********/
-                
+
                 // We put this data into the potentialDepeche array
                 $debugDepeche['depecheId'][$this->depecheId] = $this->depecheId;
                 $debugDepeche['importance'][$this->depecheId] = $this->importance;
@@ -1575,46 +1575,54 @@ class Depeche
                 $debugDepeche['maxOccurences'][$this->depecheId] = $this->maxOccurences;
                 $debugDepeche['occurenceRatio'][$this->depecheId] = $this->occurences/$this->maxOccurences;
                 // Defining the timelapse
-                $lastValidationDate = $db->query("SELECT `dateValidated` FROM depecheValidation WHERE depecheIdValidated = $this->depecheId ORDER BY dateValidated DESC LIMIT 0,1");
-                foreach ($lastValidationDate as $validationDate)
+                $lastValidationDateQuery = $db->query("SELECT `dateValidated` FROM depecheValidation WHERE depecheIdValidated = $this->depecheId ORDER BY dateValidated DESC LIMIT 0,1");
+                $lastValidationDate = $lastValidationDateQuery->fetchAll(PDO::FETCH_ASSOC);
+                if (empty($lastValidationDate))
                 {
-                    $dateValidated = new DateTime($validationDate[0]);
-                    $dateToday = new DateTime(date("Y-m-d H:i:s"));
-                    $interval = $dateValidated->diff($dateToday);
-                    $timelapse = $interval->d;
+                    $timelapse = 1;
                 }
-                
+                else
+                {
+                    foreach ($lastValidationDate as $validationDate)
+                    {
+                        $dateValidated = new DateTime($validationDate['dateValidated']);
+                        $dateToday = new DateTime(date("Y-m-d H:i:s"));
+                        $interval = $dateValidated->diff($dateToday);
+                        $timelapse = $interval->d;
+                    }
+                }
+
                 $ponderationImportance = 7;
                 $ponderationOccurences = 5;
-                
+
                 $importance = $this->importance/10;
-                
+
                 $factor1 = 1-1/(1+($timelapse-$this->occurences+1)/($this->occurences+1*10));
                 $factor2 = (($factor1*$ponderationOccurences)+($importance*$ponderationImportance))/($ponderationImportance+$ponderationOccurences);
                 $score2[$this->depecheId] = round(abs($factor2),3);
-                
+
                 // STEP 1 : number of controlled airports
                 if ($nbControlledAirports >= $this->minNbControlledAirports AND $nbControlledAirports <= $this->maxNbControlledAirports)
                 {
                     $potentialDepeche['score'][$this->depecheId] = $score2[$this->depecheId];
                 }
-                
+
             }
-            
+
             // FOR DEBUG
             if ($score2 != NULL)
             {
                 $insertScoreQuery = $db->prepare("INSERT INTO depecheStats VALUES('',:date,:score);");
                 $insertScoreQuery->execute(array(":date"=>date('Y-m-d'),":score"=>var_export($score2,true)));
             }
-            
+
             // If there are some potential depeches
             if (!empty($potentialDepeche))
             {
                 // We initialize the validated depeche and maxImportance variables
                 $validatedDepeche = 0;
                 $minScore = 0;
-                
+
                 ksort($potentialDepeche['score']);
                 foreach ($potentialDepeche['score'] as $depecheId => $value)
                 {
@@ -1624,24 +1632,25 @@ class Depeche
                         $minScore = $value;
                     }
                 }
-                
+
                 // We select the validated depeche
                 $this->selectDepecheById($validatedDepeche);
-                
+
                 // We increment the occurence
                 $this->occurences = $this->occurences + 1;
-                
+
                 // Date validated = limitDateValidity = today
                 //  (this can change !)
                 $this->dateValidated = date('Y-m-d H:i:s');
-                $this->limitDateValidity = date('Y-m-d');
-                
+                $this->limitDateValidity = date('Y-m-d',strtotime(date('Y-m-d')."+ 1 day"));
+
                 // Controlled airports
                 $this->controlledAirports = $controlledAirports;
-                
+
+
                 // We insert the validated depeche into the table depecheValidation
                 $preparedQuery = $db->prepare("INSERT INTO depecheValidation VALUES('',:depecheId,:dateValidated,:limitDateValidity,:controlledAirports,:occurences);");
-                
+
                 $preparedQuery->bindValue(':depecheId',$this->depecheId);
                 $preparedQuery->bindValue(':dateValidated',$this->dateValidated);
                 $preparedQuery->bindValue(':limitDateValidity',$this->limitDateValidity);
@@ -1649,15 +1658,15 @@ class Depeche
                 $preparedQuery->bindValue(':controlledAirports',implode(',',$this->controlledAirports));
                 $preparedQuery->bindValue(':occurences',$this->occurences);
                 $preparedQuery->execute();
-                
+
             }
         }
     }
-    
+
     public function listValidatedDepeche($day = NULL)
     {
         global $db;
-        
+
         // If no day has been specified we select for today
         if ($day == NULL)
         {
@@ -1668,7 +1677,7 @@ class Depeche
         {
             $listSqlValidatedDepeche = $db->query("SELECT * FROM depecheValidation WHERE DATE(dateValidated) = DATE($day) LIMIT 0,1");
         }
-        
+
         // Are there some results ?
         if ($listSqlValidatedDepeche != NULL)
         {
@@ -1676,18 +1685,18 @@ class Depeche
             // We select the depeche that is validated
             $this->selectDepecheById($this->validatedDepechesList['depecheIdValidated']);
         }
-        
+
     }
-    
+
     public function listAllAvailableDepeches()
     {
         global $db;
-        
+
         $listAllAvailableDepeches = $db->query("SELECT depecheId FROM depecheList ORDER BY validFrom DESC");
-        
+
         // We initialize the array
         $this->depecheList = Array();
-        
+
         if ($listAllAvailableDepeches != NULL)
         {
             // We select all the depecheId into the array
@@ -1697,11 +1706,11 @@ class Depeche
             }
         }
     }
-    
+
     public function displayDepeche($content)
     {
         $controlledAirports = Array();
-        
+
         if ($this->controlledAirports != NULL)
         {
             foreach ($this->controlledAirports as $eventId)
@@ -1711,7 +1720,7 @@ class Depeche
                 $endTime[] = getInfo('endTime','events','eventId',$eventId);
             }
         }
-        
+
         // Replaces AIRPORT with the single controlled airport
         if (sizeof($controlledAirports) == 1)
         {
@@ -1719,7 +1728,7 @@ class Depeche
             $content = str_replace("BEGIN_TIME",$beginTime[0],$content);
             $content = str_replace("END_TIME",$endTime[0],$content);
         }
-        
+
         // More than one airport controlled
         else if (sizeof($controlledAirports) > 1)
         {
@@ -1728,7 +1737,7 @@ class Depeche
             $content = str_replace("BEGIN_TIME",$beginTime[0],$content);
             $content = str_replace("END_TIME",$endTime[0],$content);
         }
-        
+
         return $content;
     }
 }

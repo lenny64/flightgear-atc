@@ -14,15 +14,15 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
     if ($_POST['flightplanId'] != NULL AND $_POST['email'] != NULL AND $_POST['privateKey'] != NULL AND $_POST['departureAirport'] != NULL AND $_POST['departureTime'] != NULL AND $_POST['date'] != NULL AND $_POST['arrivalAirport'] != NULL AND $_POST['arrivalTime'] != NULL)
     {
         global $db;
-        
+
         // We select the flightplan
         $Flightplan = new Flightplan();
         $flightplanId = $_POST['flightplanId'];
         $Flightplan->selectById($flightplanId);
-        
+
         $Flightplan->departureAirport = $_POST['departureAirport'];
         $Flightplan->departureTime = $_POST['departureTime'];
-        $Flightplan->date = $_POST['date'];
+        $Flightplan->dateDeparture = $_POST['date'];
         $Flightplan->cruiseAltitude = $_POST['cruiseAltitude'];
         $Flightplan->waypoints = $_POST['waypoints'];
         $Flightplan->arrivalAirport = $_POST['arrivalAirport'];
@@ -37,16 +37,16 @@ if (isset($_POST['flightplanId']) AND isset($_POST['email']) AND isset($_POST['p
         $Flightplan->soulsOnBoard = $_POST['soulsOnBoard'];
         $Flightplan->fuelTime = $_POST['fuelTime'];
         $Flightplan->comments = $_POST['comments'];
-        
+
         // We pick the email and key
         $entered_email = $_POST['email'];
         $entered_privateKey = $_POST['privateKey'];
-        
+
         // We check if those info correspond to those inside the flightplan
         if ($entered_email == $Flightplan->email AND $entered_privateKey == $Flightplan->privateKey)
         {
             $Flightplan->editFlightplan();
-            
+
             if (sizeof($Flightplan->error) == 0)
             {
                 echo "<div class='alert alert-info'>Your flightplan has been successfully edited !</div>";
@@ -74,7 +74,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
     $Flightplan = new Flightplan();
     $flightplanId = $_GET['flightplanId'];
     $Flightplan->selectById($flightplanId);
-    
+
     ?>
 
     <div class="alert alert-info">
@@ -82,11 +82,12 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
         <br/>
         Check the key that has been sent when you created your flightplan.
     </div>
-    
-    
-          
-        <form role="form" method="post" class="" action="./index.php5" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
-            
+
+
+
+        <form role="form" method="post" class="" action="./edit_flightplan.php5?flightplanId=<?php echo $flightplanId;?>" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
+
+            <input type="hidden" name="flightplanId" value="<?php echo $flightplanId;?>">
             <h4>Login information</h4>
             <div class="col-md-6 form-group">
                 <label class="control-label" for="file_flightplan-email">E-mail</label>
@@ -100,7 +101,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
                     <input type="text" class="form-control" id="file_flightplan-key" name="privateKey" placeholder="Key" required>
                 </div>
             </div>
-            
+
             <h4>Pilot information</h4>
             <div class="col-md-12 form-group">
                 <label class="control-label" for="file_flightplan-callsign">Callsign</label>
@@ -108,7 +109,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
                     <input type="text" class="form-control" id="file_flightplan-callsign" name="callsign" placeholder="Callsign" value="<?php echo $Flightplan->callsign;?>" required>
                 </div>
             </div>
-            
+
             <h4>Flight information</h4>
             <div class="col-md-12 form-group">
                 <label class="control-label" for="file_flightplan-date">Date</label>
@@ -151,7 +152,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
                     </div>
                 </div>
             </div>
-            
+
             <h4>Additional information</h4>
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Cruise altitude</label>
@@ -209,7 +210,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
 
 ?>
 </div>
-    
+
 <br/>
 <br/>
 <?php include('./include/footer.php5'); ?>

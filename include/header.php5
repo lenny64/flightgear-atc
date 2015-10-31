@@ -1,6 +1,6 @@
 <?php
 
-//error_reporting(E_ALL); ini_set("display_errors", 1);
+error_reporting(E_ALL); ini_set("display_errors", 1);
 
 date_default_timezone_set('UTC');
 
@@ -41,7 +41,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	"http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
-    
+
 <head>
 
 	<title>Flightgear ATC Events</title>
@@ -58,7 +58,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	<!-- AUTRES -->
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <link rel="shortcut icon" href="http://lenny64.free.fr/img/favicon.ico" />
 
         <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
@@ -68,10 +68,10 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 </head>
 
 <body>
-    
+
     <?php
-        
+
     // A little tracker
     $db->query("INSERT INTO visits VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
-    
+
     ?>
