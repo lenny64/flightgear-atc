@@ -1,27 +1,32 @@
 
 <?php
 
+/* Used to be for mpserver12. Now deprecated
 function getSSLPage($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HEADER, false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_TIMEOUT, 12);
-    curl_setopt($ch, CURLOPT_SSLVERSION,3); 
+    //curl_setopt($ch, CURLOPT_SSLVERSION, 1.1);
     $result = curl_exec($ch);
+    //echo 'cURL error, if any: ' . curl_error($ch);
     curl_close($ch);
     return $result;
 }
+// Raw content from mpserver12
+$rawContent = getSSLPage('https://mpserver12.org/external/airspace_json.php');
+// We decode the data
+//$allContacts = json_decode($rawContent, TRUE);
+*/
 
 // Known ATC models !
 $atc_models = array("atc", "atc2", "atc-ml", "atc-fs", "openradar", "atc-tower", "atc-tower2", "atc-pie");
 
-// Raw content from mpserver12
-//$rawContent = file_get_contents('https://mpserver12.org/external/airspace_json.php');
-$rawContent = getSSLPage('https://mpserver12.org/external/airspace_json.php');
-echo $rawContent;
+$rawContent = file_get_contents('http://x1.connectedserver.com/airspace_json.php');
 // We decode the data
 $allContacts = json_decode($rawContent, TRUE);
+
 // List of ATCS
 $atcs = Array();
 
@@ -48,15 +53,15 @@ if ($allContacts != NULL)
 function getAirportByCoordinates($lon,$lat)
 {
     global $db;
-    
+
     $precision = 20;
-    
+
     $airportInformation = Array();
     if (isset($lon) AND isset($lat))
     {
         $longitude = floor($lon*$precision);
         $latitude = floor($lat*$precision);
-        
+
         $airports = $db->query("SELECT globalAirportICAO,globalAirportCity,globalAirportCountry FROM airports_global WHERE FLOOR(globalAirportLat*$precision) = '$latitude' AND FLOOR(globalAirportLon*$precision) = '$longitude'");
         if ($airports != NULL)
         {
@@ -68,7 +73,7 @@ function getAirportByCoordinates($lon,$lat)
             }
         }
     }
-    
+
     return $airportInformation;
 }
 

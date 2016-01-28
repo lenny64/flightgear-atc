@@ -9,7 +9,7 @@ $err_noLogin = true;
 if (isset($_POST['email']) AND isset($_POST['password']) AND $_POST['email'] != NULL AND $_POST['password'] != NULL)
 {
     $err_noLogin = false;
-    
+
     // Are the information correct ?
     if ($_POST['email'] == getInfo('mail', 'users', 'mail', $_POST['email']) AND $_POST['password'] == getInfo('password', 'users', 'mail', $_POST['email']))
     {
@@ -35,6 +35,14 @@ if ($err_noLogin == true OR $userAuthenticated == false)
 {
     ?>
     <div class="container">
+      <div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/header_ATCDashboard.jpg') no-repeat center center;">
+        <div id='bg-overlay'>
+            <div class="container">
+                <h2 id="depecheMainTitle">ATCs are the masters of the sky</h2>
+            </div>
+        </div>
+    </div>
+
     <?php
     if (isset($userAuthenticated) AND $userAuthenticated == false) { echo "<div class='alert alert-info'>Your password and/or e-mail is not correct</div>"; }
     if ($err_noLogin == true) { echo "<div class='alert alert-info'>Please enter your e-mail and password</div>"; }
@@ -42,7 +50,7 @@ if ($err_noLogin == true OR $userAuthenticated == false)
     <br/>
     <?php
     // If the user wanted to edit the event
-    if ($_GET['eventId'] != NULL) echo '<form role="form" action="./edit_event.php5?eventId='.$_GET['eventId'].'" method="post">';
+    if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL) echo '<form role="form" action="./edit_event.php5?eventId='.$_GET['eventId'].'" method="post">';
     // Else if the user wanted to just log in
     else echo '<form class="dashboard_connectionForm" role="form" action="./dashboard.php5" method="post">'; ?>
         <div class="form-group">
@@ -54,6 +62,10 @@ if ($err_noLogin == true OR $userAuthenticated == false)
             <input class="form-control" type="password" name="password" id="password">
         </div>
         <button type="submit" class="btn btn-primary">Connect</button>
+        <div class="form-group">
+          <br/>
+          <a href="./subscribe.php5">Don't have an account yet? Create one here.</a>
+        </div>
     </form>
     </div>
     <br/>

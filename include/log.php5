@@ -1,4 +1,4 @@
-<?php //* ?>
+<?php /* ?>
 <div class="alert alert-info alert-dismissable" role="alert" id="log">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     New! Flightgear-ATC is now responsive : easier access from mobile phones and tablets.

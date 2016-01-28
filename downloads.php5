@@ -13,7 +13,7 @@
 </div>
 
 <div class="container">
-    
+
     <h3>Download ATC clients</h3>
 
         <table class="table">
@@ -42,18 +42,6 @@
                 </tr>
             </tbody>
         </table>
-
-
-    <h3>Get an ATC ident to file Flight Plans</h3>
-
-    <form role="form" action="./dev2014_01_13.php5?request_auth" method="post">
-        <input type="hidden" name="userInfo[]" value="virtualAirline"/>
-        <div class="form-group">
-            <label for="email">Your email address</label>
-            <input type="text" name="mail" class="form-control" id="email" placeholder="Email address">
-        </div>
-        <button type="submit" class="btn btn-primary">Create</button>
-    </form>
 
     <br/>
     <br/>

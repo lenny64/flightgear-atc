@@ -19,7 +19,7 @@
         ?>
     </div>
 </nav>
- * 
+ *
  */
 ?>
 <nav class="navbar navbar-inverse navbar-static-top">
@@ -44,6 +44,11 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="./dashboard.php5">ATC Dashboard</a></li>
+          <?php
+          if ($_SESSION['mode'] == 'connected') {
+            echo '<li><a href="./dashboard.php5?disconnect">Disconnect</a></li>';
+          }
+          ?>
         </ul>
       </div><!--/.nav-collapse -->
     </div>

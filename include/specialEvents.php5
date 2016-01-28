@@ -29,7 +29,7 @@ foreach ($specialEvents_list as $specialEvents)
 {
     // We select the specialEvent
     $SpecialEvent->selectById($specialEvents['specialEventsId']);
-    
+
     // Here we check if the special event is valid. The first reason is when all events are in the past
     if ($SpecialEvent->valid == TRUE)
     {

@@ -233,6 +233,40 @@ class User
         $this->name = $name;
     }
 
+    // Function to check wether an email/password pair is correct
+    public function checkUserLogin($email,$password)
+    {
+        global $db;
+
+        // We treat the inputs to avoid any issue
+        $inputEmail = purgeInputs($email);
+        $inputPassword = purgeInputs($password);
+
+        // We first check if the email exists
+        $userInfoList = $db->query("SELECT * FROM users WHERE mail = '$inputEmail'");
+        //$userInfo = $userInfoList->fetch(PDO::FETCH_ASSOC);
+        $userInfos = $userInfoList->fetchAll(PDO::FETCH_ASSOC);
+
+        $wrong_login = true;
+
+        foreach ($userInfos as $userInfo)
+        {
+          // If the email exists
+          if (isset($userInfo) AND sizeof($userInfo) != 0)
+          {
+            // We check if the password == the db_password
+            $db_password = $userInfo['password'];
+            if ($db_password == $inputPassword OR $inputPassword == md5($db_password))
+            {
+              $wrong_login = false;
+              $this->selectById($userInfo['userId']);
+            }
+          }
+        }
+
+        return $wrong_login;
+    }
+
 }
 
 
@@ -341,11 +375,17 @@ class Event
         // Otherwise we do not create an event
         else            $this->requestNewEvent = false;
 
-        $this->userId       =   $_SESSION['id'];
+        // It is possible the userId has already been defined
+        // and does not requires a session open (eg the API).
+        if (!isset($this->userId) OR $this->userId == NULL)
+        {
+          $this->userId       =   $_SESSION['id'];
+        }
 
         // If the user is not connected (password not correct)
         if ($_SESSION['mode'] != 'connected')
         {
+          /*
             // We check if there is a session planned from OpenRadar
             // (it's "remark" will have the value "openradar")
             if (!isset($Remarks) OR $this->remarks != "openradar")
@@ -355,6 +395,13 @@ class Event
             else
             {
                 $this->userId = 1;
+            }
+            */
+            $this->requestNewEvent = false;
+
+            if (isset($this->userId) AND $this->userId != NULL)
+            {
+              $this->requestNewEvent = true;
             }
         }
 
