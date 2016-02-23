@@ -17,7 +17,7 @@ require_once './include/config.php5';
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
 // Version definition
-define("DEV_VERSION","20160129");
+define("DEV_VERSION","20160223");
 // Error codes definitions
 define("WRONG_IDENT", 'The ident you are using is not correct');
 define("ERR_VAR1", 'A variable is missing or is NULL');
@@ -446,6 +446,7 @@ AND isset($_GET['arrivalTime']))
         $inject_cruiseAltitude = $_GET['cruiseAltitude'];
         $inject_trueAirspeed = $_GET['trueAirspeed'];
         $inject_dateDeparture = $_GET['dateDeparture'];
+        $inject_dateArrival = $_GET['dateArrival'];
         $inject_departureTime = $_GET['departureTime'];
         $inject_arrivalTime = $_GET['arrivalTime'];
         $inject_aircraftType = $_GET['aircraft'];
@@ -499,7 +500,7 @@ AND isset($_GET['arrivalTime']))
         if (isset($permissionToCreateFP) AND $permissionToCreateFP === TRUE)
         {
             $injectFlightplan = new Flightplan();
-            $injectFlightplan->create($inject_dateDeparture, $inject_departureAirport, $inject_arrivalAirport, $inject_alternateDestination, $inject_cruiseAltitude, $inject_trueAirspeed, $inject_callsign, $inject_pilotName, $inject_airline, $inject_flightNumber, $inject_category, $inject_aircraftType, $inject_departureTime, $inject_arrivalTime, $inject_waypoints, $inject_soulsOnBoard, $inject_fuelTime, $inject_comments);
+            $injectFlightplan->create($inject_dateDeparture, $inject_dateArrival, $inject_departureAirport, $inject_arrivalAirport, $inject_alternateDestination, $inject_cruiseAltitude, $inject_trueAirspeed, $inject_callsign, $inject_pilotName, $inject_airline, $inject_flightNumber, $inject_category, $inject_aircraftType, $inject_departureTime, $inject_arrivalTime, $inject_waypoints, $inject_soulsOnBoard, $inject_fuelTime, $inject_comments);
 
             // If the flight plan has not been accepted (we did not emit any ID)
             if ($injectFlightplan->id == FALSE)

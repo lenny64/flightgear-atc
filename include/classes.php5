@@ -819,11 +819,15 @@ class Flightplan
             {
                 $this->error[] = 'invalid departure date';
             }
+            if (isset($this->dateArrivalManual) AND $this->dateArrivalManual > date('Y-m-d',strtotime($this->dateDeparture."+1 days")) )
+            {
+                $this->error[] = 'a flightplan cannot be more than 24 hours';
+            }
         }
         return $this->error;
     }
 
-    function create($dateDeparture,$departureAirport,$arrivalAirport,$alternateDestination,$cruiseAltitude,$trueAirspeed,$callsign,$pilotName,$airline,$flightNumber,$category,$aircraftType,$departureTime,$arrivalTime,$waypoints,$soulsOnBoard,$fuelTime,$comments)
+    function create($dateDeparture,$dateArrival,$departureAirport,$arrivalAirport,$alternateDestination,$cruiseAltitude,$trueAirspeed,$callsign,$pilotName,$airline,$flightNumber,$category,$aircraftType,$departureTime,$arrivalTime,$waypoints,$soulsOnBoard,$fuelTime,$comments)
     {
 
         // We gather the information
@@ -844,6 +848,10 @@ class Flightplan
         if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
         // Otherwise i assume the arrival date is the same than the departure one
         else $this->dateArrival = $this->dateDeparture;
+
+        // Specially added for ATC-pie
+        $this->dateArrivalManual = $dateArrival;
+
         $this->waypoints = ($waypoints != NULL ? $waypoints : '');
         $this->soulsOnBoard = ($soulsOnBoard != NULL ? $soulsOnBoard : '');
         $this->fuelTime = ($fuelTime != NULL ? $fuelTime : '');

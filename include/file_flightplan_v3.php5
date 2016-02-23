@@ -2,7 +2,7 @@
 if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['departureAirport']) AND isset($_POST['arrivalAirport']))
 {
     $NewFlightplan = new Flightplan();
-    
+
     $callsign = $_POST['callsign'];
     $email = $_POST['email'];
     $departureAirport = $_POST['departureAirport'];
@@ -17,10 +17,10 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
     $flightNumber = $_POST['flightNumber'];
     $category = $_POST['category'];
     $aircraftType = $_POST['aircraftType'];
-    
+
     // We create the Flightplan
-    $NewFlightplan->create($date, $departureAirport, $arrivalAirport, $alternateDestination, $cruiseAltitude, $trueAirspeed, $callsign, $pilotName, $airline, $flightNumber, $category, $aircraftType, $departureTime, $arrivalTime, $waypoints, $soulsOnBoard, $fuelTime, $comments);
-    
+    $NewFlightplan->create($date, $date, $departureAirport, $arrivalAirport, $alternateDestination, $cruiseAltitude, $trueAirspeed, $callsign, $pilotName, $airline, $flightNumber, $category, $aircraftType, $departureTime, $arrivalTime, $waypoints, $soulsOnBoard, $fuelTime, $comments);
+
     // If there has not been an ID due to data missing and/or wrong data, we display errors
     if ($NewFlightplan->id == FALSE)
     {
@@ -57,10 +57,10 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
         <h4 class="modal-title">New flightplan</h4>
       </div>
       <div class="modal-body">
-          
-          
+
+
         <form role="form" method="post" class="" action="./index.php5" <?php if (isset($_GET['form_newSession'])) echo "style='display:none;'";?>>
-            
+
             <h4>Personal information</h4>
             <div class="col-md-6 form-group">
                 <label class="control-label" for="file_flightplan-callsign">Callsign</label>
@@ -74,7 +74,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
                     <input type="text" class="form-control" id="file_flightplan-email" name="email" placeholder="Email Address" required>
                 </div>
             </div>
-            
+
             <h4>Flight information</h4>
             <div class="col-md-12 form-group">
                 <label class="control-label">Date</label>
@@ -187,7 +187,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
                     </div>
                 </div>
             </div>
-            
+
             <h4>Additional information</h4>
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Cruise altitude</label>
@@ -238,7 +238,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
                 <button type="submit" value="Create" class="btn btn-success">Create</button>
             </div>
         </form>
-          
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
