@@ -8,9 +8,9 @@
 
 
     <?php
-    
+
     $today = date('Y-m-d');
-    
+
     for ($calendarDay = 0 ; $calendarDay < 30 ; $calendarDay++)
     {
         $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
@@ -18,12 +18,12 @@
         else if ($calendarDay == 1) $dayLine = "Tomorrow";
         else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));
         else $dayLine = date('D j M', strtotime($dayCounter));
-        
+
         if (isset($events))
         {
             $filteredEvents = filterEvents('date', $dayCounter, $events);
         }
-        
+
         // Printing a visual help
         if ($calendarDay == 0 AND date('l', strtotime($dayCounter)) != "Monday")
         {
@@ -38,7 +38,7 @@
             echo "<div class='well well-calendar'><h4><span class='glyphicon glyphicon-calendar' aria-hidden='true'></span> Week ".date('W', strtotime($dayCounter))."</h4></div>";
         }
         ?>
-    
+
 <div class="panel list-group" id="menucollapse">
     <!-- BELOW THE MAIN LINE IN THE TABLE -->
     <div class="list-group-item list-group-item-info list-clickable" data-toggle="collapse" data-target="#<?php echo $dayCounter; ?>" data-parent="#menucollapse">
@@ -75,7 +75,7 @@
                 $Flightplan = new Flightplan();
                 $Flightplan->dateDeparture = $dayCounter;
                 $flightplans = $Flightplan->getFlightplans();
-                
+
                 if (isset($flightplans) AND $flightplans != NULL AND sizeof($flightplans) > 0)
                 {
                     $flightplanLabel = 'label-success';
@@ -100,7 +100,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- BELOW THE ADDITIONAL INFORMATION ABOUT AIRPORTS -->
     <?php
     // if the date is today or tomorrow, we don't collapse
@@ -134,9 +134,9 @@
             {
                 $Event = new Event();
                 $Event->selectById($event);
-                
+
                 $atcName = getInfo('userName', 'users_names', 'userId', $Event->userId);
-                
+
                 $comments = '';
                 if (isset($Event->remarks) AND $Event->remarks != NULL AND $Event->remarks != "N/A")
                 {
@@ -148,13 +148,13 @@
                     $comments .= '</div>';
                     $comments .= '</div>';
                 }
-                
+
                 ?>
-                
+
                 <?php
                 // For later
                 // <div class="event" style="background: url('./img/banniere7.jpg') no-repeat center center;">
-                // 
+                //
                 ?>
                 <div class="event">
                     <div>
@@ -162,7 +162,15 @@
                             <!-- ICAO AND AIRPORT LOCATION -->
                             <div class="col-sm-6">
                                 <span class="label label-primary"><?php echo $Event->airportICAO;?></span>
-                                <span class="event-location"><?php echo $Event->airportName." (".$Event->airportCity.")"; ?></span>
+                                <span class="event-location">
+                                  <?php
+                                  echo $Event->airportName;
+                                  if (isset($Event->airportCity) AND $Event->airportCity != NULL)
+                                  {
+                                    echo "(".$Event->airportCity.")";
+                                  }
+                                  ?>
+                                </span>
                             </div>
                             <!-- TIMES -->
                             <div class="col-sm-6">
@@ -192,16 +200,16 @@
                         <?php echo $comments; ?>
                     </div>
                 </div>
-                
+
                 <?php
             }
 
             ?>
             </div>
             <div class="col-sm-4 col-xs-6">
-                
-                
-                
+
+
+
             <?php
             if (isset($flightplans))
             {
@@ -251,7 +259,7 @@
                         <div class="col-xs-6">
                             <a href="./edit_flightplan.php5?flightplanId=<?php echo $Flightplan->id;?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>
                         </div>
-                        
+
                     </div>
                 </div>
                 <?php
@@ -262,9 +270,8 @@
         </div>
     </div>
 </div>
-    
+
         <?php
     }
-    
+
     ?>
-    

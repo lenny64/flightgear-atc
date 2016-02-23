@@ -785,26 +785,32 @@ class Flightplan
         {
             // We check wether the information is fine
             // In particular, the airport must contain 4 letters
+            // Wrong airport
             if (preg_match("#^[a-zA-z]{4}$#",$this->departureAirport) == FALSE)
             {
                 $this->error[] = 'invalid departure airport';
             }
+            // Wrong airport
             if (preg_match("#^[a-zA-z]{4}$#",$this->arrivalAirport) == FALSE)
             {
                 $this->error[] = 'invalid arrival airport';
             }
+            // Wrong callsign
             if ($this->callsign == NULL OR $this->callsign == 'Callsign')
             {
                 $this->error[] = 'invalid callsign';
             }
+            // Wrong departureTime
             if ($this->departureTime == NULL OR preg_match("#^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]((:[0-5][0-9])?)$#", $this->departureTime) == FALSE)
             {
                 $this->error[] = 'invalid departure time '.$this->departureTime;
             }
+            // Wrong arrivalTime
             if ($this->arrivalTime == NULL OR preg_match("#^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]((:[0-5][0-9])?)$#", $this->arrivalTime) == FALSE)
             {
                 $this->error[] = 'invalid arrival time '.$this->arrivalTime;
             }
+            // Managing the date/times
             if ($this->departureTime == $this->arrivalTime)
             {
                 $this->error[] = "arrival time can't be the same than departure time";
