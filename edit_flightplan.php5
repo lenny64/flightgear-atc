@@ -175,13 +175,13 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Airline</label>
                 <div class="">
-                    <input type="text" class="form-control" name="airline" placeholder="Cruise altitude" value="<?php echo $Flightplan->airline;?>">
+                    <input type="text" class="form-control" name="airline" placeholder="Airline" value="<?php echo $Flightplan->airline;?>">
                 </div>
             </div>
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Flight number</label>
                 <div class="">
-                    <input type="text" class="form-control" name="flightNumber" placeholder="Cruise altitude" value="<?php echo $Flightplan->flightNumber;?>">
+                    <input type="text" class="form-control" name="flightNumber" placeholder="Flight Number" value="<?php echo $Flightplan->flightNumber;?>">
                 </div>
             </div>
             <div class="col-sm-4 col-xs-6 form-group">
@@ -196,7 +196,7 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
             <div class="col-sm-4 col-xs-6 form-group">
                 <label class="control-label">Aircraft</label>
                 <div class="">
-                    <input type="text" class="form-control" name="aircraft" placeholder="Aircraft" value="<?php echo $Flightplan->aircraftType;?>">
+                    <input type="text" class="form-control" name="aircraftType" placeholder="Aircraft" value="<?php echo $Flightplan->aircraftType;?>">
                 </div>
             </div>
             <div class="col-xs-12 form-group">
