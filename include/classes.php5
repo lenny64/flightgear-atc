@@ -365,7 +365,7 @@ class Event
             $this->endTime = date('H:i:s',  strtotime($EndHour.':'.$EndMinutes));
 
             // Security to avoid "0 hours" events OR if the egin time occurs after the end time
-            if ($this->beginTime >= $this->endTime)
+            if ($this->beginTime >= $this->endTime AND $this->endTime != "00:00:00")
             {
                 $this->requestNewEvent = false;
                 $this->error = "Please check your date and times";
@@ -819,9 +819,14 @@ class Flightplan
             {
                 $this->error[] = 'invalid departure date';
             }
-            if (isset($this->dateArrivalManual) AND $this->dateArrivalManual > date('Y-m-d',strtotime($this->dateDeparture."+1 days")) )
+            if (isset($this->dateArrivalManual) AND $this->dateArrivalManual != NULL)
             {
-                $this->error[] = 'a flightplan cannot be more than 24 hours';
+                $completeDepartureTime = date("Y-m-d H:i:s",strtotime($this->dateDeparture." ".$this->departureTime));
+                $completeArrivalTime = date("Y-m-d H:i:s",strtotime($this->dateArrivalManual." ".$this->arrivalTime));
+                if ($completeArrivalTime > date("Y-m-d H:i:s",strtotime($completeDepartureTime." + 24 hours")))
+                {
+                    $this->error[] = 'a flightplan cannot be more than 24 hours';
+                }
             }
         }
         return $this->error;

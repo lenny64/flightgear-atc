@@ -17,7 +17,7 @@
 </div>
 
 <div class="container">
-    
+
     <div class="col-md-12">
         <table class="table">
             <thead>
@@ -107,11 +107,25 @@
                     <td>16:00 to 22:00 UTC</td>
                     <td><a href="http://forum.flightgear.org/viewtopic.php?f=10&t=24739" target="_blank">Flightgear official topic</a></td>
                 </tr>
+                <tr>
+                    <td>SCEL</td>
+                    <td>Arturo Merino Benitez Intl (Santiago)</td>
+                    <td>Fri., Sat. and Sun.</td>
+                    <td>Fri: 19:00 to 22:00 UTC, Sat/Sun: 17:00 to 23:00 UTC</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>LSZH</td>
+                    <td>Zurich (Switzerland)</td>
+                    <td>Every day</td>
+                    <td>21:00 UTC to 23:00 UTC</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
-            
+
     </div>
-    
+
 </div>
 
 <?php include('./include/footer.php5'); ?>
