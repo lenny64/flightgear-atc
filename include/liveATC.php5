@@ -23,7 +23,7 @@ $rawContent = getSSLPage('https://mpserver12.org/external/airspace_json.php');
 // Known ATC models !
 $atc_models = array("atc", "atc2", "atc-ml", "atc-fs", "openradar", "atc-tower", "atc-tower2", "atc-pie");
 
-$rawContent = file_get_contents('http://x1.connectedserver.com/airspace_json.php');
+$rawContent = file_get_contents('http://crossfeed.freeflightsim.org/flights.json');
 // We decode the data
 $allContacts = json_decode($rawContent, TRUE);
 
@@ -34,17 +34,17 @@ $atcs = Array();
 if ($allContacts != NULL)
 {
     // For each "pilot" we see
-    foreach ($allContacts['pilots'] as $pilot)
+    foreach ($allContacts['flights'] as $pilot)
     {
         // We gather all info relevant to this pilot
         foreach($pilot as $information => $value)
         {
             // We focus on the pilot's aircraft
-            if ($information == "aircraft" AND (array_search(strtolower($value), $atc_models) !== FALSE))
+            if ($information == "model" AND (array_search(strtolower($value), $atc_models) !== FALSE))
             {
                 $atcs[$pilot['callsign']]['callsign'] = strtoupper($pilot['callsign']);
-                $atcs[$pilot['callsign']]['latitude'] = $pilot['latitude'];
-                $atcs[$pilot['callsign']]['longitude'] = $pilot['longitude'];
+                $atcs[$pilot['callsign']]['latitude'] = $pilot['lat'];
+                $atcs[$pilot['callsign']]['longitude'] = $pilot['lon'];
             }
         }
     }
@@ -103,6 +103,6 @@ function getAirportByCoordinates($lon,$lat)
     }
     ?>
     <li class="list-group-item list-group-item-info">
-        <small>data from <a href="https://mpserver12.org">mpserver12.org</a></small>
+        <small>data from <a href="http://crossfeed.freeflightsim.org/">FreeFlightSim.org</a></small>
     </li>
 </ul>
