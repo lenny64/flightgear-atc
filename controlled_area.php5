@@ -87,6 +87,13 @@
                     <td><a href="www.aviano.af.mil" target="_blank">Official website</a> / <a href="wiki.flightgear.org/Aviano_Air_Base" target="_blank">FG wiki</a></td>
                 </tr>
                 <tr>
+                    <td>LIPX</td>
+                    <td>Verona Villafranca (Italy)</td>
+                    <td>Sat.</td>
+                    <td>19:00 to 23:00 UTC</td>
+                    <td><a href="https://github.com/NIATCA-project/LIPX-custom-scenery/releases">Custom scenery</a> / <a href="http://wiki.flightgear.org/Verona_Villafranca_Airport" target="_blank">FG wiki</a></td>
+                </tr>
+                <tr>
                     <td>PANC</td>
                     <td>Ted Stevens Anchorage (Alaska, USA)</td>
                     <td>Sat. and Sun.</td>
