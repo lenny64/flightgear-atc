@@ -73,6 +73,13 @@
                     <td><a href="https://docs.google.com/forms/d/11Kdwhtqm5-mmRVECJL2YVU_oIZLvxyddQSQID5RBrl0/viewform" target="_blank">File a flightplan for London Gatwick</a></td>
                 </tr>
                 <tr>
+                    <td>EGLL</td>
+                    <td>London Heathrow (United Kingdom)</td>
+                    <td>Every day 1 week monthly</td>
+                    <td>15:00 UTC to 17:00 UTC</td>
+                    <td></td>
+                </tr>
+                <tr>
                     <td>LIMC</td>
                     <td>Milano Malpensa (Italy)</td>
                     <td>Sat.</td>
