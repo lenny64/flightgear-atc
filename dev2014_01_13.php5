@@ -11,7 +11,7 @@
 date_default_timezone_set('UTC');
 
 // Configuration file
-require_once './include/config.php5';
+require_once './include/config.php';
 
 // Let's open the DB
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
@@ -25,10 +25,10 @@ define("ERR_VAR2", 'Some variables are missing or are NULL');
 define("INVALID_FLIGHTPLAN", 'This flight plan does not exist');
 
 // A little tracker
-$db->query("INSERT INTO queries VALUES('','".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
+$db->query("INSERT INTO queries (ip, datetime, query) VALUES(".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
 
-include('./include/classes.php5');
-include('./include/functions.php5');
+include('./include/classes.php');
+include('./include/functions.php');
 
 /*
  * F U N C T I O N  D E F I N I T I O N S
@@ -272,7 +272,7 @@ else if (isset($_GET['request_auth']) AND isset($_POST['mail']))
 
     $md5_mail = substr(md5($mail.$userInfo),0,8);
 
-    $statement = $db->prepare("INSERT INTO request_users VALUES('',:mail,:md5_mail,:userInfo);");
+    $statement = $db->prepare("INSERT INTO request_users (mail,ident,infos) VALUES(:mail,:md5_mail,:userInfo);");
     $statement->execute(array(":mail"=>$mail,":md5_mail"=>$md5_mail,":userInfo"=>$userInfo));
 
     echo '<h3>Congratulations, your mail is <b>'.$mail.'</b>, your <b>IDENT</b> : '.$md5_mail.'</h3>
@@ -958,7 +958,7 @@ else
     <h4>Do you want to file flightplans automatically ?</h4>
     <br/>
     <br/>
-    If you want to file flightplans using an external client please <a href="./subscribe.php5">subscribe here</a>.
+    If you want to file flightplans using an external client please <a href="./subscribe.php">subscribe here</a>.
     <br/>
     <br/>
     <h4>The syntax is :</h4>

@@ -7,39 +7,39 @@
 <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
 <url>
-  <loc>http://lenny64.free.fr/</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/index.php5</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/index.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/lfml_event.php5</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/lfml_event.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/controlled_area.php5</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/controlled_area.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/contact.php5</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/contact.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/edit_event.php5?eventId=58</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=58</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/edit_event.php5?eventId=59</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=59</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/edit_event.php5?eventId=57</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=57</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://lenny64.free.fr/edit_event.php5?eventId=60</loc>
+  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=60</loc>
   <changefreq>daily</changefreq>
 </url>
 </urlset>
