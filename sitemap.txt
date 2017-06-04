@@ -7,39 +7,39 @@
 <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/index.php</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/index.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/lfml_event.php</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/school.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/controlled_area.php</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/controlled_area.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/contact.php</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/downloads.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=58</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/contact.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=59</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/faq.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=57</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/api.php</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://flightgear-atc.alwaysdata.com/edit_event.php?eventId=60</loc>
+  <loc>http://flightgear-atc.alwaysdata.net/dashboard.php</loc>
   <changefreq>daily</changefreq>
 </url>
 </urlset>
