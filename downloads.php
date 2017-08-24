@@ -14,34 +14,52 @@
 
 <div class="container">
 
-    <h3>Download ATC clients</h3>
+    <h3>ATC clients</h3>
 
         <table class="table">
             <thead>
                 <tr>
                     <th></th>
-                    <th>Openradar</th>
-                    <th>ATC-pie</th>
+                    <th>Download</th>
+                    <th>Developer</th>
+                    <th>Wiki page</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Download</td>
+                    <td>OpenRadar</td>
                     <td><a href="http://wiki.flightgear.org/OpenRadarDownload" target="_blank">Latest stable</a></td>
-                    <td><a href="http://sourceforge.net/projects/atc-pie/" target="_blank">Latest stable (.tar.gz)</a></td>
-                </tr>
-                <tr>
-                    <td>Developer</td>
                     <td>Wolfram Wagner</td>
-                    <td>Michael Filhol</td>
+                    <td><a href="http://wiki.flightgear.org/OpenRadar" target="_blank">Flightgear Wiki</a></td>
                 </tr>
                 <tr>
-                    <td>Wiki page</td>
-                    <td><a href="http://wiki.flightgear.org/OpenRadar" target="_blank">Flightgear Wiki</a></td>
+                    <td>ATC-pie</td>
+                    <td><a href="http://sourceforge.net/projects/atc-pie/" target="_blank">Latest stable (.tar.gz)</a></td>
+                    <td>Michael Filhol</td>
                     <td><a href="http://wiki.flightgear.org/ATC-pie" target="_blank">Flightgear Wiki</a></td>
                 </tr>
             </tbody>
         </table>
+
+    <h3>Communication</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Download</th>
+                <th>Developer</th>
+                <th>Wiki page</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>FGExtend</td>
+                <td><a href="https://fshare.udtq.fr/dl/OELmGZwJYTJ5?key=zmJMqSrdpkKJ9XT6EAf8" target="_blank">from FShare</a></td>
+                <td>icare38</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 
     <br/>
     <br/>

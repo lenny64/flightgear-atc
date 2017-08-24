@@ -1047,7 +1047,7 @@ class Flightplan
         // Date
         if (isset($this->dateDeparture) AND $this->dateDeparture != NULL)
         {
-            $queryDate = "FP.dateDeparture = '$this->dateDeparture'";
+            $queryDate = "FP.dateDeparture = '$this->dateDeparture' OR FP.dateArrival = '$this->dateArrival'";
         }
         else
         {
@@ -1098,7 +1098,7 @@ class Flightplan
                     JOIN flightplans20140113 FP ON fpstatus.flightplanId = FP.flightplanId
                     WHERE $queryCallsign AND $queryDate AND $queryICAO
                     GROUP BY fpstatus.flightplanId
-                    ORDER BY min(fpstatus.dateTime) DESC
+                    ORDER BY FP.departureTime ASC
                     $queryLimit;";
         $queryPrepare = $db->prepare($query);
         $queryPrepare->execute();

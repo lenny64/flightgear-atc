@@ -74,6 +74,7 @@
                 <?php
                 $Flightplan = new Flightplan();
                 $Flightplan->dateDeparture = $dayCounter;
+                $Flightplan->dateArrival = $dayCounter;
                 $flightplans = $Flightplan->getFlightplans();
 
                 if (isset($flightplans) AND $flightplans != NULL AND sizeof($flightplans) > 0)
@@ -216,6 +217,13 @@
                 foreach ($flightplans as $flightplan)
                 {
                     $Flightplan->selectById($flightplan['flightplanId']);
+
+                    // I'm making dates and times more readable
+                    $printDateDeparture = date('d M', strtotime($Flightplan->dateDeparture));
+                    $printDepartureTime = date('H:i', strtotime($Flightplan->departureTime));
+                    $printDateArrival = date('d M', strtotime($Flightplan->dateArrival));;
+                    $printArrivalTime = date('H:i', strtotime($Flightplan->arrivalTime));
+
                     ?>
                 <div class="flightplan">
                     <div class="row">
@@ -245,11 +253,11 @@
                         </div>
                         <!-- DEPARTURE TIME -->
                         <div class="col-xs-6">
-                            <span class="flightplan-time"><?php echo $Flightplan->departureTime;?></span>
+                            <span class="label label-primary"><?php echo $printDepartureTime;?></span> <span class="label label-primary"><?php echo $printDateDeparture;?></span>
                         </div>
                         <!-- ARRIVAL TIME -->
                         <div class="col-xs-6">
-                            <span class="flightplan-time"><?php echo $Flightplan->arrivalTime;?></span>
+                            <span class="label label-primary"><?php echo $printArrivalTime;?></span> <span class="label label-primary"><?php echo $printDateArrival;?></span>
                         </div>
                         <!-- STATUS -->
                         <div class="col-xs-6">

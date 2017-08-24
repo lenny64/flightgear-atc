@@ -8,7 +8,7 @@ div#jumbotron_mainPage { position: relative; background-size: cover; width: 100%
 div.depeche { position: relative; height: 100px; top:-145px; width: 700px; padding:0; margin-bottom: -145px; text-shadow: 0px 0px 6px #000; }
     h2#depecheMainTitle { font-family: Arvo; font-weight: bold; }
     p#depecheContent { font-size: 1.2em; }
-            
+
 /* SPECIAL EVENT */
 div.specialEvent { width: 90%; margin: auto; padding: 5px; background-color: #e0f0e0; color: #666; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
     div.specialEvent img.specialEventImg { float: left; position: relative; margin-left: 20px; top: -5px; }
@@ -36,13 +36,13 @@ div.well-calendar { color: #337ab7; }
 div.list-clickable { cursor: pointer; }
     div.list-clickable span.flightplan-bullet-counter { color: #5cb85c; }
 div.dayContent { background-color: #d9edf7; }
-        
+
 /* EVENT CREATION DIV WITH BUTTON INSIDE THE LIST */
 div.createEvent { margin: 0; padding: 10px; }
 
 /* FLIGHTPLAN CREATION DIV WITH BUTTON INSIDE THE LIST */
 div.createFlightplan { margin: 0; padding: 10px; }
-        
+
 /* EVENT DIV INSIDE THE LIST */
 div.event { margin-top: 0; margin-bottom: 0; margin-left: 0; }
     div.event > div { background: rgba(217,237,247,0.8); margin: 0; padding: 13px; }
@@ -52,10 +52,11 @@ div.event { margin-top: 0; margin-bottom: 0; margin-left: 0; }
     div.event span.event-documentation { font-size: 0.9em; }
     div.event span.event-atc { font-size: 0.8em; font-weight: bold; color: #666; }
     div.event p.event-comments { font-size: 0.8em; color: #999; margin-top: 5px; background-color: #ddd; padding: 5px; }
-    
+
 /* FLIGHTPLAN DIV INSIDE THE LIST */
 div.flightplan { margin-top: 0; margin-bottom: 0; margin-left: 0; padding: 13px 0; }
     span.flightplan-category { color: #999; font-weight: bold; font-size: 0.9em;}
     span.flightplan-plane { color: #666; font-weight: bold; font-size: 0.9em;}
     span.flightplan-info { color: #999; font-size: 0.8em; text-transform: uppercase; }
     span.flightplan-time { color: #333; font-size: 0.9em; }
+    span.flightplan-date { color: #666; font-size: 0.9em; font-weight: bold; }
