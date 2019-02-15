@@ -54,8 +54,8 @@
         <tbody>
             <tr>
                 <td>FGExtend</td>
-                <td><a href="https://fshare.udtq.fr/dl/OELmGZwJYTJ5?key=zmJMqSrdpkKJ9XT6EAf8" target="_blank">from FShare</a></td>
-                <td>icare38</td>
+                <td><a href="https://fshare.udtq.fr/dl/OELmGZwJYTJ5?key=zmJMqSrdpkKJ9XT6EAf8" target="_blank">Latest stable</a></td>
+                <td>Xavier De Goër</td>
                 <td></td>
             </tr>
         </tbody>

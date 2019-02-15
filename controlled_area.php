@@ -135,6 +135,27 @@
                     <td>21:00 UTC to 23:00 UTC</td>
                     <td></td>
                 </tr>
+                <tr>
+                    <td>KORD</td>
+                    <td>Chicago O'Hare Intl</td>
+                    <td>Mon., Tue., Sun.</td>
+                    <td>Evenings EST (~ 22h UTC)</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>KCRW</td>
+                    <td>Charleston Yeager</td>
+                    <td>Wed., Thu.</td>
+                    <td>Evenings EST (~ 22h UTC)</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>KCOS</td>
+                    <td>Colorado Springs Municipal</td>
+                    <td>Fri., Sat.</td>
+                    <td>Evenings EST (~ 22h UTC)</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
 

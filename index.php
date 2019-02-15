@@ -24,6 +24,11 @@
     // New specialEvents feature
     include('./include/specialEvents.php');
 
+    // C U S T O M   A T C   C A L E N D A R
+    if ($_SESSION['mode'] == "connected") {
+        include('./include/atc_homescreen.php');
+    }
+
     // C A L E N D A R
     include('./include/calendar.php');
     echo '<br style="clear:both;"/>';

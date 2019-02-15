@@ -152,7 +152,7 @@ else if (isset($_GET['getFlightplans']))
     if (isset($_GET['date']) AND $_GET['date'] != NULL)
     {
         $date = $_GET['date'];
-        $queryDate = "FP.dateDeparture = '$date'";
+        $queryDate = "(FP.dateDeparture = '$date' OR FP.dateArrival = '$date')";
     }
     else
     {

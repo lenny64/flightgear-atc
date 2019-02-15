@@ -1047,7 +1047,7 @@ class Flightplan
         // Date
         if (isset($this->dateDeparture) AND $this->dateDeparture != NULL)
         {
-            $queryDate = "FP.dateDeparture = '$this->dateDeparture' OR FP.dateArrival = '$this->dateArrival'";
+            $queryDate = "(FP.dateDeparture = '$this->dateDeparture' OR FP.dateArrival = '$this->dateArrival')";
         }
         else
         {

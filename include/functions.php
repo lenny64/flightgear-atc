@@ -54,7 +54,7 @@ function returnEvents($date = NULL)
 
     $events = array();
     if (isset($date) AND $date != NULL) $events_list = $db->query("SELECT eventId,airportICAO,date FROM events WHERE date = '$date' ORDER BY beginTime");
-    else $events_list = $db->query("SELECT eventId,airportICAO,date FROM events WHERE date >= ".date('Y-m-d')." ORDER BY date,beginTime");
+    else $events_list = $db->query("SELECT eventId,airportICAO,date FROM events WHERE date >= '".date('Y-m-d')."' ORDER BY date,beginTime");
     $i = 0;
 
     foreach ($events_list as $row)
