@@ -64,7 +64,9 @@ if ($err_noLogin == true OR $userAuthenticated == false)
         <button type="submit" class="btn btn-primary">Connect</button>
         <div class="form-group">
           <br/>
-          <a href="./subscribe.php">Don't have an account yet? Create one here.</a>
+          <a href="./subscribe.php">Create an account</a>
+          <br/>
+          <!--<a href="./passwordLost.php">I've lost my password</a>-->
         </div>
     </form>
     </div>

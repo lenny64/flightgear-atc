@@ -137,6 +137,9 @@
                 $Event->selectById($event);
 
                 $atcName = getInfo('userName', 'users_names', 'userId', $Event->userId);
+                $atcParams = json_decode(getInfo('userParameters', 'users', 'userId', $Event->userId));
+                $verified = $atcParams->{'verified'};
+
 
                 $comments = '';
                 if (isset($Event->remarks) AND $Event->remarks != NULL AND $Event->remarks != "N/A")
@@ -194,7 +197,16 @@
                         <div class="row">
                             <!-- ATC NAME -->
                             <div class="col-xs-12">
-                                <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
+                                <?php if ($verified == "true")
+                                {   ?>
+                                    <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
+                                    <?php
+                                }
+                                else
+                                {   ?>
+                                    <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
+                                    <?php
+                                } ?>
                             </div>
                         </div>
                         <!-- COMMENTS -->

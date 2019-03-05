@@ -14,6 +14,21 @@
 <div class="container">
 
     <div class="panel panel-default">
+        <div class="panel-heading">2019-03-05 - <strong>Malicious users</strong></div>
+        <div class="panel-body">
+            <p>
+                There has been some recents attacks on the flightgear-atc website (and the multiplayer servers of FGFS) that caused harm to some users of the flightgear-atc website.
+                <br/>
+                Indeed some people created accounts on the website and tried to give wrong information on the other users.
+            </p>
+            <p>
+                As a result, we decided to create a list of "trusted ATCs" on which we know we can rely on. Indeed, when a "trusted ATC" creates a session his username will be written in a green label. Example :
+                <br/>
+                <span class="label label-success">Hosted by user</span>
+            </p>
+        </div>
+    </div>
+    <div class="panel panel-default">
         <div class="panel-heading">2017-04-28 - <strong>Maintenance operation</strong></div>
         <div class="panel-body">
             <p>
