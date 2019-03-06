@@ -210,7 +210,7 @@
                             </div>
                         </div>
                         <!-- COMMENTS -->
-                        <?php echo $comments; ?>
+                        <?php echo nl2br($comments); ?>
                     </div>
                 </div>
 
