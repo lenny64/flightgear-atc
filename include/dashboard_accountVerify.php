@@ -10,6 +10,13 @@ if (isset($_GET['getVerified']))
         $mail_subject = 'Verification query '.$User->id;
         $mail_content = 'Query from '.$User->id.' ('.$User->mail.').';
         mail('thibault.armengaud@free.fr', $mail_subject, $mail_content);
+        ?>
+        <div class="alert alert-success">
+            Congratulations! Your account is being verified. the process may take some time.
+            <br/>
+            You can still create sessions. The <span class="label label-success">green label</span> will come soon :)
+        </div>
+        <?php
     }
     else if ($User->parameters['verified'] == 'true')
     {
@@ -33,7 +40,7 @@ if (isset($_GET['getVerified']))
     {
         ?>
         <div class="alert alert-success">
-            Your account verification is pending. Please wait some few days :)
+            Your account verification is pending. Please wait some few days...
             <br/>
             You can still create sessions. The <span class="label label-success">green label</span> will come soon :)
         </div>

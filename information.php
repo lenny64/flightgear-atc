@@ -26,6 +26,11 @@
                 <br/>
                 <span class="label label-success">Hosted by user</span>
             </p>
+            <p>
+                In order to request your account verification please log in on your <a href="./dashboard.php">dashboard page</a> and read the instructions. Click here to check your verification :
+                <br/>
+                <a class="btn btn-primary" href="./dashboard.php?getVerified">Check</a>
+            </p>
         </div>
     </div>
     <div class="panel panel-default">
