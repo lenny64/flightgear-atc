@@ -4,8 +4,9 @@ if (isset($_GET['getVerified']))
     if (!$User->parameters['verified'])
     {
         // First we put the user as not verified, just to make sure the !$User->parameters['verified'] will be false next time
-        $userParams = $User->parameters;
-        $userParams['verified'] = "pending";
+        // $userParams = $User->parameters;
+        // $userParams['verified'] = "pending";
+        $userParams = ['verified' => 'pending'];
         $User->changeParameters($userParams);
         $mail_subject = 'Verification query '.$User->id;
         $mail_content = 'Query from '.$User->id.' ('.$User->mail.').';

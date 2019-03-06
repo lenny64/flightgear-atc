@@ -11,6 +11,7 @@ class User
     public $hasCookie = false;
     public $userCookieId;
     public $name;
+    public $parameters;
     private $requestNewUser = true;
 
     public function associateCookieToUser()
@@ -209,12 +210,18 @@ class User
     public function changeParameters($parameters)
     {
         global $db;
-
+        if ($this->parameters != null)
+        {
+            foreach ($this->parameters as $parameter => $value)
+            {
+                $checkedParameters[$parameter] = $value;
+            }
+        }
         foreach ($parameters as $parameter => $value)
         {
             $checkedParameters[$parameter] = purgeInputs($value);
         }
-	$jsonUserParameters = json_encode($checkedParameters);
+        $jsonUserParameters = json_encode($checkedParameters);
         $preparedQuery = $db->prepare("UPDATE users SET userParameters=:jsonUserParameters WHERE userId=:userId;");
         $preparedQuery->execute(array(":jsonUserParameters" => $jsonUserParameters, ":userId" => purgeInputs($this->id)));
         $this->parameters = $parameters;
