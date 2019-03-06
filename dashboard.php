@@ -18,6 +18,9 @@
 
     <?php
 
+
+    include('./include/dashboard_accountVerify.php');
+
     // TABS CLASS MANAGEMENT
     if (isset($_GET['settings']))
     {
