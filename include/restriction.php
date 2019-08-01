@@ -66,6 +66,8 @@ if ($err_noLogin == true OR $userAuthenticated == false)
           <br/>
           <a href="./subscribe.php">Create an account</a>
           <br/>
+          <a href="./passwordLost.php">I lost my password</a>
+          <br/>
           <!--<a href="./passwordLost.php">I've lost my password</a>-->
         </div>
     </form>

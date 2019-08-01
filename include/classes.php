@@ -274,6 +274,82 @@ class User
         return $wrong_login;
     }
 
+    public function resetPassword($unique_id = False, $newPassword = False)
+    {
+        global $db;
+        $db_password_reset = $db->query("SELECT `userId`, `uniqueId`, `datetime` FROM users_reset_password WHERE userId = $this->id AND used = 0 ORDER BY datetime DESC LIMIT 1");
+        if ($db_password_reset) {
+            $last_password_reset = $db_password_reset->fetch(PDO::FETCH_ASSOC);
+        }
+        // INSERTING NEW PASSWORD
+        // If there is no new password
+        if (!isset($unique_id) || $unique_id == False || $unique_id == "") {
+            // If there has been no request at all or no request since 24hours
+            if (!isset($last_password_reset['datetime']) || strtotime($last_password_reset['datetime']) > strtotime(date("Y-m-d H:i:s")."+1 day") ) {
+                $unique_id = substr(md5(time()), 0, 8);
+                $sql = "INSERT INTO `users_reset_password` (userId, uniqueId) VALUES(:userId, :uniqueId)";
+                $stmt = $db->prepare($sql);
+                $success = $stmt->execute(Array('userId' => $this->id, 'uniqueId' => $unique_id));
+                if ($success) {
+                    $headers = "From: thibault.armengaud@flightgear-atc.net\r\n" ;
+                    $headers .= "To: $this->mail <".$this->mail.">\r\n" ;
+                    $headers .= "Reply-To: thibault.armengaud@gmail.com\r\n" ;
+                    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+                    $headers .= "MIME-Version: 1.0\r\n";
+                    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+                    mail($this->mail, 'Flightgear-ATC password change', 'This is a message from flightgear-atc.alwaysdata.net<br/>
+                                        You (or someone else) have requested a password change.<br/><br/>
+                                        If you did not request a password change please ignore this email.<br/>
+                                        If you requested a password change please go to this address:<br/><br/>
+                                        <a href="http://flightgear-atc.alwaysdata.net/passwordLost.php">http://flightgear-atc.alwaysdata.net/passwordLost.php</a> <br/><br/>
+                                        ID to change your password: '.$unique_id, $headers);
+                    $status = "ID_CREATED";
+                }
+                else {
+                    $status = "CREATION_ERROR";
+                }
+            }
+            else {
+                $status = "ID_ALREADY_CREATED";
+            }
+        }
+        // CHANGING PASSWORD
+        // If there is a new password entered
+        else if (isset($unique_id) && $unique_id != False && $unique_id != "") {
+            // If there has been a password request && the password request has been made within 24h
+            if (isset($last_password_reset['datetime']) && strtotime($last_password_reset['datetime']) <= strtotime(date("Y-m-d H:i:s")."+1 day") ) {
+                // If the unique id matches
+                if ($unique_id == $last_password_reset['uniqueId']) {
+                    if (isset($newPassword) && $newPassword != False && $newPassword != "") {
+                        $sql = "UPDATE `users` SET password = :newPassword  WHERE userId = :userId";
+                        $stmt = $db->prepare($sql);
+                        $success = $stmt->execute(Array('newPassword' => $newPassword, ':userId' => $this->id));
+                        if ($success) {
+                            $sql = "UPDATE users_reset_password SET used = 1 WHERE userId = :userId AND datetime = :datetime";
+                            $stmt = $db->prepare($sql);
+                            $stmt->execute(Array('userId' => $this->id, 'datetime' => $last_password_reset['datetime']));
+                            $status = "PASSWORD_CHANGED";
+                        }
+                        else {
+                            $status = "CREATION_ERROR";
+                        }
+                    }
+                    else {
+                        $status = "BAD_PASSWORD";
+                    }
+                }
+                else {
+                    $status = "ID_NOT_MATCHING";
+                }
+            }
+            else {
+                $status = "PLEASE_GENERATE_NEW_ID";
+            }
+        }
+
+        return $status;
+    }
+
 }
 
 
