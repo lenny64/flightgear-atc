@@ -14,6 +14,23 @@
 <div class="container">
 
     <div class="panel panel-default">
+        <div class="panel-heading">2019-08-02 - <strong>Password reset feature</strong></div>
+        <div class="panel-body">
+            <p>
+                This update adds a password reset ability for those who forgot their credentials.
+            </p>
+            <p>
+                In the <a href="http://flightgear-atc.alwaysdata.net/dashboard.php" target="_blank">"ATC Dashboard"</a> page you'll find a button <b>"I lost my password"</b> to reset your password.
+                <br/>
+                <ul>
+                    <li>Please enter your email address. An email will be sent to you, containing an unique ID. This ID is valid for only 24 hours.</li>
+                    <li>Re-enter your email address, enter the ID contained in the email and your new password.</li>
+                    <li>Click on <button class="btn btn-primary">Reset my password</button></li>
+                </ul>
+            </p>
+        </div>
+    </div>
+    <div class="panel panel-default">
         <div class="panel-heading">2019-03-05 - <strong>Malicious users</strong></div>
         <div class="panel-body">
             <p>

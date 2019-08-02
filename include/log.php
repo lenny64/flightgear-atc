@@ -1,4 +1,4 @@
-<?php //* ?>
+<?php /* ?>
 <div class="alert alert-success alert-dismissable" role="alert" id="log">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <span class="glyphicon glyphicon glyphicon-cog" aria-hidden="true"></span><b> WARNING </b> Some malicious users wanted to harm Jomo's sessions at EDDF on wednesdays, saturdays and sundays.
