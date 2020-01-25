@@ -940,8 +940,10 @@ class Flightplan
         $this->departureTime = $departureTime;
         $this->arrivalTime = $arrivalTime;
         $this->dateDeparture = $dateDeparture;
+        $obj_departureTime = new DateTime($dateDeparture.' '.$departureTime);
+        $obj_arrivalTime = new DateTime($dateArrival.' '.$arrivalTime);
         // If the arrival time is before departure time, i assume the arrival will be after midnight of the next day
-        if ($this->arrivalTime < $this->departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
+        if ($obj_arrivalTime < $obj_departureTime) $this->dateArrival = date('Y-m-d',strtotime($this->dateDeparture."+1 days"));
         // Otherwise i assume the arrival date is the same than the departure one
         else $this->dateArrival = $this->dateDeparture;
 
