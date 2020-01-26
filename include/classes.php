@@ -269,7 +269,6 @@ class User
         $userInfos = $userInfoList->fetchAll(PDO::FETCH_ASSOC);
 
         $wrong_login = true;
-
         foreach ($userInfos as $userInfo)
         {
           // If the email exists
@@ -277,7 +276,8 @@ class User
           {
             // We check if the password == the db_password
             $db_password = $userInfo['password'];
-            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR password_verify($inputPassword, $db_password))
+            $db_password_hash = $userInfo['password_hash'];
+            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR password_verify($inputPassword, $db_password_hash))
             {
               $wrong_login = false;
               $this->selectById($userInfo['userId']);
