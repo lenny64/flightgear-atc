@@ -240,6 +240,17 @@ class User
         $this->name = $name;
     }
 
+    /* Function to change the mail of the ATC
+     */
+    public function changeMail($submittedMail)
+    {
+        global $db;
+        $mail = purgeInputs($submittedMail);
+        $preparedQuery = $db->prepare("UPDATE users SET mail = :mail WHERE userId = :userId");
+        $preparedQuery->execute(array(":userId" => $this->id, ":mail" => $mail));
+        $this->mail = $mail;
+    }
+
     // Function to check wether an email/password pair is correct
     public function checkUserLogin($email,$password)
     {
@@ -348,6 +359,26 @@ class User
         }
 
         return $status;
+    }
+
+    public function changePassword($newPassword)
+    {
+        global $db;
+        $sql = "UPDATE users SET password = :password WHERE userId = :userId";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(Array(':password' => $newPassword, ':userId' => $this->id));
+    }
+
+    public function deleteAccount()
+    {
+        global $db;
+        if ($this->id != NULL) {
+            $sql = "DELETE FROM users WHERE userId = :userId";
+            $stmt = $db->prepare($sql);
+            $stmt->execute(Array(':userId' => $this->id));
+            $this->hasCookie = false;
+            $this->cookieId = false;
+        }
     }
 
 }

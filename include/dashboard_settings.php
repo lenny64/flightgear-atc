@@ -41,6 +41,16 @@ if (isset($_POST['change_settings']))
         $atcName = $_POST['atcName'];
         $User->changeName($atcName);
     }
+    if (isset($_POST['atcMail']))
+    {
+        $atcMail = $_POST['atcMail'];
+        $User->changeMail($atcMail);
+    }
+    if (isset($_POST['atcPassword']) && $_POST['atcPassword'] != NULL && $_POST['atcPassword'] != "password")
+    {
+        $newPassword = $_POST['atcPassword'];
+        $User->changePassword($newPassword);
+    }
 
     /* Other parameters part */
     // FPForm visibility on home screen
@@ -54,6 +64,24 @@ if (isset($_POST['change_settings']))
     echo "<div class='alert alert-info'>";
     echo "Your settings have been saved at ".date('H:i:s');
     echo "</div>";
+}
+
+if (isset($_POST['deleteAccount']) && $_POST['deleteAccount'] == 1)
+{
+    if (isset($_POST['deleteAccountConfirm']) && $_POST['deleteAccountConfirm'] == 1)
+    {
+        $User->deleteAccount();
+        $_SESSION['mode'] = 'guest';
+        echo "<div class='alert alert-success'>";
+        echo "Your account has been deleted";
+        echo "</div>";
+    }
+    else
+    {
+        echo "<div class='alert alert-info'>";
+        echo "Your account has not been deleted";
+        echo "</div>";
+    }
 }
 
 ?>
@@ -77,6 +105,42 @@ if (isset($_POST['change_settings']))
             <p class="help-block">(blank = your pseudo won't appear in your ATC events)</p>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-default" value="Change settings">Change settings</button>
+            <label for="atcName">My email</label>
+            <input type="text" class="form-control" id="atcMail" name="atcMail" value="<?php if(isset($User->mail) AND $User->mail != NULL) echo $User->mail; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="atcPassword">My password</label>
+            <input type="password" class="form-control" id="atcPassword" name="atcPassword" value="password" />
+            <p class="help-block">(do not change to keep your current password)</p>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default" value="Change settings">Change settings</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteAccount">Delete account</button>
         </div>
     </form>
+
+
+<div id="modalDeleteAccount" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <form role="form" action="./dashboard.php?settings" method="post" class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Account deletion</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete your account?</p>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="deleteAccountConfirm" value="1"/> I confirm I want to delete my account
+            </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger" name="deleteAccount" value="1">Yes delete my account</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal">No, do not delete my account</button>
+      </div>
+    </form>
+
+    </div>
+</div>
