@@ -66,6 +66,19 @@ if (isset($_POST['change_settings']))
     echo "</div>";
 }
 
+// Detection of strong password
+$update_password_bg = '';
+$update_password_text = "(do not change or leave empty to keep your current password)";
+$update_password_textColor = '';
+$update_password_style = '';
+if (!$User->checkPasswordSecured())
+{
+    $update_password_bg = 'bg-danger';
+    $update_password_text = "Please change your password";
+    $update_password_textColor = 'text-danger';
+    $update_password_style = 'padding: 10px;';
+}
+
 if (isset($_POST['deleteAccount']) && $_POST['deleteAccount'] == 1)
 {
     if (isset($_POST['deleteAccountConfirm']) && $_POST['deleteAccountConfirm'] == 1)
@@ -108,10 +121,10 @@ if (isset($_POST['deleteAccount']) && $_POST['deleteAccount'] == 1)
             <label for="atcName">My email</label>
             <input type="text" class="form-control" id="atcMail" name="atcMail" value="<?php if(isset($User->mail) AND $User->mail != NULL) echo $User->mail; ?>" />
         </div>
-        <div class="form-group">
-            <label for="atcPassword">My password</label>
+        <div class="form-group <?= $update_password_bg; ?>" style="<?= $update_password_style;?>">
+            <label for="atcPassword" class="<?= $update_password_textColor; ?>">My password</label>
             <input type="password" class="form-control" id="atcPassword" name="atcPassword" value="password" />
-            <p class="help-block">(do not change to keep your current password)</p>
+            <p class="help-block"><?= $update_password_text; ?></p>
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-default" value="Change settings">Change settings</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteAccount">Delete account</button>

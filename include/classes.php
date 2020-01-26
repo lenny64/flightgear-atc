@@ -6,6 +6,7 @@ class User
     public $connected;
     public $mail;
     public $password;
+    public $passwordHashed;
     public $id;
     public $nofitications;
     public $hasCookie = false;
@@ -85,7 +86,7 @@ class User
         $Password = purgeInputs($submittedPassword);
 
         // We get the list of users
-        $users_list = $db->query("SELECT userId, mail, password FROM users");
+        $users_list = $db->query("SELECT userId, mail, password, password_hash FROM users");
 
         // We see
         foreach ($users_list as $user)
@@ -96,10 +97,11 @@ class User
                 $this->mail = $Mail;
 
                 // and if the password is correct
-                if ($user['password'] == $Password)
+                if ($user['password'] == $Password OR password_verify($Password, $user['password_hash']))
                 {
                     // We get the password
                     $this->password = $Password;
+                    $this->passwordHashed = $user['password_hash'];
                     // And we get the ID
                     $this->id = $user['userId'];
 
@@ -137,8 +139,8 @@ class User
         // If we receive the signal to create a new user (by default)
         if ($this->requestNewUser == true)
         {
-            $preparedQuery = $db->prepare("INSERT INTO `users` (mail, password, ip, notifications, cookie, userParameters) VALUES(:Mail, :Password, :IP, '0', '', '');");
-            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs($Password), ":IP" => purgeInputs($IP)));
+            $preparedQuery = $db->prepare("INSERT INTO `users` (mail, password_hash, ip, notifications, cookie, userParameters) VALUES(:Mail, :Password, :IP, '0', '', '');");
+            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs(password_hash($Password, PASSWORD_DEFAULT)), ":IP" => purgeInputs($IP)));
             $_SESSION['mode'] = 'connected';
             $_SESSION['id'] = getInfo('userId', 'users', 'mail', $Mail);
             $this->id = $_SESSION['id'];
@@ -165,6 +167,7 @@ class User
                 $this->ip = $users['ip'];
                 $this->mail = $users['mail'];
                 $this->password = $users['password'];
+                $this->passwordHashed = $users['password_hash'];
                 $this->id = $users['userId'];
                 $this->notifications = $users['notifications'];
                 $this->parameters = json_decode($users['userParameters'],true);
@@ -274,7 +277,7 @@ class User
           {
             // We check if the password == the db_password
             $db_password = $userInfo['password'];
-            if ($db_password == $inputPassword OR $inputPassword == md5($db_password))
+            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR password_verify($inputPassword, $db_password))
             {
               $wrong_login = false;
               $this->selectById($userInfo['userId']);
@@ -332,13 +335,14 @@ class User
                 // If the unique id matches
                 if ($unique_id == $last_password_reset['uniqueId']) {
                     if (isset($newPassword) && $newPassword != False && $newPassword != "") {
-                        $sql = "UPDATE `users` SET password = :newPassword  WHERE userId = :userId";
+                        $this->passwordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
+                        $sql = "UPDATE `users` SET password_hash = :newPassword, password = ''  WHERE userId = :userId";
                         $stmt = $db->prepare($sql);
-                        $success = $stmt->execute(Array('newPassword' => $newPassword, ':userId' => $this->id));
+                        $success = $stmt->execute(Array(':newPassword' => $this->passwordHashed, ':userId' => $this->id));
                         if ($success) {
                             $sql = "UPDATE users_reset_password SET used = 1 WHERE userId = :userId AND datetime = :datetime";
                             $stmt = $db->prepare($sql);
-                            $stmt->execute(Array('userId' => $this->id, 'datetime' => $last_password_reset['datetime']));
+                            $stmt->execute(Array(':userId' => $this->id, ':datetime' => $last_password_reset['datetime']));
                             $status = "PASSWORD_CHANGED";
                         }
                         else {
@@ -364,9 +368,10 @@ class User
     public function changePassword($newPassword)
     {
         global $db;
-        $sql = "UPDATE users SET password = :password WHERE userId = :userId";
+        $this->passwordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
+        $sql = "UPDATE users SET password_hash = :new_password_hash, password = '' WHERE userId = :userId";
         $stmt = $db->prepare($sql);
-        $stmt->execute(Array(':password' => $newPassword, ':userId' => $this->id));
+        $stmt->execute(Array(':new_password_hash' => $this->passwordHashed, ':userId' => $this->id));
     }
 
     public function deleteAccount()
@@ -379,6 +384,18 @@ class User
             $this->hasCookie = false;
             $this->cookieId = false;
         }
+    }
+
+    public function checkPasswordSecured()
+    {
+        global $db;
+        $infos = $db->query("SELECT password, password_hash FROM users WHERE userId = $this->id");
+        while ($info = $infos->fetch(PDO::FETCH_ASSOC)) {
+            if ($info['password_hash'] != NULL && $info['password_hash'] != '') {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

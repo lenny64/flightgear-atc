@@ -18,6 +18,13 @@ if (isset($_POST['email']) AND isset($_POST['password']) AND $_POST['email'] != 
         $User->selectById(getInfo('userId', 'users', 'mail', $_POST['email']));
         $User->connect($User->id);
     }
+    else if ($_POST['email'] == getInfo('mail', 'users', 'mail', $_POST['email']) AND password_verify($_POST['password'], getInfo('password_hash','users','mail', $_POST['email'])))
+    {
+        $userAuthenticated = true;
+        $User = new User();
+        $User->selectById(getInfo('userId', 'users', 'mail', $_POST['email']));
+        $User->connect($User->id);
+    }
     else
     {
         $userAuthenticated = false;

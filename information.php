@@ -14,6 +14,19 @@
 <div class="container">
 
     <div class="panel panel-default">
+        <div class="panel-heading">2020-01-26 - <strong>Stronger passwords</strong></div>
+        <div class="panel-body">
+            <p>
+                This update improves password security.
+            </p>
+            <p>
+                From January 26th a new version of password encryption is available. You are thus required to change your password from your <a href="./dashboard.php?settings" target="_blank">"ATC Dashboard"</a>.
+                <br/>
+                There is no password constraint however you are invited to use letters (in upper and lower case), digits and special characters (\!%$£€#).
+            </p>
+        </div>
+    </div>
+    <div class="panel panel-default">
         <div class="panel-heading">2019-08-02 - <strong>Password reset feature</strong></div>
         <div class="panel-body">
             <p>
