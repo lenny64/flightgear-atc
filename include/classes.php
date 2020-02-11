@@ -449,6 +449,8 @@ class Event
     public $airportName;
     public $airportCity;
     public $airportCountry;
+    public $airportLat;
+    public $airportLon;
     public $date;
     public $beginTime;
     public $endTime;
@@ -628,7 +630,9 @@ class Event
                         events.* ,
                         airports_global.globalAirportName AS airportName,
                         airports_global.globalAirportCity AS airportCity,
-                        airports_global.globalAirportCountry AS airportCountry
+                        airports_global.globalAirportCountry AS airportCountry,
+                        airports_global.globalAirportLat AS airportLat,
+                        airports_global.globalAirportLon AS airportLon
                     FROM events
                     LEFT JOIN airports_global
                     ON events.airportICAO = airports_global.globalAirportICAO
@@ -638,6 +642,8 @@ class Event
 
                 $this->id = $event['eventId'];
                 $this->airportICAO = strtoupper($event['airportICAO']);
+                $this->airportLat = floatval($event['airportLat']);
+                $this->airportLon = floatval($event['airportLon']);
                 $this->userId = $event['userId'];
                 $this->date = $event['date'];
                 $this->beginTime = $event['beginTime'];

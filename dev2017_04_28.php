@@ -264,43 +264,71 @@ else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
 
         $events = $db->query("SELECT * FROM events WHERE date >= '$today' AND date <= '$date' LIMIT 0,80");
 
-        $XMLEvents = new SimpleXMLElement("<events></events>");
-        $XMLEvents->addAttribute('version',DEV_VERSION);
-
-        foreach ($events as $event)
+        if (isset($_GET['format']) && $_GET['format'] == "json")
         {
-            $Event = new Event();
-            $Event->selectById($event['eventId']);
+            foreach ($events as $event)
+            {
+                $Event = new Event();
+                $Event->selectById($event['eventId']);
+                $events_list[] = Array('eventId' => $Event->id,
+                                                'airportICAO' => $Event->airportICAO,
+                                                'date' => $Event->date,
+                                                'beginTime' => $Event->beginTime,
+                                                'endTime' => $Event->endTime,
+                                                'fgcom' => $Event->fgcom,
+                                                'teamspeak' => $Event->teamspeak,
+                                                'transitionLevel' => $Event->transitionLevel,
+                                                'runways' => $Event->runways,
+                                                'ils' => $Event->ils,
+                                                'docsLink' => htmlspecialchars($Event->docsLink),
+                                                'remarks' => $Event->remarks,
+                                                'lat' => $Event->airportLat,
+                                                'lon' => $Event->airportLon);
+            }
+            header('Content-Type: application/json');
+            echo json_encode($events_list);
+        }
+        else
+        {
+            $XMLEvents = new SimpleXMLElement("<events></events>");
+            $XMLEvents->addAttribute('version',DEV_VERSION);
 
-            $XMLEvent = $XMLEvents->addChild('event');
-            //$XMLEvent->addChild('eventId',$Event->id);
-            $XMLEvent->eventId = $Event->id;
-            //$XMLEvent->addChild('airportICAO',$Event->airportICAO);
-            $XMLEvent->airportICAO = $Event->airportICAO;
-            //$XMLEvent->addChild('date',$Event->date);
-            $XMLEvent->date = $Event->date;
-            //$XMLEvent->addChild('beginTime',$Event->beginTime);
-            $XMLEvent->beginTime = $Event->beginTime;
-            //$XMLEvent->addChild('endTime',$Event->endTime);
-            $XMLEvent->endTime = $Event->endTime;
-            //$XMLEvent->addChild('fgcom',$Event->fgcom);
-            $XMLEvent->fgcom = $Event->fgcom;
-            //$XMLEvent->addChild('teamspeak',$Event->teamspeak);
-            $XMLEvent->teamspeak = $Event->teamspeak;
-            //$XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
-            $XMLEvent->transitionLevel = $Event->transitionLevel;
-            //$XMLEvent->addChild('runways',$Event->runways);
-            $XMLEvent->runways = $Event->runways;
-            //$XMLEvent->addChild('ILS',$Event->ils);
-            $XMLEvent->ILS = $Event->ils;
-            //$XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
-            $XMLEvent->docsLink = htmlspecialchars($Event->docsLink);
-            //$XMLEvent->addChild('remarks',$Event->remarks);
-            $XMLEvent->remarks = $Event->remarks;
+            foreach ($events as $event)
+            {
+                $Event = new Event();
+                $Event->selectById($event['eventId']);
+
+                $XMLEvent = $XMLEvents->addChild('event');
+                //$XMLEvent->addChild('eventId',$Event->id);
+                $XMLEvent->eventId = $Event->id;
+                //$XMLEvent->addChild('airportICAO',$Event->airportICAO);
+                $XMLEvent->airportICAO = $Event->airportICAO;
+                //$XMLEvent->addChild('date',$Event->date);
+                $XMLEvent->date = $Event->date;
+                //$XMLEvent->addChild('beginTime',$Event->beginTime);
+                $XMLEvent->beginTime = $Event->beginTime;
+                //$XMLEvent->addChild('endTime',$Event->endTime);
+                $XMLEvent->endTime = $Event->endTime;
+                //$XMLEvent->addChild('fgcom',$Event->fgcom);
+                $XMLEvent->fgcom = $Event->fgcom;
+                //$XMLEvent->addChild('teamspeak',$Event->teamspeak);
+                $XMLEvent->teamspeak = $Event->teamspeak;
+                //$XMLEvent->addChild('transitionLevel',$Event->transitionLevel);
+                $XMLEvent->transitionLevel = $Event->transitionLevel;
+                //$XMLEvent->addChild('runways',$Event->runways);
+                $XMLEvent->runways = $Event->runways;
+                //$XMLEvent->addChild('ILS',$Event->ils);
+                $XMLEvent->ILS = $Event->ils;
+                //$XMLEvent->addChild('docsLink',  htmlspecialchars($Event->docsLink));
+                $XMLEvent->docsLink = htmlspecialchars($Event->docsLink);
+                //$XMLEvent->addChild('remarks',$Event->remarks);
+                $XMLEvent->remarks = $Event->remarks;
+            }
+
+            header('Content-type: application/xml');
+            echo $XMLEvents->asXML();
         }
 
-        header('Content-type: application/xml');
-        echo $XMLEvents->asXML();
     }
     else
     {

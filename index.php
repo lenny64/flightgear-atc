@@ -29,6 +29,9 @@
         include('./include/atc_homescreen.php');
     }
 
+    // M A P
+    include('./include/map.php');
+
     // C A L E N D A R
     include('./include/calendar.php');
     echo '<br style="clear:both;"/>';

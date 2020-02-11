@@ -53,7 +53,9 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	<link rel="stylesheet" type="text/css" href="./style/dashboard.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/contact.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/poll.css"/>
-        <link rel="stylesheet" href="./bootstrap-3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./bootstrap-3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./leaflet/leaflet.css"/>
+
 
 	<!-- AUTRES -->
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
@@ -64,6 +66,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
         <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
         <script type="text/javascript" src="./include/jquery-ui-1.10.4.custom.min.js"></script>
         <script type="text/javascript" src="./include/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="./leaflet/leaflet.js"></script>
         <script src="./bootstrap-3.3.5/js/bootstrap.min.js"></script>
 </head>
 
