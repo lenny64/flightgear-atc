@@ -150,13 +150,13 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
         <div class="col-md-6 form-group">
             <label class="control-label" for="apt_name">Airport name*</label>
             <div class="">
-                <input type="text" class="form-control" id="apt_name" name="<?php echo $requiredFields[2];?>" placeholder="Airport name" required>
+                <input type="text" class="form-control" id="apt_name" name="<?php echo $requiredFields[0];?>" placeholder="Airport name" required>
             </div>
         </div>
         <div class="col-md-6 form-group">
             <label class="control-label" for="apt_icao">Airport ICAO*</label>
             <div class="">
-                <input type="text" class="form-control" id="apt_icao" name="<?php echo $requiredFields[3];?>" placeholder="ICAO code" required>
+                <input type="text" class="form-control" id="apt_icao" name="<?php echo $requiredFields[1];?>" placeholder="ICAO code" required>
             </div>
         </div>
 
@@ -166,13 +166,13 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                 <label class="control-label" for="newEvent-dateYear">Date*</label>
             </div>
             <div class="col-xs-3">
-                <select name="<?php echo $requiredFields[4];?>" id="newEvent-dateYear" class="form-control">
+                <select name="<?php echo $requiredFields[2];?>" id="newEvent-dateYear" class="form-control">
                     <option value="<?php echo date('Y');?>" <?php if(isset($getYear) AND $getYear == date('Y')) echo "selected";?>><?php echo date('Y');?></option>
                     <option value="<?php echo date('Y',strtotime(date()." + 1 year"));?>" <?php if(isset($getYear) AND $getYear != date('Y')) echo "selected";?>><?php echo date('Y',strtotime(date()." + 1 year"));?></option>
                 </select>
             </div>
             <div class="col-xs-7">
-                <select name="<?php echo $requiredFields[5];?>" class="form-control">
+                <select name="<?php echo $requiredFields[3];?>" class="form-control">
                     <option value="01" <?php if (isset($getMonth) and $getMonth == "01") echo "selected"; ?> >January</option>
                     <option value="02" <?php if (isset($getMonth) and $getMonth == "02") echo "selected"; ?> >February</option>
                     <option value="03" <?php if (isset($getMonth) and $getMonth == "03") echo "selected"; ?> >March</option>
@@ -188,7 +188,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                 </select>
             </div>
             <div class="col-xs-2">
-                <input type="text" class="form-control" id="newEvent-dateDay" name="<?php echo $requiredFields[6];?>" value="<?php if (isset($getDay) and $getDay != NULL) echo $getDay; else { echo "Days"; } ?>" required>
+                <input type="text" class="form-control" id="newEvent-dateDay" name="<?php echo $requiredFields[4];?>" value="<?php if (isset($getDay) and $getDay != NULL) echo $getDay; else { echo "Days"; } ?>" required>
             </div>
         </div>
         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
@@ -199,16 +199,16 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                 <label class="control-label" for="apt_endHour"><img src="./img/scheme_time.png"/> To*</label>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_beginHour" name="<?php echo $requiredFields[7];?>" placeholder="hh" required>
+                <input type="text" class="form-control" id="apt_beginHour" name="<?php echo $requiredFields[5];?>" placeholder="hh" required>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_beginMinutes" name="<?php echo $requiredFields[8];?>" placeholder="mm" required>
+                <input type="text" class="form-control" id="apt_beginMinutes" name="<?php echo $requiredFields[6];?>" placeholder="mm" required>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_endHour" name="<?php echo $requiredFields[9];?>" placeholder="hh" required>
+                <input type="text" class="form-control" id="apt_endHour" name="<?php echo $requiredFields[7];?>" placeholder="hh" required>
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" id="apt_endMinutes" name="<?php echo $requiredFields[10];?>" placeholder="mm" required>
+                <input type="text" class="form-control" id="apt_endMinutes" name="<?php echo $requiredFields[8];?>" placeholder="mm" required>
             </div>
         </div>
 
