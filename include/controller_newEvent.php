@@ -2,8 +2,6 @@
 
 // Those are the fields which are required as inputs
 $requiredFields = Array(
-    'newSessionMail',
-    'newSessionPassword',
     'newSessionAirportName',
     'newSessionAirportICAO',
     'newSessionYear',
@@ -51,6 +49,11 @@ if (isset($_GET['newSession']))
         eval ( '$' . substr($field,10) . ' = "' . htmlspecialchars($_POST[$field]) . '";');
     }
 
+    if (!isset($_SESSION['id']) OR $_SESSION['id'] == NULL OR $_SESSION['mode'] != 'connected')
+    {
+        $permissionToCreate = false;
+    }
+
     // If there is a missing information ...
     if (isset($missingInformations) AND $missingInformations != NULL)
     {
@@ -79,8 +82,8 @@ if (isset($_GET['newSession']))
         if (!isset($User->id))
         {
             // If not we actually create the user
-            $User = new User();
-            $User->create($Mail, $Password, $_SERVER['REMOTE_ADDR']);
+            // $User = new User();
+            // $User->create($Mail, $Password, $_SERVER['REMOTE_ADDR']);
         }
         // We create the airport (if exists, won't be added again)
         $Airport = new Airport();
