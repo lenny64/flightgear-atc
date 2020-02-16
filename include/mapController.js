@@ -36,9 +36,11 @@ var date_7days = new Date();
 date_7days.setDate(date_7days.getDate() + 7);
 var readable_date_7days = formatDate(date_7days);
 
+
+var overlayMaps = {};
+
 // I look for airports controlled
 $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&format=json", function(data) {
-    var overlayMaps = {};
     var overlay = {};
     $.each(data, function(i,airport) {
         var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
@@ -47,7 +49,7 @@ $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&form
         }
         else {
             overlay[airport.date] = Array(marker);
-            $('.boutons_map').html('<a class="btn btn-primary">'+airport.date+'</a>');
+            $('.boutons_map').html('<a class="btn btn-default" onclick="showLayer(\''+airport.date+'\')">'+airport.date+'</a>');
         }
     });
     $.each(overlay, function(i, layer) {
@@ -56,3 +58,16 @@ $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&form
     console.log(overlayMaps);
     L.control.layers(overlayMaps).addTo(mymap);
 });
+
+var showLayer = function(layer) {
+    event.preventDefault();
+    if(mymap.hasLayer(overlayMaps[layer])) {
+        $(this).removeClass('btn-primary');
+        $(this).addClass('btn-default');
+        mymap.removeLayer(overlayMaps[layer]);
+    } else {
+        mymap.addLayer(overlayMaps[layer]);
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+    }
+};
