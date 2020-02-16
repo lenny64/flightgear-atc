@@ -40,44 +40,22 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
     ?>
         <?php
 
-        // If the user is already connected, we won't ask him to ident
-        if (isset($_SESSION['id']) AND $_SESSION['id'] != NULL AND $_SESSION['mode'] == 'connected')
-        {
-            ?>
-            <input type="hidden" name="<?php echo $requiredFields[0];?>" value="<?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>"/>
-            <input type="hidden" name="<?php echo $requiredFields[1];?>" value="<?php echo getInfo('password', 'users', 'userId', $_SESSION['id']);?>"/>
-            <div class="alert alert-success"><b>Good news</b> ! You are connected : <?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>.</div>
-            <?php
-        }
-
-        // Otherwise
-        else {
+        // If the user is not connected
+        if (!isset($_SESSION['id']) OR $_SESSION['id'] == NULL OR $_SESSION['mode'] != 'connected') {
         ?>
         <h3>Identification</h3>
 
         <div class="alert alert-info">
             The ATC Dashboard has been re-designed! Click below if you want to access there.
             <br/><br/>
-            <a href="./dashboard.php" class="btn btn-primary">I already have an account</a>
-        </div>
-
-        <div class="col-sm-6 form-group">
-            <label class="control-label" for="newEvent-email">Your email address*</label>
-            <div class="">
-                <input type="text" class="form-control" id="newEvent-email" name="<?php echo $requiredFields[0];?>" placeholder="Email Address" required>
-            </div>
-        </div>
-        <div class="col-sm-6 form-group">
-            <label class="control-label" for="newEvent-password">Password*</label>
-            <div class="">
-                <input type="password" class="form-control" id="newEvent-password" name="<?php echo $requiredFields[1];?>" placeholder="Remember this password" required>
-            </div>
+            <a href="./dashboard.php" class="btn btn-primary">I already have an account</a> <a href="./subscribe.php" class="btn btn-default">I want to create an account</a>
         </div>
 
         <?php
-        }
+        // If the user is already connected, we won't ask him to ident
+        } else {
         ?>
-        <br/>
+        <div class="alert alert-success"><b>Good news</b> ! You are connected : <?php echo getInfo('mail', 'users', 'userId', $_SESSION['id']);?>.</div>
         <h3><img src="./img/scheme_airport.png"/> Location</h3>
         <div class="col-md-12 form-group">
             <label class="control-label">Airport selection</label>
@@ -263,6 +241,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
         </div>
 
         <button type="submit" class="btn btn-primary" value="Create session">Create session</button>
-
+        <?php
+      } ?>
     </div>
 </form>
