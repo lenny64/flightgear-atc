@@ -95,6 +95,8 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
         });
         L.control.layers(overlayMaps).addTo(mymap);
         mymap.addLayer(overlayMaps['Live ATC']);
+        var boutons_map = $('.boutons_map').html();
+        $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-primary" onclick="showLayer(this,\'Live ATC\')">Live ATC</a>');
     }
 });
 
