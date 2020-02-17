@@ -42,35 +42,36 @@ var overlayMaps = {};
 // I look for airports controlled
 $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&format=json", function(data) {
     var overlay = {};
-    $.each(data, function(i,airport) {
-        var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
-        // I put the center of the map on first marker
-        if (i == 0) {
-            mymap.panTo(new L.LatLng(airport.lat, airport.lon));
-        }
+    if (data != null) {
+        $.each(data, function(i,airport) {
+            var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
+            // I put the center of the map on first marker
+            if (i == 0) {
+                mymap.panTo(new L.LatLng(airport.lat, airport.lon));
+            }
 
-        // If there are several airports on same day
-        if (airport.date in overlay) {
-            overlay[airport.date].push(marker);
-        } // For the first airport of the day we initialize the array and add a button
-        else {
-            overlay[airport.date] = Array(marker);
-            addButton(airport.date);
-        }
-    });
-    // For each date we create a layer
-    $.each(overlay, function(i, layer) {
-        overlayMaps[i] = L.layerGroup(layer);
-    });
-    // We add a control layer
-    L.control.layers(overlayMaps).addTo(mymap);
+            // If there are several airports on same day
+            if (airport.date in overlay) {
+                overlay[airport.date].push(marker);
+            } // For the first airport of the day we initialize the array and add a button
+            else {
+                overlay[airport.date] = Array(marker);
+                addButton(airport.date);
+            }
+        });
+        // For each date we create a layer
+        $.each(overlay, function(i, layer) {
+            overlayMaps[i] = L.layerGroup(layer);
+        });
+        // We add a control layer
+        L.control.layers(overlayMaps).addTo(mymap);
 
-    // I add the first layer by default
-    mymap.addLayer(overlayMaps[Object.keys(overlayMaps)[0]]);
-    // With the proper button active
-    $('.bouton-map').first().addClass("btn-primary");
-    $('.bouton-map').first().removeClass("btn-default");
-
+        // I add the first layer by default
+        mymap.addLayer(overlayMaps[Object.keys(overlayMaps)[0]]);
+        // With the proper button active
+        $('.bouton-map').first().addClass("btn-primary");
+        $('.bouton-map').first().removeClass("btn-default");
+    }
 });
 
 var addButton = function(airport_date) {
