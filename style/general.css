@@ -42,6 +42,14 @@ h1.main_title {
     color: #424D15;
 }
 
+.jumbotron {
+    margin-bottom: 0px!important;
+    border-bottom-left-radius: 0;
+    -moz-border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    -moz-border-bottom-right-radius: 0;
+}
+
 .boutons_map {
     margin-top: 0.5%;
     margin-bottom: 1%;
