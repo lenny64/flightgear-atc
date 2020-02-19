@@ -46,6 +46,9 @@ h1.main_title {
     margin-top: 0.5%;
     margin-bottom: 1%;
 }
+a.bouton-map {
+    margin-right: 5px;
+}
 /*
 input, textarea {
     border: solid 1px #a0c0ff;

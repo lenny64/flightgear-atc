@@ -45,47 +45,14 @@ var readable_date_7days = formatDate(date_7days);
 
 var overlay = {'Live ATC': Array()};
 var overlayMaps = {};
-
-// I look for airports controlled
-$.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&format=json", function(data) {
-    if (data != null) {
-        $.each(data, function(i,airport) {
-            var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
-            // I put the center of the map on first marker
-            if (i == 0) {
-                mymap.panTo(new L.LatLng(airport.lat, airport.lon));
-            }
-
-            // If there are several airports on same day
-            if (airport.date in overlay) {
-                overlay[airport.date].push(marker);
-            } // For the first airport of the day we initialize the array and add a button
-            else {
-                overlay[airport.date] = Array(marker);
-                addButton(airport.date);
-            }
-        });
-        // For each date we create a layer
-        $.each(overlay, function(i, layer) {
-            overlayMaps[i] = L.layerGroup(layer);
-        });
-        // We add a control layer
-        L.control.layers(overlayMaps).addTo(mymap);
-
-        // I add the first layer by default
-        mymap.addLayer(overlayMaps[Object.keys(overlayMaps)[0]]);
-        // With the proper button active
-        $('.bouton-map').first().addClass("btn-primary");
-        $('.bouton-map').first().removeClass("btn-default");
-    }
-});
+var addControlLayers = false;
 
 $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
     var data = JSON.parse(data);
-    var atc_models = ["atc", "atc2", "atc-ml", "atc-fs", "openradar", "atc-tower", "atc-tower2", "atc-pie", "ATC-pie"];
+    var atc_models = ["atc", "atc2", "atc-ml", "atc-fs", "openradar", "atc-tower", "atc-tower2", "atc-pie", "atc-pie"];
     if (data != null) {
         $.each(data.flights, function(i, airport) {
-            if (atc_models.indexOf(airport.model) !== -1) {
+            if (atc_models.indexOf(airport.model.toLowerCase()) != -1) {
                 var marker = L.marker([airport.lat, airport.lon], {icon: iconLiveATC}).bindPopup(airport.callsign);
                 overlay['Live ATC'].push(marker);
             }
@@ -93,11 +60,50 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
         $.each(overlay, function(i, layer) {
             overlayMaps[i] = L.layerGroup(layer);
         });
-        L.control.layers(overlayMaps).addTo(mymap);
+        // if (!addControlLayers) {
+        //     L.control.layers(overlayMaps).addTo(mymap);
+        //     addControlLayers = true;
+        // }
         mymap.addLayer(overlayMaps['Live ATC']);
         var boutons_map = $('.boutons_map').html();
-        $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-primary" onclick="showLayer(this,\'Live ATC\')">Live ATC</a>');
+        $('.boutons_map').html(boutons_map+'<a class="btn btn-sm btn-primary bouton-map" onclick="showLayer_new(this,\'Live ATC\')">Live ATC</a>');
     }
+    // I look for airports controlled
+    $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&format=json", function(data) {
+        if (data != null) {
+            $.each(data, function(i,airport) {
+                var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
+                // I put the center of the map on first marker
+                if (i == 0) {
+                    mymap.panTo(new L.LatLng(airport.lat, airport.lon));
+                }
+
+                // If there are several airports on same day
+                if (airport.date in overlay) {
+                    overlay[airport.date].push(marker);
+                } // For the first airport of the day we initialize the array and add a button
+                else {
+                    overlay[airport.date] = Array(marker);
+                    addButton(airport.date);
+                }
+            });
+            // For each date we create a layer
+            $.each(overlay, function(i, layer) {
+                overlayMaps[i] = L.layerGroup(layer);
+            });
+            // // We add a control layer
+            // if (!addControlLayers) {
+            //     L.control.layers(overlayMaps).addTo(mymap);
+            //     addControlLayers = true;
+            // }
+
+            // I add the first layer by default
+            mymap.addLayer(overlayMaps[Object.keys(overlayMaps)[0]]);
+            // With the proper button active
+            $('.bouton-map').first().addClass("btn-primary");
+            $('.bouton-map').first().removeClass("btn-default");
+        }
+    });
 });
 
 var addButton = function(airport_date) {
@@ -112,7 +118,7 @@ var addButton = function(airport_date) {
     if (delta_days == 0) var text = "Today";
     else if (delta_days == 1) var text = "Tomorrow";
     else var text = "On "+days_of_week[date_evt.getDay()];
-    $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-default" onclick="showLayer(this,\''+airport_date+'\')">'+text+'</a>');
+    $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-default" onclick="showLayer_new(this,\''+airport_date+'\')">'+text+'</a>');
 }
 
 var showLayer = function(el,layer) {
@@ -132,3 +138,16 @@ var showLayer = function(el,layer) {
     $(el).addClass('btn-primary');
     $(el).removeClass('btn-default');
 };
+
+var showLayer_new = function(el,layer) {
+    event.preventDefault();
+    if(mymap.hasLayer(overlayMaps[layer])) {
+        $(el).removeClass('btn-primary');
+        $(el).addClass('btn-default');
+        mymap.removeLayer(overlayMaps[layer]);
+    } else {
+        $(el).removeClass('btn-default');
+        $(el).addClass('btn-primary');
+        mymap.addLayer(overlayMaps[layer]);
+   }
+}
