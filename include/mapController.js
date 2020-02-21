@@ -6,12 +6,9 @@ var mymap = L.map('mapid', {
     scrollWheelZoom: false,
     layers: []
 });
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-    maxZoom: 18,
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    id: 'mapbox/streets-v11'
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(mymap);
 
 var myIcon = L.icon({
@@ -55,6 +52,12 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
         $.each(data.flights, function(i, airport) {
             if (atc_models.indexOf(airport.model.toLowerCase()) != -1) {
                 var marker = L.marker([airport.lat, airport.lon], {icon: iconLiveATC}).bindPopup(airport.callsign);
+                marker.on('mouseover',function(ev) {
+                  ev.target.openPopup();
+                });
+                marker.on('mouseout',function(ev) {
+                  ev.target.closePopup();
+                });
                 overlay['Live ATC'].push(marker);
             }
         });
@@ -74,6 +77,12 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
         if (data != null) {
             $.each(data, function(i,airport) {
                 var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
+                marker.on('mouseover',function(ev) {
+                  ev.target.openPopup();
+                });
+                marker.on('mouseout',function(ev) {
+                  ev.target.closePopup();
+                });
                 // I put the center of the map on first marker
                 if (i == 0) {
                     mymap.panTo(new L.LatLng(airport.lat, airport.lon));
