@@ -128,15 +128,16 @@ var addButton = function(airport_date) {
     if (delta_days == 0) var text = "Today";
     else if (delta_days == 1) var text = "Tomorrow";
     else var text = "On "+days_of_week[date_evt.getDay()];
-    $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-default" onmouseover="showLayer(this,\''+airport_date+'\')" onclick="showLayer_new(this,\''+airport_date+'\')">'+text+'</a>');
+    $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-default" onmouseover="showLayer(this,\''+airport_date+'\')">'+text+'</a>');
 }
 
 var showLayer = function(el,layer) {
     event.preventDefault();
     // I remove all layers
     $.each(overlayMaps, function (i, l) {
-        console.log(l);
-        mymap.removeLayer(l);
+        if (i != 'Live ATC') {
+          mymap.removeLayer(l);
+        }
     });
     // I turn off all layer buttons
     $('.bouton-map').each(function(i, obj) {
@@ -161,17 +162,4 @@ var showLayer_new = function(el,layer) {
         $(el).addClass('btn-primary');
         mymap.addLayer(overlayMaps[layer]);
    }
-}
-
-var showLayer_new2 = function(el,layer) {
-    event.preventDefault();
-    if(mymap.hasLayer(overlayMaps[layer])) {
-        mymap.removeLayer(overlayMaps[layer]);
-    } else {
-        mymap.addLayer(overlayMaps[layer]);
-   }
-}
-var hideLayer_new2 = function(el,layer) {
-    event.preventDefault();
-    mymap.removeLayer(overlayMaps[layer]);
 }
