@@ -70,7 +70,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
         // }
         mymap.addLayer(overlayMaps['Live ATC']);
         var boutons_map = $('.boutons_map').html();
-        $('.boutons_map').html(boutons_map+'<a class="btn btn-sm btn-primary bouton-map" onclick="showLayer_new(this,\'Live ATC\')">Live ATC</a>');
+        $('.boutons_map').html(boutons_map+'<a class="btn btn-sm btn-success bouton-map" id="live_atc" onclick="showLayer_new(this,\'Live ATC\')">Live ATC</a>');
     }
     // I look for airports controlled
     $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&format=json", function(data) {
@@ -141,8 +141,10 @@ var showLayer = function(el,layer) {
     });
     // I turn off all layer buttons
     $('.bouton-map').each(function(i, obj) {
-        $(obj).removeClass('btn-primary');
-        $(obj).addClass('btn-default');
+        if ($(obj).attr('id') != 'live_atc') {
+            $(obj).removeClass('btn-primary');
+            $(obj).addClass('btn-default');
+        }
     });
     // We add the layer
     mymap.addLayer(overlayMaps[layer]);
