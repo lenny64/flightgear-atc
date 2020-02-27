@@ -44,6 +44,7 @@ var readable_date_7days = formatDate(date_7days);
 var overlay = {'Live ATC': Array()};
 var overlayMaps = {};
 var addControlLayers = false;
+var map_recenter = false;
 
 $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
     var data = JSON.parse(data);
@@ -59,6 +60,11 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                   ev.target.closePopup();
                 });
                 overlay['Live ATC'].push(marker);
+                // I put the center of the map on first marker
+                if (i == 0) {
+                    mymap.panTo(new L.LatLng(airport.lat, airport.lon));
+                    map_recenter = true;
+                }
             }
         });
         $.each(overlay, function(i, layer) {
@@ -84,7 +90,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                   ev.target.closePopup();
                 });
                 // I put the center of the map on first marker
-                if (i == 0) {
+                if (i == 0 && map_recenter == false) {
                     mymap.panTo(new L.LatLng(airport.lat, airport.lon));
                 }
 
