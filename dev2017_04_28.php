@@ -17,7 +17,7 @@ require_once './include/config.php';
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 
 // Version definition
-define("DEV_VERSION","2.2");
+define("DEV_VERSION","2.3");
 // Error codes definitions
 define("WRONG_IDENT", 'The ident you are using is not correct');
 define("ERR_VAR1", 'A variable is missing or is NULL');
@@ -262,7 +262,7 @@ else if (isset($_GET['getATCSessions']) AND isset($_GET['limitDate']))
         $date = $_GET['limitDate'];
         $today = date('Y-m-d');
 
-        $events = $db->query("SELECT * FROM events WHERE date >= '$today' AND date <= '$date' LIMIT 0,80");
+        $events = $db->query("SELECT * FROM events WHERE date >= '$today' AND date <= '$date' ORDER BY date ASC LIMIT 0,80");
 
         if (isset($_GET['format']) && $_GET['format'] == "json")
         {
