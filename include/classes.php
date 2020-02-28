@@ -492,6 +492,12 @@ class Event
         if (isset($Year) AND isset($Month) AND isset($Day) AND $Year != NULL AND $Month != NULL AND $Day != NULL)
         {
             $this->date = date('Y-m-d',strtotime($Year.'-'.$Month.'-'.$Day));
+            // Avoid creating events in the past
+            if ($this->date < date('Y-m-d'))
+            {
+                $this->requestNewEvent = false;
+                $this->error = "You cannot create an event in the past";
+            }
 
             // We transform each Hour+Minutes into Time format
             $this->beginTime = date('H:i:s',  strtotime($BeginHour.':'.$BeginMinutes));
@@ -530,11 +536,11 @@ class Event
                 $this->userId = 1;
             }
             */
-            $this->requestNewEvent = false;
 
-            if (isset($this->userId) AND $this->userId != NULL)
+            if (!isset($this->userId) OR $this->userId == NULL)
             {
-              $this->requestNewEvent = true;
+                $this->requestNewEvent = false;
+                $this->error = "You are not connected";
             }
         }
 
