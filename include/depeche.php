@@ -50,6 +50,24 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
     $Depeche->validateDepeche();
 }
 
+
+$Poll = new Poll();
+$polls_list = $Poll->getPolls();
+$showPoll = ($polls_list > 0) ? TRUE : FALSE;
+
+if ($showPoll == FALSE) { // If there is no poll
+    $title = $Depeche->displayDepeche($Depeche->title);
+    $content = $Depeche->displayDepeche($Depeche->content);
+}
+else { // If there is poll
+    $title = "A question for you!";
+    $content = $Poll->content;
+    $content .= "<br/>";
+    foreach ($Poll->choices as $choice) {
+        $content .= "<input type='button' class='btn btn-primary btn-sm' value='".$choice."'/>";
+    }
+}
+
 ?>
 
 <!-- Image size 900 x 190 -->
@@ -58,9 +76,9 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
     <div id='bg-overlay'>
         <div class="container">
             <div class="col-md-8">
-                <h2 id="depecheMainTitle"><?php echo $Depeche->displayDepeche($Depeche->title); ?></h2>
+                <h2 id="depecheMainTitle"><?php echo $title; ?></h2>
                 <p id="depecheContent">
-                    <?php echo $Depeche->displayDepeche($Depeche->content); ?>
+                    <?php echo $content; ?>
                 </p>
             </div>
             <div class="col-md-4 hidden-sm hidden-xs">

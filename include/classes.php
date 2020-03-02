@@ -1435,6 +1435,21 @@ class Poll
     {
     }
 
+    public function getPolls()
+    {
+        global $db;
+        $polls_query = $db->query("SELECT ps.pollId, ps.dateBegin, ps.dateEnd, ps.title, ps.content,
+                                            pa.answer,
+                                            pr.result
+                                    FROM polls_submits ps
+                                    LEFT JOIN polls_answers pa ON (ps.pollId = pa.pollId)
+                                    LEFT JOIN polls_results pr ON (pr.pollId = pa.pollId)
+                                    WHERE ps.dateBegin <= CURDATE() AND ps.dateEnd >= CURDATE() LIMIT 1");
+        $polls_list = $polls_query->fetch(PDO::FETCH_ASSOC);
+        $this->selectById($polls_list['pollId']);
+        return $polls_list;
+    }
+
     public function selectById($id)
     {
         if (isset($id))
