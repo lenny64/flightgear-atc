@@ -1525,6 +1525,7 @@ class Poll
 
     public function answer($answer,$ip)
     {
+        global $db;
         $this->checkAnswer();
 
         if ($this->okToVote != TRUE)
