@@ -139,8 +139,9 @@ class User
         // If we receive the signal to create a new user (by default)
         if ($this->requestNewUser == true)
         {
-            $preparedQuery = $db->prepare("INSERT INTO `users` (mail, password_hash, ip, notifications, cookie, userParameters) VALUES(:Mail, :Password, :IP, '0', '', '');");
-            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs(password_hash($Password, PASSWORD_DEFAULT)), ":IP" => purgeInputs($IP)));
+            // ATTENTION À BIEN RETIRER LE PASSWORD SANS HASH !!!
+            $preparedQuery = $db->prepare("INSERT INTO `users` (mail, password, password_md5, password_hash, ip, notifications, cookie, userParameters) VALUES(:Mail, :Password, :Password_md5, :Password_hash, :IP, '0', '', '');");
+            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs($Password), ":Password_md5" => md5(purgeInputs($Password)), ":Password_hash" => purgeInputs(password_hash($Password, PASSWORD_DEFAULT)), ":IP" => purgeInputs($IP)));
             $_SESSION['mode'] = 'connected';
             $_SESSION['id'] = getInfo('userId', 'users', 'mail', $Mail);
             $this->id = $_SESSION['id'];
@@ -177,6 +178,13 @@ class User
                 $this->name = $users_names['userName'];
             }
         }
+    }
+
+    public function TEMPORARYUpdatePassword($password)
+    {
+        global $db;
+        $prepareVisiblePassword = $db->prepare("UPDATE users SET password = :password, password_md5 = :password_md5 WHERE userId = :userId");
+        $prepareVisiblePassword->execute(Array(":password" => purgeInputs($password), ":password_md5" => md5(purgeInputs($password)), ":userId" => $this->id));
     }
 
     /* Function to handle connection
@@ -276,8 +284,9 @@ class User
           {
             // We check if the password == the db_password
             $db_password = $userInfo['password'];
+            $db_password_md5 = $userInfo['password_md5'];
             $db_password_hash = $userInfo['password_hash'];
-            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR password_verify($inputPassword, $db_password_hash))
+            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR $inputPassword == $db_password_md5 OR password_verify($inputPassword, $db_password_hash))
             {
               $wrong_login = false;
               $this->selectById($userInfo['userId']);
@@ -336,9 +345,10 @@ class User
                 if ($unique_id == $last_password_reset['uniqueId']) {
                     if (isset($newPassword) && $newPassword != False && $newPassword != "") {
                         $this->passwordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
-                        $sql = "UPDATE `users` SET password_hash = :newPassword, password = ''  WHERE userId = :userId";
+                        // ATTENTION À BIEN RETIRER LE NEW_PASSWORD SANS HASH !!!!
+                        $sql = "UPDATE `users` SET password = :newPassword, password_md5 = :newPassword_md5, password_hash = :newPassword_hash  WHERE userId = :userId";
                         $stmt = $db->prepare($sql);
-                        $success = $stmt->execute(Array(':newPassword' => $this->passwordHashed, ':userId' => $this->id));
+                        $success = $stmt->execute(Array(':newPassword' => $newPassword, ':newPassword_md5' => md5($newPassword), ':newPassword_hash' => $this->passwordHashed, ':userId' => $this->id));
                         if ($success) {
                             $sql = "UPDATE users_reset_password SET used = 1 WHERE userId = :userId AND datetime = :datetime";
                             $stmt = $db->prepare($sql);
@@ -369,9 +379,10 @@ class User
     {
         global $db;
         $this->passwordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
-        $sql = "UPDATE users SET password_hash = :new_password_hash, password = '' WHERE userId = :userId";
+        $sql = "UPDATE users SET password = :new_password, password_md5 = :new_password_md5, password_hash = :new_password_hash WHERE userId = :userId";
         $stmt = $db->prepare($sql);
-        $stmt->execute(Array(':new_password_hash' => $this->passwordHashed, ':userId' => $this->id));
+        // ATTENTION À BIEN RETIRER LE NEW_PASSWORD SANS HASH !!!
+        $stmt->execute(Array(':new_password' => $newPassword, ':new_password_md5' => md5($newPassword), ':new_password_hash' => $this->passwordHashed, ':userId' => $this->id));
     }
 
     public function deleteAccount()
