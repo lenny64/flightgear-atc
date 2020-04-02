@@ -54,9 +54,17 @@ include_once('./include/poll.php');
 
 $Poll = new Poll();
 $polls_list = $Poll->getPolls();
-$showPoll = ($polls_list > 0) ? TRUE : FALSE;
+// By default we do not show poll
+$showPoll = FALSE;
+if ($polls_list > 0) { // If there is a poll
+    // We check if the user already answered
+    $Poll->checkAnswer();
+    if ($Poll->okToVote !== FALSE) {
+        $showPoll = TRUE;
+    }
+}
 
-if ($showPoll == FALSE) { // If there is no poll
+if ($showPoll == FALSE) { // If there is no poll we display the depeche
     $title = $Depeche->displayDepeche($Depeche->title);
     $content = $Depeche->displayDepeche($Depeche->content);
 }
@@ -67,7 +75,7 @@ else { // If there is poll
     $content .= "<form action='./' method='post'>";
     $content .= "<input type='hidden' name='poll_id' value='".$Poll->id."'/>";
     foreach ($Poll->choices as $choice) {
-        $content .= "<input type='submit' class='btn btn-default btn-sm' name='poll_answer' value='".$choice."'/><br/>";
+        $content .= "<input type='submit' class='btn btn-default btn-sm' name='poll_answer' value='".$choice."'/> ";
     }
     // $content .= "<input type='submit' value='Submit!' class='btn btn-sm btn-success'>";
     $content .= "</form>";

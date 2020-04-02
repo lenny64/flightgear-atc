@@ -14,8 +14,6 @@ if (isset($_POST['poll_id']) AND $_POST['poll_id'] != NULL AND isset($_POST['pol
 	$Poll = new Poll();
 	$Poll->selectById($pollId);
 	$Poll->answer($answer,$ip);
-	echo "OKKK";
-	error_log("OKK");
 }
 
 // We get all the polls

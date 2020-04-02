@@ -1449,6 +1449,7 @@ class Poll
     public function getPolls()
     {
         global $db;
+        $ip = $_SERVER['REMOTE_ADDR'];
         $polls_query = $db->query("SELECT ps.pollId, ps.dateBegin, ps.dateEnd, ps.title, ps.content,
                                             pa.answer,
                                             pr.result
@@ -1541,15 +1542,15 @@ class Poll
 
         if ($this->okToVote != TRUE)
         {
-                // We print an alert message
-                echo "<div class='warning'>You already voted.
-                <br/><br/>
-                Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
-                <ul>
-                        <li>Poll proposals ;</li>
-                        <li>Bug reports.</li>
-                </ul>
-                </div>";
+                // // We print an alert message
+                // echo "<div class='warning'>You already voted.
+                // <br/><br/>
+                // Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
+                // <ul>
+                //         <li>Poll proposals ;</li>
+                //         <li>Bug reports.</li>
+                // </ul>
+                // </div>";
                 return FALSE;
         }
         else
@@ -1558,14 +1559,14 @@ class Poll
                 $preparedQuery = $db->prepare("INSERT INTO polls_results (pollId, result, cookieId, ip, dateResult) VALUES(:id, :answer, '', :ip, :date);");
                 $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":answer" => purgeInputs($answer), ":ip" => purgeInputs($ip), ":date" => date('Y-m-d H:i:s')));
                 // We display a message
-                echo "<div class='warning'>Your vote has been accepted. Thank you.
-                <br/><br/>
-                Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
-                <ul>
-                        <li>Poll proposals ;</li>
-                        <li>Bug reports.</li>
-                </ul>
-                </div>";
+                // echo "<div class='warning'>Your vote has been accepted. Thank you.
+                // <br/><br/>
+                // Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
+                // <ul>
+                //         <li>Poll proposals ;</li>
+                //         <li>Bug reports.</li>
+                // </ul>
+                // </div>";
                 return TRUE;
         }
     }
