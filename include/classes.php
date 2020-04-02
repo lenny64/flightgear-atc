@@ -332,8 +332,30 @@ class User
                     $status = "CREATION_ERROR";
                 }
             }
-            else {
+            else { // If the id has been resetted
                 $status = "ID_ALREADY_CREATED";
+                $unique_id = substr(md5(time()), 0, 8);
+                $sql = "UPDATE `users_reset_password` SET uniqueId = :uniqueId, datetime = NOW() WHERE userId = :userId AND used = 0";
+                $stmt = $db->prepare($sql);
+                $success = $stmt->execute(Array(':uniqueId' => $unique_id, ':userId' => $this->id));
+                if ($success) {
+                    $headers = "From: thibault.armengaud@flightgear-atc.net\r\n" ;
+                    $headers .= "To: $this->mail <".$this->mail.">\r\n" ;
+                    $headers .= "Reply-To: thibault.armengaud@gmail.com\r\n" ;
+                    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+                    $headers .= "MIME-Version: 1.0\r\n";
+                    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+                    mail($this->mail, 'Flightgear-ATC password change', 'This is a message from flightgear-atc.alwaysdata.net<br/>
+                                        You (or someone else) have requested a password change.<br/><br/>
+                                        If you did not request a password change please ignore this email.<br/>
+                                        If you requested a password change please go to this address:<br/><br/>
+                                        <a href="http://flightgear-atc.alwaysdata.net/passwordLost.php">http://flightgear-atc.alwaysdata.net/passwordLost.php</a> <br/><br/>
+                                        ID to change your password: '.$unique_id, $headers);
+                    $status = "ID_UPDATED";
+                }
+                else {
+                    $status = "CREATION_ERROR";
+                }
             }
         }
         // CHANGING PASSWORD
