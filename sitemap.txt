@@ -8,11 +8,11 @@
 
 <url>
   <loc>http://flightgear-atc.alwaysdata.net/</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>hourly</changefreq>
 </url>
 <url>
   <loc>http://flightgear-atc.alwaysdata.net/index.php</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>hourly</changefreq>
 </url>
 <url>
   <loc>http://flightgear-atc.alwaysdata.net/school.php</loc>
