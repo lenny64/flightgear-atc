@@ -29,11 +29,11 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 {
     $additional_card_class = "";
     $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
-    if ($calendarDay == 0) {
+    if ($calendarDay == 0 AND $dayCounter == date('Y-m-d')) {
         $dayLine = "Today";
         $additional_card_class = "border-info";
     }
-    else if ($calendarDay == 1) $dayLine = "Tomorrow";
+    else if ($calendarDay == 1 AND $dayCounter == date('Y-m-d', strtotime(date('Y-m-d')." +1 day"))) $dayLine = "Tomorrow";
     else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));
     else $dayLine = date('D j M', strtotime($dayCounter));
 
@@ -65,23 +65,21 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
             $comments .= '</div>';
             $comments .= '</div>';
         }
-
+        $showFlightplans = false;
         $flightplans = $Event->getFlightplans();
+        if (sizeof($flightplans) > 0) {
+            $showFlightplans = true;
+        }
 
         ?>
         <div class="card mb-1 <?= $additional_card_class;?>">
-            <div class="card-header container-fluid event-title" data-eventid="<?= $Event->id; ?>">
+            <div class="card-header event-title" data-eventid="<?= $Event->id; ?>">
                 <a href="#"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a>
-                <div class="row">
-                    <div class="col-md-8">
-                        <?= $Event->airportCity; ?>
-                        <br/>
-                        <?= $Event->beginTime; ?> &rarr; <?= $Event->endTime; ?>
-                    </div>
-                    <div class="col-md-4 float-right">
-                        <span class="badge badge-info"><?= sizeof($flightplans);?> flightplans</span>
-                    </div>
-                </div>
+                <br/>
+                <?= $Event->airportCity; ?>
+                <br/>
+                <span class="badge badge-success"><?= $Event->beginTime; ?></span> &rarr; <span class="badge badge-success"><?= $Event->endTime; ?></span>
+                <?php if ($showFlightplans === true) { ?><span class="badge badge-info"><?= sizeof($flightplans);?> flightplans</span><?php } ?>
             </div>
             <div class="card-body event-details" id="event_details_<?= $Event->id; ?>">
                 <p class="card-text">
