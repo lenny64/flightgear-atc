@@ -67,7 +67,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
     <meta property="twitter:description" content="<?= $PAGE_DESCRIPTION; ?>">
     <meta property="twitter:creator" content="@Flightgear_ATC">
 
-    <link rel="shortcut icon" href="http://lenny64.free.fr/img/favicon.ico" />
+    <link rel="shortcut icon" href="./img/favicon.ico" />
 
     <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="./include/jquery-ui-1.10.4.custom.min.js"></script>
