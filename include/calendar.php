@@ -1,11 +1,18 @@
+
+<div class="row">
+
 <?php
 
 $today = date('Y-m-d');
 
 for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
 {
+    $additional_card_class = "";
     $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
-    if ($calendarDay == 0) $dayLine = "Today";
+    if ($calendarDay == 0) {
+        $dayLine = "Today";
+        $additional_card_class = "border-info";
+    }
     else if ($calendarDay == 1) $dayLine = "Tomorrow";
     else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));
     else $dayLine = date('D j M', strtotime($dayCounter));
@@ -15,7 +22,8 @@ for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
         $filteredEvents = filterEvents('date', $dayCounter, $events);
     }
     ?>
-<div class="col-md-3">
+
+<div class="col-md-3 col-sm-6">
     <center><h5><?=$dayLine;?></h5></center>
     <?php
     foreach ($filteredEvents as $event)
@@ -39,38 +47,34 @@ for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
         }
 
         ?>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="#" data-toggle="popover" data-trigger="hover" title="Popover Header" data-content="Some content inside the popover">
-                <span class="label label-default"><?= $Event->airportICAO; ?></span>
-                <small><?= $Event->airportName; ?> <?= $Event->airportCity; ?></small>
+        <div class="card mb-1 <?= $additional_card_class;?>">
+            <div class="card-header">
+                <?= $Event->airportICAO; ?> <?= $Event->airportName; ?>
                 <br/>
-                <small><?= $Event->beginTime; ?> &rarr; <?= $Event->endTime; ?></small>
-                </a>
-            </div>
-            <div class="panel-body">
-                <?php if ($Event->fgcom != "N/A") { ?>
-                    <small><strong>FGCOM</strong> <?=$Event->fgcom; ?></small>
-                    <br/>
-                <?php } if ($Event->teamspeak != "N/A") { ?>
-                    <small><strong>Mumble</strong></small>
-                    <br/>
-                    <small><?= $Event->teamspeak; ?></small>
-                    <br/>
-                <?php } ?>
-                <small><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></small>
+                <?= $Event->airportCity; ?>
                 <br/>
-                <?php if ($verified == "true") { ?>
-                    <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
-                <?php } else { ?>
-                    <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
-                <?php } ?>
+                <?= $Event->beginTime; ?> &rarr; <?= $Event->endTime; ?>
             </div>
-            <?php if ($comments != "") { ?>
-            <div class="panel-footer">
-                <small><?= nl2br($comments); ?></small>
+            <div class="card-body">
+                <p class="card-text">
+                    <?php if ($Event->fgcom != "N/A") { ?>
+                        <small><strong>FGCOM</strong> <?=$Event->fgcom; ?></small>
+                        <br/>
+                    <?php } if ($Event->teamspeak != "N/A") { ?>
+                        <small><strong>Mumble</strong></small>
+                        <br/>
+                        <small><?= $Event->teamspeak; ?></small>
+                        <br/>
+                    <?php } ?>
+                    <small><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></small>
+                    <br/>
+                    <?php if ($verified == "true") { ?>
+                        <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
+                    <?php } else { ?>
+                        <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
+                    <?php } ?>
+                </p>
             </div>
-            <?php } ?>
         </div>
 
         <?php
@@ -79,7 +83,9 @@ for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
 </div>
 
     <?php
-}
+} ?>
+</div>
+<?php
 /*
     for ($calendarDay = 0 ; $calendarDay < 30 ; $calendarDay++)
     {

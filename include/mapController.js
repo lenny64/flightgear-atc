@@ -134,7 +134,7 @@ var addButton = function(airport_date) {
     if (delta_days == 0) var text = "Today";
     else if (delta_days == 1) var text = "Tomorrow";
     else var text = "On "+days_of_week[date_evt.getDay()];
-    $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-default" onmouseover="showLayer(this,\''+airport_date+'\')">'+text+'</a>');
+    $('.boutons_map').html(boutons_map+'<a class="bouton-map btn btn-sm btn-light" onmouseover="showLayer(this,\''+airport_date+'\')">'+text+'</a>');
 }
 
 var showLayer = function(el,layer) {

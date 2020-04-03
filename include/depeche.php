@@ -72,10 +72,10 @@ else { // If there is poll
     $title = "A question for you!";
     $content = $Poll->content;
     $content .= "<br/>";
-    $content .= "<form action='./' method='post'>";
+    $content .= "<form class='form' action='./' method='post'>";
     $content .= "<input type='hidden' name='poll_id' value='".$Poll->id."'/>";
     foreach ($Poll->choices as $choice) {
-        $content .= "<input type='submit' class='btn btn-default btn-sm' name='poll_answer' value='".$choice."'/> ";
+        $content .= "<input type='submit' class='btn btn-light btn-sm' name='poll_answer' value='".$choice."'/> ";
     }
     // $content .= "<input type='submit' value='Submit!' class='btn btn-sm btn-success'>";
     $content .= "</form>";
@@ -86,43 +86,17 @@ else { // If there is poll
 <!-- Image size 900 x 190 -->
 
 <div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/a<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
-    <div id='bg-overlay'>
-        <div class="container">
-            <div class="col-md-8">
-                <h2 id="depecheMainTitle"><?php echo $title; ?></h2>
-                <p id="depecheContent">
+    <div id='bg-overlay' class="mb-3">
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
+                <h1 class="display-4" id="depecheMainTitle"><?php echo $title; ?></h1>
+                <p class="lead" id="depecheContent">
                     <?php echo $content; ?>
                 </p>
             </div>
-            <div class="col-md-4 hidden-sm hidden-xs">
+            <div class="col-md-4 col-sm-12">
                 <?php include('./include/liveATC.php'); ?>
             </div>
         </div>
     </div>
 </div>
-
-<ul class="list-group visible-xs visible-sm">
-    <li class='list-group-item list-group-item-info'>
-        Live ATCs availables (data from <a href="http://mpserver12.flightgear.org">mpserver12.flightgear.org</a>)
-    </li>
-    <?php
-    if ($atcs != NULL)
-    {
-        foreach($atcs as $atc)
-        {
-            $airportInformation = getAirportByCoordinates($atc['longitude'], $atc['latitude']);
-            echo "<li class='list-group-item'>".$atc['callsign'];
-            if ($airportInformation != NULL)
-            {
-                echo " (".$airportInformation['city'].",".$airportInformation['country'].")";
-            }
-            echo "</li>";
-        }
-    }
-    else
-    {
-        echo "<li class='list-group-item'>There are no ATC online.</li>";
-    }
-
-    ?>
-</ul>

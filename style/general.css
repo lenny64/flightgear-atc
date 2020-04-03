@@ -93,40 +93,6 @@ span.input_example {
     font-family: Georgia,'Times New Roman',times,serif;
 }
 
-#menu {
-    text-align: center;
-    margin: 0;
-    margin-bottom: 0px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
-    background-color: #333;
-}
-
-#menu a {
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-    position: relative;
-    top: -5px;
-    display: inline-block;
-    padding: 3px 4px 3px 4px;
-    margin: 0px 15px 0px 15px;
-}
-
-#menu a div.menu_entry:hover {
-    color: #fff;
-}
-
-#menu a div.menu_entry {
-	color: #ddd;
-    font-size: 15px;
-    font-style: normal;
-    text-decoration: none;
-    display: inline;
-    margin: 0;
-}
 
 
 .submenu {
