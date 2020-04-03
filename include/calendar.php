@@ -81,28 +81,28 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                 <span class="badge badge-success"><?= $Event->beginTime; ?></span> &rarr; <span class="badge badge-success"><?= $Event->endTime; ?></span>
                 <?php if ($showFlightplans === true) { ?><span class="badge badge-info"><?= sizeof($flightplans);?> flightplans</span><?php } ?>
             </div>
-            <div class="card-body event-details" id="event_details_<?= $Event->id; ?>">
-                <p class="card-text">
-                    <?php if ($Event->fgcom != "N/A") { ?>
-                        <small><strong>FGCOM</strong> <?=$Event->fgcom; ?></small>
-                        <br/>
-                    <?php } if ($Event->teamspeak != "N/A") { ?>
-                        <small><strong>Mumble</strong></small>
-                        <br/>
-                        <small><?= $Event->teamspeak; ?></small>
-                        <br/>
-                    <?php } ?>
-                    <?php if ($Event->docsLink != "http://") { ?>
-                    <small><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></small>
+            <?php if (($Event->fgcom != "N/A" OR $Event->teamspeak != "N/A") AND $Event->docsLink != "http://" AND $atcName != "") { ?>
+            <div class="card-body py-2 event-details" id="event_details_<?= $Event->id; ?>">
+                <?php if ($Event->fgcom != "N/A") { ?>
+                    <small><strong>FGCOM</strong> <?=$Event->fgcom; ?></small>
                     <br/>
-                    <?php } ?>
-                    <?php if ($verified == "true" && $atcName != "") { ?>
-                        <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
-                    <?php } else if ($atcName != "") { ?>
-                        <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
-                    <?php } ?>
-                </p>
+                <?php } if ($Event->teamspeak != "N/A") { ?>
+                    <small><strong>Mumble</strong></small>
+                    <br/>
+                    <small><?= $Event->teamspeak; ?></small>
+                    <br/>
+                <?php } ?>
+                <?php if ($Event->docsLink != "http://") { ?>
+                <small><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></small>
+                <br/>
+                <?php } ?>
+                <?php if ($verified == "true" && $atcName != "") { ?>
+                    <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
+                <?php } else if ($atcName != "") { ?>
+                    <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
+                <?php } ?>
             </div>
+            <?php } ?>
         </div>
 
         <?php
