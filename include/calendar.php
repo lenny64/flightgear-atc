@@ -16,7 +16,7 @@ if ($today_minus_x_days < date('Y-m-d')) {
 }
 ?>
 
-<h1 class="display-4 my-4" id="next_atc_events">
+<h1 class="my-4" id="next_atc_events">
     Next upcoming ATC Events
     <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">&larr; previous events</a><?php } ?>
     <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">next events &rarr;</a>

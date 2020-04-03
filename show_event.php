@@ -75,7 +75,9 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
                     </div>
                     <div class="row my-2">
                         <div class="col-md-12">
-                            Remarks: <?= $Event->remarks; ?>
+                            Remarks:
+                            <br/><br/>
+                            <?= nl2br(htmlspecialchars_decode($Event->remarks)); ?>
                         </div>
                     </div>
                 </div>
