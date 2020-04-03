@@ -422,9 +422,9 @@ class User
     public function checkPasswordSecured()
     {
         global $db;
-        $infos = $db->query("SELECT password, password_hash FROM users WHERE userId = $this->id");
+        $infos = $db->query("SELECT password, password_md5, password_hash FROM users WHERE userId = $this->id");
         while ($info = $infos->fetch(PDO::FETCH_ASSOC)) {
-            if ($info['password_hash'] != NULL && $info['password_hash'] != '') {
+            if ($info['password_hash'] != NULL && $info['password_hash'] != '' && $info['password_md5'] != NULL && $info['password_md5'] != '') {
                 return true;
             }
         }

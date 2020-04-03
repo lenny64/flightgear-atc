@@ -1,5 +1,13 @@
 
-<div class="row">
+<h1>
+    Next upcoming ATC Events
+    <div class="btn-group pl-3" role="group" aria-label="">
+        <button type="button" class="btn btn-info btn-sm">&larr; previous events</button>
+        <button type="button" class="btn btn-info btn-sm">next events &rarr;</button>
+    </div>
+</h1>
+
+<div class="row mt-3">
 
 <?php
 
@@ -24,7 +32,7 @@ for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
     ?>
 
 <div class="col-md-3 col-sm-6">
-    <center><h5><?=$dayLine;?></h5></center>
+    <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-primary btn-sm">+</a></h5></center>
     <?php
     foreach ($filteredEvents as $event)
     {
@@ -49,7 +57,7 @@ for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
         ?>
         <div class="card mb-1 <?= $additional_card_class;?>">
             <div class="card-header">
-                <?= $Event->airportICAO; ?> <?= $Event->airportName; ?>
+                <a href="#"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a>
                 <br/>
                 <?= $Event->airportCity; ?>
                 <br/>

@@ -35,9 +35,9 @@
 
     ?>
 
-    <ul class="nav nav-pills">
-        <li role="presentation" class="<?php echo $eventsClass;?>"><a href="./dashboard.php">My events</a></li>
-        <li role="presentation" class="<?php echo $settingsClass;?>"><a href="./dashboard.php?settings">My settings</a></li>
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item"><a class="nav-link <?= $eventsClass; ?>" href="./dashboard.php">My events</a></li>
+        <li class="nav-item"><a class="nav-link <?= $settingsClass; ?>" href="./dashboard.php?settings">My settings</a></li>
     </ul>
 
     <?php

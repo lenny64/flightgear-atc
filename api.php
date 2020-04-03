@@ -34,9 +34,8 @@ $api_version = get_api_version();
 
 <!-- LE CODE COMMENCE ICI -->
 <div class="jumbotron">
-    <div class="container">
-        <h2 class="page-header" id="topPage">API <span class="badge">VERSION <?php echo $api_version; ?></span></h2>
-        <p>
+        <h2 class="display-3" id="topPage">API <span class="badge badge-info">VERSION <?php echo $api_version; ?></span></h2>
+        <p class="lead">
             This page is dedicated to developers wishing to interact with flightear-atc
         </p>
     </div>
@@ -59,12 +58,12 @@ $api_version = get_api_version();
     <h4><a href="#post5">POST - Close a flight plan</a></h4>
     <h4><a href="#post6">POST - Insert/Modify a custom value</a></h4>
 
-    <h1 class="page-header" id="apioverview"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> API Overview </h1>
-    <h3><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> Description</h3>
+    <h1 class="display-4" id="apioverview"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> API Overview </h1>
+    <h3><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> Description</h3>
     <p>
         The API queries are made directly through the URL. Every query has an answer, in an XML format (not JSON).
         <br/>
-        Current API version is <?php echo $api_version;?>. The URL to access the API is :
+        Current API version is <?php echo $api_version;?>. The URL to access the API is:
         <pre><?php echo API_URL;?></pre>
         The name of the query and the parameters are mentioned after the ".php".
         <br/>
@@ -73,7 +72,7 @@ $api_version = get_api_version();
     <p>
         There are two kinds of queries : GET and POST.
     </p>
-    <h3><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> Errors</h3>
+    <h3><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> Errors</h3>
     <p>
         If any query is not correct, an error message will appear. Example of error message :
 <pre><xmp><error version="<?php echo $api_version;?>">
@@ -92,7 +91,7 @@ $api_version = get_api_version();
         </ul>
     </p>
 
-    <h1 class="page-header" id="authentication"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> Authentication</h1>
+    <h1 class="display-4" id="authentication"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> Authentication</h1>
     <p>
         For POST queries you will need to sign in.
         <br/>
@@ -102,8 +101,8 @@ $api_version = get_api_version();
         The <code>email</code> and <code>password</code> will be asked for any POST query.
     </p>
 
-    <h1 class="page-header" id="apiqueries"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> API queries</h1>
-    <h3 id="get1"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> GET - Check if an airport is controlled</h3>
+    <h1 class="display-4" id="apiqueries"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> API queries</h1>
+    <h3 id="get1"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> GET - Check if an airport is controlled</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?isAirportControlled&airport=...&date=YYYY-MM-DD&time=HH:MM:SS</pre></div>
         <div class="panel-body">
@@ -135,7 +134,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="get2"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> GET - Retrieve flight plans</h3>
+    <h3 id="get2"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> GET - Retrieve flight plans</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?getFlightplans[&callsign=...[&date=YYYY-MM-DD[&airport=...[&status=...[&limit=...]]]]]</pre></div>
         <div class="panel-body">
@@ -195,7 +194,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="get3"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> GET - Flight plan details</h3>
+    <h3 id="get3"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> GET - Flight plan details</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?getFlightplanDetails&flightplanId=...</pre></div>
         <div class="panel-body">
@@ -250,7 +249,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="get4"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> GET - ATC sessions</h3>
+    <h3 id="get4"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> GET - ATC sessions</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?getATCSessions&limitDate=YYYY-MM-DD</pre></div>
         <div class="panel-body">
@@ -293,7 +292,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="get5"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> GET - Test authentication</h3>
+    <h3 id="get5"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> GET - Test authentication</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?testAuthentication&email=...&password=...</pre></div>
         <div class="panel-body">
@@ -324,7 +323,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="post1"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> POST - Create an ATC session</h3>
+    <h3 id="post1"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> POST - Create an ATC session</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?newAtcSession&email=...&password=...&date=YYYY-MM-DD&beginTime=HH:MM:SS&endTime=HH:MM:SS&airportICAO=...
 [&fgCom=...[&teamSpeak=...[&docsLink[&remarks=...]]]]</pre></div>
@@ -371,7 +370,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="post2"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> POST - File a new flight plan</h3>
+    <h3 id="post2"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> POST - File a new flight plan</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?fileFlightplan&email=...&password=...&callsign=...&dateDeparture=YYYY-MM-DD&departureAirport=...&departureTime=HH:MM:SS&arrivalAirport=...&arrivalTime=HH:MM:SS
 [&airline=...[&flightNumber=...[&alternateDestination=...[&cruiseAltitude=...[&trueAirspeed=...[&aircraft=...[&soulsOnBoard=...[&fuelTime=...[&pilotName=...[&waypoints=...[&category=IFR/VFR[&comments=...]]]]]]]]]]]]</pre></div>
@@ -439,7 +438,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="post3"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> POST - Edit a flight plan</h3>
+    <h3 id="post3"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> POST - Edit a flight plan</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?editFlightplan&email=...&password=...&flightplanId=...
 [&callsign=...[&dateDeparture=YYYY-MM-DD[&departureAirport=...[&departureTime=HH:MM:SS[&arrivalAirport=...[&arrivalTime=HH:MM:SS[&airline=...[&flightNumber=...[&alternateDestination=...[&cruiseAltitude=...[&trueAirspeed=...[&aircraft=...[&soulsOnBoard=...[&fuelTime=...[&pilotName=...[&waypoints=...[&category=IFR/VFR[&comments=...]]]]]]]]]]]]</pre></div>
@@ -508,7 +507,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="post4"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> POST - Open a flight plan</h3>
+    <h3 id="post4"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> POST - Open a flight plan</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?openFlightplan&email=...&password=...&flightplanId=...</pre></div>
         <div class="panel-body">
@@ -559,7 +558,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="post5"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> POST - Close a flight plan</h3>
+    <h3 id="post5"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> POST - Close a flight plan</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?closeFlightplan&email=...&password=...&flightplanId=...</pre></div>
         <div class="panel-body">
@@ -610,7 +609,7 @@ $api_version = get_api_version();
             </p>
         </div>
     </div>
-    <h3 id="post6"><a href="#topPage"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a> POST - Insert/Modify a custom value</h3>
+    <h3 id="post6"><a href="#topPage"><span class="badge badge-pill badge-light">&uarr;</span></a> POST - Insert/Modify a custom value</h3>
     <div class="panel panel-default">
         <div class="panel-heading"><pre>?setVar&email=...&password=...&flightplanId=...&variable=...&value=[...]</pre></div>
         <div class="panel-body">

@@ -15,6 +15,10 @@
   <changefreq>hourly</changefreq>
 </url>
 <url>
+  <loc>http://flightgear-atc.alwaysdata.net/new_event.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
   <loc>http://flightgear-atc.alwaysdata.net/school.php</loc>
   <changefreq>daily</changefreq>
 </url>
@@ -41,5 +45,9 @@
 <url>
   <loc>http://flightgear-atc.alwaysdata.net/dashboard.php</loc>
   <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/information.php</loc>
+  <changefreq>weekly</changefreq>
 </url>
 </urlset>

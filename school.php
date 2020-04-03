@@ -5,12 +5,10 @@
 
 <!-- LE CODE COMMENCE ICI -->
 <div class="jumbotron">
-    <div class="container">
-        <h2>Flight plan Suggestions</h2>
-        <p>
+        <h1 class="display-3">Flight plan Suggestions</h1>
+        <p class="lead">
             Flight plan Suggestions aim to increase pilots' skills and knowledge. Find below short documents focusing on simple courses.
         </p>
-    </div>
 </div>
 
 <div class="container">
@@ -30,25 +28,31 @@
             {
                 ?>
                     <div class="row">
-                        <div class="col-md-5 bg-info">
-                            <h3><?php echo $flightplanSuggestion['title'];?></h3>
-                            <p>
-                                <a href="./download.php?file=<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank" class="btn btn-info btn-sm"><img src="./img/logo_pdf.png" width="25"/> Flight plan Suggestion document</a>
-                            </p>
-                            <p>
-                                <a href="<?php echo $flightplanSuggestion['skyVector'];?>" target="_blank" class="btn btn-sm"><img src="./img/scheme_waypoints.png" width="20"/> SkyVector route</a>
-                            </p>
-                            <p>
-                                <b><?php echo $flightplanSuggestion['description'];?></b>
-                            </p>
-                            <p>
-                                In this Flight plan Suggestion you will fly from <b><?php echo $flightplanSuggestion['departureAirport']." to ".$flightplanSuggestion['arrivalAirport'];?></b> at this recommended cruise level (<b><?php echo $flightplanSuggestion['cruiseAltitude'];?></b>).
-                                <br/>
-                                Those airports are mostly controlled on <b><?php echo $flightplanSuggestion['mostControlled'];?></b> so please make sure they are both controlled <a href="./index.php" target="_blank">there</a> at the time you plan to fly.
-                            </p>
-                            <p>
-                                This Flight plan Suggestion mainly focuses on <b><?php echo $flightplanSuggestion['courses'];?></b>.
-                            </p>
+                        <div class="col-md-5">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3><?php echo $flightplanSuggestion['title'];?></h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>
+                                        <a href="./download.php?file=<?php echo $flightplanSuggestion['docsLink'];?>" target="_blank" class="btn btn-info btn-sm"><img src="./img/logo_pdf.png" width="25"/> Flight plan Suggestion document</a>
+                                    </p>
+                                    <p>
+                                        <a href="<?php echo $flightplanSuggestion['skyVector'];?>" target="_blank" class="btn btn-sm"><img src="./img/scheme_waypoints.png" width="20"/> SkyVector route</a>
+                                    </p>
+                                    <p>
+                                        <b><?php echo $flightplanSuggestion['description'];?></b>
+                                    </p>
+                                    <p>
+                                        In this Flight plan Suggestion you will fly from <b><?php echo $flightplanSuggestion['departureAirport']." to ".$flightplanSuggestion['arrivalAirport'];?></b> at this recommended cruise level (<b><?php echo $flightplanSuggestion['cruiseAltitude'];?></b>).
+                                        <br/>
+                                        Those airports are mostly controlled on <b><?php echo $flightplanSuggestion['mostControlled'];?></b> so please make sure they are both controlled <a href="./index.php" target="_blank">there</a> at the time you plan to fly.
+                                    </p>
+                                    <p>
+                                        This Flight plan Suggestion mainly focuses on <b><?php echo $flightplanSuggestion['courses'];?></b>.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-7">
                             <form role="form" class="" action="./index.php" method="post">
@@ -93,25 +97,20 @@
                                     $flightplanSuggestion['duration'] = $hours.":".$minutes;
                                     $flightplanSuggestion['arrivalTime'] = date('H:i', strtotime($flightplanSuggestion['departureTime']." +".$minutes." minutes"));
                                 ?>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="departureDate">Departure date</label>
-                                        <input type="text" name="date" id="departureDate" value="<?php echo date('Y-m-d');?>" class="form-control "/>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="departureDate">Departure date</label>
+                                    <input type="text" name="date" id="departureDate" value="<?php echo date('Y-m-d');?>" class="form-control "/>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="departureAirport">Departure airport</label>
-                                        <input type="hidden" name="departureAirport" value="<?php echo $flightplanSuggestion['departureAirport'];?>"/>
-                                        <p class="form-control-static">
-                                            <?php echo $flightplanSuggestion['departureAirport'];?>
-                                        </p>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="departureAirport">Departure airport : <?php echo $flightplanSuggestion['departureAirport'];?></label>
+                                    <input type="hidden" name="departureAirport" value="<?php echo $flightplanSuggestion['departureAirport'];?>"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col">
                                             <label for="departureTime">Departure time</label>
                                         </div>
-                                        <div class="col-lg-6 col-sm-12 col-xs-6">
+                                        <div class="col">
                                             <select name="departureTimeHours" class="form-control input-sm" id="file_flightplan-departureTimeHours<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" class="time" onchange="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);">
                                             <?php
                                             for ($h = 0; $h < 24; $h++)
@@ -128,7 +127,7 @@
                                             ?>
                                             </select>
                                         </div>
-                                        <div class="col-lg-6 col-sm-12 col-xs-6">
+                                        <div class="col">
                                             <select name="departureTimeMinutes" class="form-control input-sm" id="file_flightplan-departureTimeMinutes<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" class="time" onchange="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);">
                                             <?php
                                             for ($m = 0; $m < 60; $m+=5)
@@ -151,62 +150,50 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="arrivalAirport">Arrival airport</label>
-                                        <input type="hidden" name="arrivalAirport" id="arrivalAirport" value="<?php echo $flightplanSuggestion['arrivalAirport'];?>"/>
-                                        <p class="form-control-static">
-                                            <?php echo $flightplanSuggestion['arrivalAirport'];?>
-                                        </p>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="arrivalAirport">Arrival airport: <?php echo $flightplanSuggestion['arrivalAirport'];?></label>
+                                    <input type="hidden" name="arrivalAirport" id="arrivalAirport" value="<?php echo $flightplanSuggestion['arrivalAirport'];?>"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col">
                                             <label for="arrivalTime">Arrival time</label>
                                         </div>
-                                        <div class="col-lg-6 col-sm-12 col-xs-6">
+                                        <div class="col">
                                             <input type="text" class="form-control input-sm" name="arrivalTimeHours" id="inputArrivalHours<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="?" readonly="readonly"/>
                                         </div>
-                                        <div class="col-lg-6 col-sm-12 col-xs-6">
+                                        <div class="col">
                                             <input type="text" class="form-control input-sm" name="arrivalTimeMinutes" id="inputArrivalMinutes<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="?" readonly="readonly"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="airspeed">Airspeed (kts)</label>
-                                        <input type="text" class="form-control" name="trueSpeed" id="inputSpeed<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="<?php echo $flightplanSuggestion['speed'];?>" onKeyUp="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cruiseLevel">Cruise level</label>
-                                        <input type="hidden" class="form-control" name="cruiseAltitude" value="<?php echo $flightplanSuggestion['cruiseAltitude'];?>"/>
-                                        <p class="form-control-static">
-                                            <?php echo $flightplanSuggestion['cruiseAltitude'];?>
-                                        </p>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="airspeed">Airspeed (kts)</label>
+                                    <input type="text" class="form-control" name="trueSpeed" id="inputSpeed<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>" value="<?php echo $flightplanSuggestion['speed'];?>" onKeyUp="calculateNewArrivalTime(<?php echo $flightplanSuggestion['flightplanSuggestionId'];?>);"/>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="route">Route</label>
-                                        <p class="form-control-static"><?php echo $flightplanSuggestion['route'];?></p>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="cruiseLevel">Cruise level</label>
+                                    <input type="hidden" class="form-control" name="cruiseAltitude" value="<?php echo $flightplanSuggestion['cruiseAltitude'];?>"/>
+                                    <p class="form-control-static">
+                                        <?php echo $flightplanSuggestion['cruiseAltitude'];?>
+                                    </p>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="callsign" placeholder="Callsign" required/>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="route">Route</label>
+                                    <p class="form-control-static"><?php echo $flightplanSuggestion['route'];?></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="email" placeholder="E-mail address" required/>
-                                    </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="callsign" placeholder="Callsign" required/>
                                 </div>
-                                <div class="col-md-4">
-                                    <input type="submit" class="btn btn-success btn-lg"/>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="email" placeholder="E-mail address" required/>
                                 </div>
+                                <input type="submit" class="btn btn-success btn-block" value="Create new flight plan"/>
                             </form>
                         </div>
                     </div>
                     <br style="clear:both;"/>
+                    <hr class="mb-2"/>
                 <?php
             }
         }

@@ -53,7 +53,7 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
                     <label for="content">Content</label>
                     <textarea name="content" class="form-control" id="content"></textarea>
                 </div>
-                <input type="submit" value="Send message"/>
+                <input type="submit" class="btn btn-success btn-block" value="Send message"/>
             </form>
         </div>
 
@@ -76,31 +76,33 @@ else if (isset($_POST['pseudo']) AND isset($_POST['note']) AND isset($_POST['imp
                 <div class="form-group">
                     <label for="improvements">Improvements</label>
                     <textarea name="improvements" class="form-control"></textarea>
+                    <small class="form-text text-muted">Your ideas will be shown below</small>
                 </div>
-                Your ideas will be shown below
-                <input type="submit" value="Send"/>
+                <input type="submit" value="Send" class="btn btn-success btn-block"/>
             </form>
         </div>
     </div>
 
-    <div class="commentaires col-md-12">
 
-            <?php
+<?php
 
-            $liste_commentaires = $db->query("SELECT * FROM improvements ORDER BY improvement_id DESC LIMIT 0,20");
+$liste_commentaires = $db->query("SELECT * FROM improvements ORDER BY improvement_id DESC LIMIT 0,20");
 
-            foreach ($liste_commentaires as $commentaire)
-            {?>
-                    <div class="commentaire">
-                    <span class="commentaire_pseudo"><?php echo $commentaire['pseudo'];?></span>
-                    <span class="commentaire_date"><?php echo $commentaire['datetime'];?></span>
-                    <span class="commentaire_improvement"><?php echo nl2br($commentaire['improvement']);?></span>
-                    </div>
-            <?php
-            }
+foreach ($liste_commentaires as $commentaire)
+{?>
+        <div class="card mb-3">
+            <div class="card-header">
+                <?php echo $commentaire['pseudo'];?>
+                <span class="float-right text-muted"><?php echo $commentaire['datetime'];?></span>
+            </div>
+            <div class="card-body">
+                <?php echo nl2br($commentaire['improvement']);?>
+            </div>
+        </div>
+<?php
+}
 
-            ?>
-    </div>
+?>
 
 
 <br/>

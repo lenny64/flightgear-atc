@@ -15,11 +15,7 @@ if (sizeof($DashboardEvents->dashboardEvents) != 0)
 {
   include './include/dashboard_oneClickEvent.php';
 }
-?>
 
-<h3><span class="glyphicon glyphicon glyphicon-th-list"></span> Events</h3>
-
-<?php
 // If there are no events
 if (sizeof($DashboardEvents->dashboardEvents) == 0)
 {
@@ -34,12 +30,12 @@ else
   {
       $DashboardEvents->selectById($event['eventId']);
   ?>
-  <div class="panel panel-default">
-      <div class="panel-heading">
+  <div class="card mb-3">
+      <div class="card-header">
           <h4><span class="label label-primary"><?php echo $DashboardEvents->airportICAO;?></span></h4>
-          <a class="btn btn-default btn-sm" href="./edit_event.php?eventId=<?php echo $DashboardEvents->id;?>"><span class="glyphicon glyphicon glyphicon-pencil"></span> Edit event</a>
+          <a class="btn btn-info btn-sm" href="./edit_event.php?eventId=<?php echo $DashboardEvents->id;?>"><span class="glyphicon glyphicon glyphicon-pencil"></span> Edit event</a>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
           <h5>Date</h5>
           <?php echo $DashboardEvents->date; ?>
 
