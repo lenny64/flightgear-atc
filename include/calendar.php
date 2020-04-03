@@ -1,19 +1,31 @@
 
-<h1>
+<?php
+
+$number_days_displayed = 4;
+
+if (isset($_GET['dateBegin']) && $_GET['dateBegin'] != NULL) {
+    $today = $_GET['dateBegin'];
+} else {
+    $today = date('Y-m-d');
+}
+$today_plus_x_days = date('Y-m-d', strtotime($today." +".$number_days_displayed." days"));
+$today_minus_x_days = date('Y-m-d', strtotime($today." -".$number_days_displayed." days"));
+$show_previous_events = true;
+if ($today_minus_x_days < date('Y-m-d')) {
+    $show_previous_events = false;
+}
+?>
+
+<h1 class="display-4 my-4" id="next_atc_events">
     Next upcoming ATC Events
-    <div class="btn-group pl-3" role="group" aria-label="">
-        <button type="button" class="btn btn-info btn-sm">&larr; previous events</button>
-        <button type="button" class="btn btn-info btn-sm">next events &rarr;</button>
-    </div>
+    <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">&larr; previous events</a><?php } ?>
+    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">next events &rarr;</a>
 </h1>
 
 <div class="row mt-3">
 
 <?php
-
-$today = date('Y-m-d');
-
-for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
+for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 {
     $additional_card_class = "";
     $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
@@ -54,16 +66,24 @@ for ($calendarDay = 0 ; $calendarDay < 4 ; $calendarDay++)
             $comments .= '</div>';
         }
 
+        $flightplans = $Event->getFlightplans();
+
         ?>
         <div class="card mb-1 <?= $additional_card_class;?>">
-            <div class="card-header">
+            <div class="card-header container-fluid event-title" data-eventid="<?= $Event->id; ?>">
                 <a href="#"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a>
-                <br/>
-                <?= $Event->airportCity; ?>
-                <br/>
-                <?= $Event->beginTime; ?> &rarr; <?= $Event->endTime; ?>
+                <div class="row">
+                    <div class="col-md-8">
+                        <?= $Event->airportCity; ?>
+                        <br/>
+                        <?= $Event->beginTime; ?> &rarr; <?= $Event->endTime; ?>
+                    </div>
+                    <div class="col-md-4 float-right">
+                        <span class="badge badge-info"><?= sizeof($flightplans);?> flightplans</span>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body event-details" id="event_details_<?= $Event->id; ?>">
                 <p class="card-text">
                     <?php if ($Event->fgcom != "N/A") { ?>
                         <small><strong>FGCOM</strong> <?=$Event->fgcom; ?></small>

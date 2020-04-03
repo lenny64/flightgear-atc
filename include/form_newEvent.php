@@ -56,7 +56,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
         } else {
         ?>
         <div class="alert alert-success">
-            <b>Tip!</b> Quickly create your ATC events using the <a href="./dashboard.php" class="btn btn-success">ATC dashboard</a>.
+            <b>Tip!</b> Quickly create your ATC events using the <a href="./dashboard.php" class="btn btn-success">ATC dashboard</a>
         </div>
         <div class="row">
             <div class="col-md-6">

@@ -499,6 +499,7 @@ class Event
     private $requestNewEvent = true;
     public $error = 0;
     public $eventCreated = false;
+    public $flightplans;
 
 
     public function create($Year, $Month, $Day, $BeginHour, $BeginMinutes, $EndHour, $EndMinutes, $AirportICAO, $FGCOM, $TeamSpeak, $DocsLink, $Remarks)
@@ -780,6 +781,31 @@ class Event
         }
 
         return $events;
+    }
+
+    public function getFlightplans()
+    {
+        global $db;
+        $this->flightplans = Array();
+        if (isset($this->date) AND isset($this->beginTime) AND isset($this->endTime) AND isset($this->airportICAO)) {
+            if ($this->date != NULL AND $this->beginTime != NULL AND $this->endTime != NULL AND $this->airportICAO != NULL) {
+                $query = $db->query("SELECT FP.flightplanId FROM flightplans20140113 AS FP WHERE
+                            (FP.airportICAOFrom = '$this->airportICAO' OR FP.airportICAOTo = '$this->airportICAO')
+                            AND
+                            (FP.dateDeparture = '$this->date' OR FP.dateArrival = '$this->date')
+                            AND
+                            ((FP.departureTime >= '$this->beginTime' AND FP.departureTime <= '$this->endTime')
+                            OR (FP.arrivalTime >= '$this->beginTime' AND FP.arrivalTime <= '$this->endTime'))
+                        ORDER BY FP.departureTime ASC");
+                $query_list = $query->fetchAll(PDO::FETCH_ASSOC);
+                if ($query_list != 0) {
+                    foreach ($query_list as $fp) {
+                        $this->flightplans[] = $fp;
+                    }
+                }
+            }
+        }
+        return $this->flightplans;
     }
 }
 
