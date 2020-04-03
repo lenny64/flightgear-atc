@@ -44,7 +44,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     ?>
 
 <div class="col-md-3 col-sm-6">
-    <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-primary btn-sm">+</a></h5></center>
+    <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-primary btn-sm">+ add event</a></h5></center>
     <?php
     foreach ($filteredEvents as $event)
     {
@@ -74,7 +74,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         ?>
         <div class="card mb-1 <?= $additional_card_class;?>">
             <div class="card-header event-title" data-eventid="<?= $Event->id; ?>">
-                <a href="#"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a>
+                <a href="./show_event.php?eventId=<?=$Event->id;?>"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a>
                 <br/>
                 <?= $Event->airportCity; ?>
                 <br/>
@@ -92,11 +92,13 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                         <small><?= $Event->teamspeak; ?></small>
                         <br/>
                     <?php } ?>
+                    <?php if ($Event->docsLink != "http://") { ?>
                     <small><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></small>
                     <br/>
-                    <?php if ($verified == "true") { ?>
+                    <?php } ?>
+                    <?php if ($verified == "true" && $atcName != "") { ?>
                         <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
-                    <?php } else { ?>
+                    <?php } else if ($atcName != "") { ?>
                         <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
                     <?php } ?>
                 </p>

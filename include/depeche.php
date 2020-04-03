@@ -88,15 +88,15 @@ else { // If there is poll
 <div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/a<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
     <div id='bg-overlay' class="mb-3">
         <div class="row">
-            <div class="col-md-8 col-sm-12">
-                <h1 class="display-4" id="depecheMainTitle"><?php echo $title; ?></h1>
-                <p class="lead" id="depecheContent">
+            <div class="col-md-12">
+                <h1 class="display-4"><?php echo $title; ?></h1>
+                <p class="lead" >
                     <?php echo $content; ?>
                 </p>
             </div>
-            <div class="col-md-4 col-sm-12">
+            <!--<div class="col-md-4 col-sm-12">
                 <?php include('./include/liveATC.php'); ?>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

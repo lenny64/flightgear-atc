@@ -800,7 +800,7 @@ class Event
                 $query_list = $query->fetchAll(PDO::FETCH_ASSOC);
                 if ($query_list != 0) {
                     foreach ($query_list as $fp) {
-                        $this->flightplans[] = $fp;
+                        $this->flightplans[] = $fp['flightplanId'];
                     }
                 }
             }
