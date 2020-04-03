@@ -44,7 +44,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 
 <head>
 
-	<title>Flightgear ATC Events</title>
+	<title><?= $PAGE_TITLE; ?></title>
 
 	<!-- STYLES -->
     <link href='http://fonts.googleapis.com/css?family=Arvo:700' rel='stylesheet' type='text/css'>
@@ -60,6 +60,12 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	<!-- AUTRES -->
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="<?= $PAGE_DESCRIPTION; ?>">
+
+    <!-- SOCIAL -->
+    <meta property="twitter:title" content="<?= $PAGE_TITLE; ?>">
+    <meta property="twitter:description" content="<?= $PAGE_DESCRIPTION; ?>">
+    <meta property="twitter:creator" content="@Flightgear_ATC">
 
     <link rel="shortcut icon" href="http://lenny64.free.fr/img/favicon.ico" />
 
