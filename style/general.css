@@ -31,6 +31,11 @@ a {
     text-decoration: none;
 }
 
+.map {
+    height: 220px;
+    margin-top: -40px;
+}
+
 h1.main_title {
     margin: 10px 0 20px 0;
     color: #424D15;
@@ -43,7 +48,7 @@ h1.main_title {
 }
 
 .jumbotron {
-    margin-bottom: 0px!important;
+    /* margin-bottom: 0px!important; */
 }
 .container .jumbotron {
     border-bottom-left-radius: 0px!important;
