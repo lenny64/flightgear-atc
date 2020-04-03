@@ -50,6 +50,37 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
     $Depeche->validateDepeche();
 }
 
+include_once('./include/poll.php');
+
+$Poll = new Poll();
+$polls_list = $Poll->getPolls();
+// By default we do not show poll
+$showPoll = FALSE;
+if ($polls_list > 0) { // If there is a poll
+    // We check if the user already answered
+    $Poll->checkAnswer();
+    if ($Poll->okToVote !== FALSE) {
+        $showPoll = TRUE;
+    }
+}
+
+if ($showPoll == FALSE) { // If there is no poll we display the depeche
+    $title = $Depeche->displayDepeche($Depeche->title);
+    $content = $Depeche->displayDepeche($Depeche->content);
+}
+else { // If there is poll
+    $title = "A question for you!";
+    $content = $Poll->content;
+    $content .= "<br/>";
+    $content .= "<form action='./' method='post'>";
+    $content .= "<input type='hidden' name='poll_id' value='".$Poll->id."'/>";
+    foreach ($Poll->choices as $choice) {
+        $content .= "<input type='submit' class='btn btn-default btn-sm' name='poll_answer' value='".$choice."'/> ";
+    }
+    // $content .= "<input type='submit' value='Submit!' class='btn btn-sm btn-success'>";
+    $content .= "</form>";
+}
+
 ?>
 
 <!-- Image size 900 x 190 -->
@@ -58,9 +89,9 @@ if (!isset($Depeche->validatedDepechesList) OR empty($Depeche->validatedDepeches
     <div id='bg-overlay'>
         <div class="container">
             <div class="col-md-8">
-                <h2 id="depecheMainTitle"><?php echo $Depeche->displayDepeche($Depeche->title); ?></h2>
+                <h2 id="depecheMainTitle"><?php echo $title; ?></h2>
                 <p id="depecheContent">
-                    <?php echo $Depeche->displayDepeche($Depeche->content); ?>
+                    <?php echo $content; ?>
                 </p>
             </div>
             <div class="col-md-4 hidden-sm hidden-xs">

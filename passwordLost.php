@@ -27,18 +27,14 @@
     </div>
     <?php
   }
-  else if (isset($status) && ($status == "ID_CREATED" || $status == "ID_ALREADY_CREATED" || $status == "ID_NOT_MATCHING")) {
+  else if (isset($status) && ($status == "ID_CREATED" || $status == "ID_NOT_MATCHING" || $status == "ID_UPDATED")) {
       ?>
     <form role="form" action="./passwordLost.php" method="post">
-        <?php if ($status == "ID_CREATED") { ?>
+        <?php if ($status == "ID_CREATED" || $status == "ID_UPDATED") { ?>
             <div class="alert alert-success">
                 A unique id has been generated. Please check your email and enter the id below.
                 <br/>
                 The ID is available 24 hours.
-            </div>
-        <?php } else if ($status == "ID_ALREADY_CREATED") { ?>
-            <div class="alert alert-danger">
-                A password request have already been generated. Please check your email and enter the id below (please note the ID is valid for 24 hours).
             </div>
         <?php } else if ($status == "ID_NOT_MATCHING") { ?>
             <div class="alert alert-danger">
@@ -60,7 +56,7 @@
         </div>
         <div class="form-group">
             <label for="uniqueId">ID*</label>
-            <input class="form-control" type="text" name="uniqueId" id="uniqueId" required="required">
+            <input class="form-control" type="text" name="uniqueId" id="uniqueId" placeholder="Leave empty to generate a new ID">
         </div>
         <div class="form-group">
             <label for="password">New password*</label>

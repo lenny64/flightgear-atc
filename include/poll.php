@@ -32,10 +32,10 @@ foreach ($polls_list as $poll)
 	{
 		// If there are not at least 2 choices
 		if (sizeof($Poll->choices) >= 2)
-		{
+		{ // WE SHOW POLL
 ?>
 
-<div class="poll" id="poll_div" <?php //if (isset($_COOKIE['lenny64_poll']) AND $_COOKIE['lenny64_poll'] == $Poll->id) echo 'style="display: none;"';?>>
+<!-- <div class="poll" id="poll_div" <?php //if (isset($_COOKIE['lenny64_poll']) AND $_COOKIE['lenny64_poll'] == $Poll->id) echo 'style="display: none;"';?>>
 	<span class="poll_close" onclick="document.getElementById('poll_div').style.display='none';">x Close</span>
 	<span class="poll_title"><?php echo $Poll->title; ?></span>
 	<span class="poll_content"><?php echo $Poll->content; ?></span>
@@ -57,7 +57,7 @@ foreach ($polls_list as $poll)
 		?>
 		<br/><input type="submit" value="Submit !" class="poll_submit_button"/>
 	</form>
-</div>
+</div> -->
 
 <?php
 		}

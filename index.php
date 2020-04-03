@@ -8,12 +8,14 @@
 
 
     <?php
+
+    // FOR SIGNIFICATIVE CHANGES
+    include('./include/log.php');
+    
     // DEPECHE AFP PART (including abstract picture)
     // NEW : now includes liveATC
     include('./include/depeche.php');
 
-    // FOR SIGNIFICATIVE CHANGES
-    include('./include/log.php');
 
     // I am first looking for every eventId
     $events = returnEvents();

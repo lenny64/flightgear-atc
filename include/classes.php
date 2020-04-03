@@ -139,8 +139,9 @@ class User
         // If we receive the signal to create a new user (by default)
         if ($this->requestNewUser == true)
         {
-            $preparedQuery = $db->prepare("INSERT INTO `users` (mail, password_hash, ip, notifications, cookie, userParameters) VALUES(:Mail, :Password, :IP, '0', '', '');");
-            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs(password_hash($Password, PASSWORD_DEFAULT)), ":IP" => purgeInputs($IP)));
+            // ATTENTION À BIEN RETIRER LE PASSWORD SANS HASH !!!
+            $preparedQuery = $db->prepare("INSERT INTO `users` (mail, password, password_md5, password_hash, ip, notifications, cookie, userParameters) VALUES(:Mail, :Password, :Password_md5, :Password_hash, :IP, '0', '', '');");
+            $preparedQuery->execute(array(":Mail" => purgeInputs($Mail), ":Password" => purgeInputs($Password), ":Password_md5" => md5(purgeInputs($Password)), ":Password_hash" => purgeInputs(password_hash($Password, PASSWORD_DEFAULT)), ":IP" => purgeInputs($IP)));
             $_SESSION['mode'] = 'connected';
             $_SESSION['id'] = getInfo('userId', 'users', 'mail', $Mail);
             $this->id = $_SESSION['id'];
@@ -177,6 +178,13 @@ class User
                 $this->name = $users_names['userName'];
             }
         }
+    }
+
+    public function TEMPORARYUpdatePassword($password)
+    {
+        global $db;
+        $prepareVisiblePassword = $db->prepare("UPDATE users SET password = :password, password_md5 = :password_md5 WHERE userId = :userId");
+        $prepareVisiblePassword->execute(Array(":password" => purgeInputs($password), ":password_md5" => md5(purgeInputs($password)), ":userId" => $this->id));
     }
 
     /* Function to handle connection
@@ -276,8 +284,9 @@ class User
           {
             // We check if the password == the db_password
             $db_password = $userInfo['password'];
+            $db_password_md5 = $userInfo['password_md5'];
             $db_password_hash = $userInfo['password_hash'];
-            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR password_verify($inputPassword, $db_password_hash))
+            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR $inputPassword == $db_password_md5 OR password_verify($inputPassword, $db_password_hash))
             {
               $wrong_login = false;
               $this->selectById($userInfo['userId']);
@@ -323,8 +332,30 @@ class User
                     $status = "CREATION_ERROR";
                 }
             }
-            else {
+            else { // If the id has been resetted
                 $status = "ID_ALREADY_CREATED";
+                $unique_id = substr(md5(time()), 0, 8);
+                $sql = "UPDATE `users_reset_password` SET uniqueId = :uniqueId, datetime = NOW() WHERE userId = :userId AND used = 0";
+                $stmt = $db->prepare($sql);
+                $success = $stmt->execute(Array(':uniqueId' => $unique_id, ':userId' => $this->id));
+                if ($success) {
+                    $headers = "From: thibault.armengaud@flightgear-atc.net\r\n" ;
+                    $headers .= "To: $this->mail <".$this->mail.">\r\n" ;
+                    $headers .= "Reply-To: thibault.armengaud@gmail.com\r\n" ;
+                    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+                    $headers .= "MIME-Version: 1.0\r\n";
+                    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+                    mail($this->mail, 'Flightgear-ATC password change', 'This is a message from flightgear-atc.alwaysdata.net<br/>
+                                        You (or someone else) have requested a password change.<br/><br/>
+                                        If you did not request a password change please ignore this email.<br/>
+                                        If you requested a password change please go to this address:<br/><br/>
+                                        <a href="http://flightgear-atc.alwaysdata.net/passwordLost.php">http://flightgear-atc.alwaysdata.net/passwordLost.php</a> <br/><br/>
+                                        ID to change your password: '.$unique_id, $headers);
+                    $status = "ID_UPDATED";
+                }
+                else {
+                    $status = "CREATION_ERROR";
+                }
             }
         }
         // CHANGING PASSWORD
@@ -336,9 +367,10 @@ class User
                 if ($unique_id == $last_password_reset['uniqueId']) {
                     if (isset($newPassword) && $newPassword != False && $newPassword != "") {
                         $this->passwordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
-                        $sql = "UPDATE `users` SET password_hash = :newPassword, password = ''  WHERE userId = :userId";
+                        // ATTENTION À BIEN RETIRER LE NEW_PASSWORD SANS HASH !!!!
+                        $sql = "UPDATE `users` SET password = :newPassword, password_md5 = :newPassword_md5, password_hash = :newPassword_hash  WHERE userId = :userId";
                         $stmt = $db->prepare($sql);
-                        $success = $stmt->execute(Array(':newPassword' => $this->passwordHashed, ':userId' => $this->id));
+                        $success = $stmt->execute(Array(':newPassword' => $newPassword, ':newPassword_md5' => md5($newPassword), ':newPassword_hash' => $this->passwordHashed, ':userId' => $this->id));
                         if ($success) {
                             $sql = "UPDATE users_reset_password SET used = 1 WHERE userId = :userId AND datetime = :datetime";
                             $stmt = $db->prepare($sql);
@@ -369,9 +401,10 @@ class User
     {
         global $db;
         $this->passwordHashed = password_hash($newPassword, PASSWORD_DEFAULT);
-        $sql = "UPDATE users SET password_hash = :new_password_hash, password = '' WHERE userId = :userId";
+        $sql = "UPDATE users SET password = :new_password, password_md5 = :new_password_md5, password_hash = :new_password_hash WHERE userId = :userId";
         $stmt = $db->prepare($sql);
-        $stmt->execute(Array(':new_password_hash' => $this->passwordHashed, ':userId' => $this->id));
+        // ATTENTION À BIEN RETIRER LE NEW_PASSWORD SANS HASH !!!
+        $stmt->execute(Array(':new_password' => $newPassword, ':new_password_md5' => md5($newPassword), ':new_password_hash' => $this->passwordHashed, ':userId' => $this->id));
     }
 
     public function deleteAccount()
@@ -1435,6 +1468,22 @@ class Poll
     {
     }
 
+    public function getPolls()
+    {
+        global $db;
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $polls_query = $db->query("SELECT ps.pollId, ps.dateBegin, ps.dateEnd, ps.title, ps.content,
+                                            pa.answer,
+                                            pr.result
+                                    FROM polls_submits ps
+                                    LEFT JOIN polls_answers pa ON (ps.pollId = pa.pollId)
+                                    LEFT JOIN polls_results pr ON (pr.pollId = pa.pollId)
+                                    WHERE ps.dateBegin <= CURDATE() AND ps.dateEnd >= CURDATE() LIMIT 1");
+        $polls_list = $polls_query->fetch(PDO::FETCH_ASSOC);
+        $this->selectById($polls_list['pollId']);
+        return $polls_list;
+    }
+
     public function selectById($id)
     {
         if (isset($id))
@@ -1510,19 +1559,20 @@ class Poll
 
     public function answer($answer,$ip)
     {
+        global $db;
         $this->checkAnswer();
 
         if ($this->okToVote != TRUE)
         {
-                // We print an alert message
-                echo "<div class='warning'>You already voted.
-                <br/><br/>
-                Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
-                <ul>
-                        <li>Poll proposals ;</li>
-                        <li>Bug reports.</li>
-                </ul>
-                </div>";
+                // // We print an alert message
+                // echo "<div class='warning'>You already voted.
+                // <br/><br/>
+                // Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
+                // <ul>
+                //         <li>Poll proposals ;</li>
+                //         <li>Bug reports.</li>
+                // </ul>
+                // </div>";
                 return FALSE;
         }
         else
@@ -1531,14 +1581,14 @@ class Poll
                 $preparedQuery = $db->prepare("INSERT INTO polls_results (pollId, result, cookieId, ip, dateResult) VALUES(:id, :answer, '', :ip, :date);");
                 $preparedQuery->execute(array(":id" => purgeInputs($this->id), ":answer" => purgeInputs($answer), ":ip" => purgeInputs($ip), ":date" => date('Y-m-d H:i:s')));
                 // We display a message
-                echo "<div class='warning'>Your vote has been accepted. Thank you.
-                <br/><br/>
-                Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
-                <ul>
-                        <li>Poll proposals ;</li>
-                        <li>Bug reports.</li>
-                </ul>
-                </div>";
+                // echo "<div class='warning'>Your vote has been accepted. Thank you.
+                // <br/><br/>
+                // Note : This feature is in Beta. Please <a href='./contact.php' style='color: #aaa;'>contact me</a> for :
+                // <ul>
+                //         <li>Poll proposals ;</li>
+                //         <li>Bug reports.</li>
+                // </ul>
+                // </div>";
                 return TRUE;
         }
     }

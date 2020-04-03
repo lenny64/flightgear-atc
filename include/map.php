@@ -1,5 +1,5 @@
 
-<div id="mapid" style="height: 220px;">
+<div id="mapid" class="map">
 </div>
 <div class="boutons_map">
 </div>
