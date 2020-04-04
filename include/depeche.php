@@ -65,7 +65,8 @@ if ($polls_list > 0) { // If there is a poll
 }
 
 if ($showPoll == FALSE) { // If there is no poll we display the depeche
-    $title = $Depeche->displayDepeche($Depeche->title);
+    $title = "Next upcoming ATC Events";
+    // $title = $Depeche->displayDepeche($Depeche->title);
     $content = $Depeche->displayDepeche($Depeche->content);
 }
 else { // If there is poll
