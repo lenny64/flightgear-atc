@@ -17,8 +17,9 @@ if ($today_minus_x_days < date('Y-m-d')) {
 ?>
 
 <div class="my-4" id="next_atc_events">
-    <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">&larr; previous events</a><?php } ?>
-    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">next events &rarr;</a>
+    <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-primary btn-sm">&larr; previous events</a><?php } ?>
+    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-primary btn-sm">next events &rarr;</a>
+    <a id="collapse_events" href="#" class="btn btn-primary btn-sm">Collapse/expand events</a>
 </div>
 
 <div class="row mt-3">
@@ -45,6 +46,13 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 <div class="col-md-3 col-sm-6">
     <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-light btn-sm float-right">+ add event</a></h5></center>
     <?php
+    if (sizeof($filteredEvents) == 0) {
+        echo "<div class='card'>";
+        echo "<div class='card-header'>";
+        echo "No events yet";
+        echo "</div>";
+        echo "</div>";
+    }
     foreach ($filteredEvents as $event)
     {
         $Event = new Event();

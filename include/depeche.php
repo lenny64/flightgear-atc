@@ -65,7 +65,7 @@ if ($polls_list > 0) { // If there is a poll
 }
 
 if ($showPoll == FALSE) { // If there is no poll we display the depeche
-    $title = "Next upcoming ATC Events";
+    $title = "Next Flightgear ATC Events";
     // $title = $Depeche->displayDepeche($Depeche->title);
     $content = $Depeche->displayDepeche($Depeche->content);
 }
@@ -86,8 +86,8 @@ else { // If there is poll
 
 <!-- Image size 900 x 190 -->
 
-<div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/a<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
-    <div id='bg-overlay' class="mb-3">
+<div class="jumbotron mb-0" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/a<?php echo $Depeche->abstractImg;?>') no-repeat center center;">
+    <div id='bg-overlay' class="mb-0">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="display-4"><?php echo $title; ?></h1>

@@ -23,7 +23,7 @@
  */
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1">
   <a class="navbar-brand" href="#"><img src="./img/flightgear-atc_logo_shadowless_161x51.png" alt="Flightgear ATC events" height="25"/></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

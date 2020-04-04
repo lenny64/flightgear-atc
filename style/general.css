@@ -22,7 +22,7 @@ div#body_container {
         padding-top: 40px;
 }
 
-img#abstract { position: relative; top: -40px; }
+img#abstract { position: relative; }
 
 p.normal_content { margin: 2% 4%; }
 
@@ -33,7 +33,6 @@ a {
 
 .map {
     height: 220px;
-    margin-top: -40px;
 }
 
 h1 {
