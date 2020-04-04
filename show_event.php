@@ -91,6 +91,9 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
                 </div>
                 <div class="card-body">
 <?php
+if (sizeof($flightplans) == 0) {
+                    echo "There is no flight plan yet";
+}
 foreach ($flightplans as $flightplan_id) {
     $FP = new Flightplan();
     $FP->selectById($flightplan_id);

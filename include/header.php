@@ -54,6 +54,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
 	<link rel="stylesheet" type="text/css" href="./style/contact.css"/>
 	<link rel="stylesheet" type="text/css" href="./style/poll.css"/>
     <link rel="stylesheet" href="./bootstrap-4.3.1/css/bootstrap.min.css"/>
+    <link href="./open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="./leaflet/leaflet.css"/>
 
 

@@ -15,11 +15,11 @@ if ($today_minus_x_days < date('Y-m-d')) {
     $show_previous_events = false;
 }
 ?>
-
-<div class="my-4" id="next_atc_events">
-    <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-primary btn-sm">&larr; previous events</a><?php } ?>
-    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-primary btn-sm">next events &rarr;</a>
-    <a id="collapse_events" href="#" class="btn btn-primary btn-sm">Collapse/expand events</a>
+<hr/>
+<div class="my-2" id="next_atc_events">
+    <a id="collapse_events" href="#" class="btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</a>
+    <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-primary btn-lg">&larr; previous events</a><?php } ?>
+    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-primary btn-lg">next events &rarr;</a>
 </div>
 
 <div class="row mt-3">
@@ -44,7 +44,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     ?>
 
 <div class="col-md-3 col-sm-6">
-    <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-light btn-sm float-right">+ add event</a></h5></center>
+    <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-outline-primary btn-sm float-right"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a></h5></center>
     <?php
     if (sizeof($filteredEvents) == 0) {
         echo "<div class='card'>";
@@ -79,37 +79,67 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         }
 
         ?>
-        <div class="card mb-1 <?= $additional_card_class;?>">
+        <div class="card mb-2 <?= $additional_card_class;?>">
             <div class="card-header event-title" data-eventid="<?= $Event->id; ?>">
-                <a href="./show_event.php?eventId=<?=$Event->id;?>"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a>
-                <br/>
+                <h6><img src="./img/menu_controlled.png"/> <a href="./show_event.php?eventId=<?=$Event->id;?>"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a></h6>
                 <?= $Event->airportCity; ?>
                 <br/>
                 <span class="badge badge-success"><?= $Event->beginTime; ?></span> &rarr; <span class="badge badge-success"><?= $Event->endTime; ?></span>
                 <?php if ($showFlightplans === true) { ?><span class="badge badge-info"><?= sizeof($flightplans);?> flightplans</span><?php } ?>
             </div>
-            <?php if (($Event->fgcom != "N/A" OR $Event->teamspeak != "N/A") AND $Event->docsLink != "http://" AND $atcName != "") { ?>
             <div class="card-body py-2 event-details" id="event_details_<?= $Event->id; ?>">
                 <?php if ($Event->fgcom != "N/A") { ?>
-                    <small><strong>FGCOM</strong> <?=$Event->fgcom; ?></small>
+                    <small><span class="oi oi-comment-square" aria-hidden="true"></span> <strong>FGCOM</strong> <?=$Event->fgcom; ?></small>
                     <br/>
                 <?php } if ($Event->teamspeak != "N/A") { ?>
-                    <small><strong>Mumble</strong></small>
-                    <br/>
-                    <small><?= $Event->teamspeak; ?></small>
+                    <small><span class="oi oi-comment-square" aria-hidden="true"></span> <strong>Mumble</strong> <?= $Event->teamspeak; ?></small>
                     <br/>
                 <?php } ?>
                 <?php if ($Event->docsLink != "http://") { ?>
-                <small><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></small>
+                <small><a href="<?php echo $Event->docsLink; ?>" target="_blank"><span class="oi oi-document" aria-hidden="true"></span> Airport documentation</a></small>
                 <br/>
                 <?php } ?>
                 <?php if ($verified == "true" && $atcName != "") { ?>
-                    <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
+                    Hosted by <strong><span class="badge badge-success"><span class='oi oi-check' aria-hidden='true'></span> <?php echo $atcName; ?></strong></span>
                 <?php } else if ($atcName != "") { ?>
-                    <span class="event-atc">Hosted by <strong><?php echo $atcName; ?></strong></span>
+                    Hosted by <strong><?php echo $atcName; ?></strong>
                 <?php } ?>
+                <hr/>
+                <div class="mt-2">
+                    <a href="#" class="btn btn-sm btn-outline-info"><span class="oi oi-plus" aria-hidden="true"></span> flight plan</a>
+<?php
+                foreach ($flightplans as $flightplan) {
+                    $FP = new Flightplan();
+                    $FP->selectById($flightplan);
+                    $printDateDeparture = date('d M', strtotime($FP->dateDeparture));
+                    $printDepartureTime = date('H:i', strtotime($FP->departureTime));
+                    $printDateArrival = date('d M', strtotime($FP->dateArrival));;
+                    $printArrivalTime = date('H:i', strtotime($FP->arrivalTime));
+?>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <b><?= $FP->callsign; ?></b> <small><span class="text-muted"><?=$FP->aircraftType;?></span></small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span class="badge badge-info"><?= $FP->departureAirport; ?></span>
+                            <br/>
+                            <span class="badge badge-success"><?= $printDepartureTime; ?></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="badge badge-info"><?= $FP->arrivalAirport; ?></span>
+                            <br/>
+                            <span class="badge badge-success"><?= $printArrivalTime; ?></span>
+                        </div>
+                    </div>
+                        <a class="" href="./edit_flightplan.php?flightplanId=<?=$FP->id;?>" target="_blank"><span class="oi oi-pencil" aria-hidden="true"></span> Edit flightplan</a>
+
+<?php
+                }
+?>
+                </div>
             </div>
-            <?php } ?>
         </div>
 
         <?php
