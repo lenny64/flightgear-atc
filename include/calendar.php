@@ -16,10 +16,10 @@ if ($today_minus_x_days < date('Y-m-d')) {
 }
 ?>
 
-<h1 class="my-4" id="next_atc_events">
+<div class="my-4" id="next_atc_events">
     <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">&larr; previous events</a><?php } ?>
     <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-info btn-sm">next events &rarr;</a>
-</h1>
+</div>
 
 <div class="row mt-3">
 

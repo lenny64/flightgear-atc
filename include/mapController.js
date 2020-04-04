@@ -171,3 +171,9 @@ var showLayer_new = function(el,layer) {
         mymap.addLayer(overlayMaps[layer]);
    }
 }
+
+var mapToggle = function() {
+    $('#mapid').toggle();
+}
+
+$('#mapToggle').click(mapToggle);
