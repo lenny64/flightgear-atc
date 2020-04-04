@@ -26,11 +26,11 @@ if ($today_minus_x_days < date('Y-m-d')) {
 <?php
 for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 {
-    $additional_card_class = "";
+    $additional_card_class = "border-info";
     $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
     if ($calendarDay == 0 AND $dayCounter == date('Y-m-d')) {
         $dayLine = "Today";
-        $additional_card_class = "border-info";
+        $additional_card_class = "border-secondary";
     }
     else if ($calendarDay == 1 AND $dayCounter == date('Y-m-d', strtotime(date('Y-m-d')." +1 day"))) $dayLine = "Tomorrow";
     else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));

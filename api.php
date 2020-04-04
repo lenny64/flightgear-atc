@@ -34,7 +34,7 @@ $api_version = get_api_version();
 
 <!-- LE CODE COMMENCE ICI -->
 <div class="jumbotron">
-        <h2 class="display-3" id="topPage">API <span class="badge badge-info">VERSION <?php echo $api_version; ?></span></h2>
+        <h1 class="display-3" id="topPage">API <span class="badge badge-info">VERSION <?php echo $api_version; ?></span></h1>
         <p class="lead">
             This page is dedicated to developers wishing to interact with flightear-atc
         </p>

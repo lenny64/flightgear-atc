@@ -36,15 +36,9 @@ a {
     margin-top: -40px;
 }
 
-h1.main_title {
-    margin: 10px 0 20px 0;
-    color: #424D15;
-    font-family: "Droid serif", Georgia, Serif;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    text-align: center;
-    color: #424D15;
+h1 {
+    font-family: Arvo, Arial, sans-serif;
+    font-weight: bold;
 }
 
 .jumbotron {
