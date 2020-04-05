@@ -106,7 +106,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                 <?php } ?>
                 <hr/>
                 <div class="mt-2">
-                    <a href="#" class="btn btn-sm btn-outline-info"><span class="oi oi-plus" aria-hidden="true"></span> flight plan</a>
+                    <a href="#" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#myModal" onclick="document.getElementById('file_flightplan-date').value='<?php echo $dayCounter;?>';"><span class="oi oi-plus" aria-hidden="true"></span> flight plan</a>
 <?php
                 foreach ($flightplans as $flightplan) {
                     $FP = new Flightplan();

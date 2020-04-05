@@ -120,6 +120,7 @@ foreach ($flightplans as $flightplan_id) {
 <?php
 }
 ?>
+                    <a href="#" class="btn btn-sm btn-outline-info"><span class="oi oi-plus" aria-hidden="true"></span> flight plan</a>
                 </div>
             </div>
         </div>
