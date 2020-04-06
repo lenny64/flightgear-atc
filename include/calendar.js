@@ -22,4 +22,10 @@ var collapseEvents = function() {
 
 $(document).ready(function(){
     $('#collapse_events').click(collapseEvents);
+    $( "#datepicker" ).datepicker({
+      showOn: "button",
+      buttonImage: "open-iconic/png/calendar-3x.png",
+      buttonImageOnly: true,
+      buttonText: "Select date"
+    });
 });

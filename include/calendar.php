@@ -10,16 +10,20 @@ if (isset($_GET['dateBegin']) && $_GET['dateBegin'] != NULL) {
 }
 $today_plus_x_days = date('Y-m-d', strtotime($today." +".$number_days_displayed." days"));
 $today_minus_x_days = date('Y-m-d', strtotime($today." -".$number_days_displayed." days"));
-$show_previous_events = true;
+$style_previous_events = "btn-primary";
 if ($today_minus_x_days < date('Y-m-d')) {
-    $show_previous_events = false;
+    $style_previous_events = "btn-outline-secondary disabled";
 }
 ?>
 <hr/>
 <div class="my-2" id="next_atc_events">
-    <a id="collapse_events" href="#" class="btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</a>
-    <?php if ($show_previous_events == true) { ?><a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-primary btn-lg">&larr; previous events</a><?php } ?>
-    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-primary btn-lg">next events &rarr;</a>
+
+    <form action="./" class="form form-inline" method="get">
+        <a id="collapse_events" href="#" class="mr-2 btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</a>
+        <a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="mx-2 btn <?=$style_previous_events;?> btn-lg"><span class="oi oi-chevron-left" title="previous days" aria-hidden="true"></span> previous days</a>
+        <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="mx-2 btn btn-primary btn-lg">next days <span class="oi oi-chevron-right" title="next days" aria-hidden="true"></span></a>
+        <input type="hidden" id="datepicker" name="dateBegin" class="mx-2"/><input type="submit" class="mx-2 btn btn-outline-primary" value="Go"/>
+    </form>
 </div>
 
 <div class="row mt-3">
