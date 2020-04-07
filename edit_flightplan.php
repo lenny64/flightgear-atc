@@ -89,21 +89,23 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
 
             <input type="hidden" name="flightplanId" value="<?php echo $flightplanId;?>">
             <h4>Login information</h4>
-            <div class="col-md-6 form-group">
-                <label class="control-label" for="file_flightplan-email">E-mail</label>
-                <div class="">
-                    <input type="text" class="form-control" id="file_flightplan-email" name="email" placeholder="E-mail" required>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label class="control-label" for="file_flightplan-email">E-mail</label>
+                    <div class="">
+                        <input type="text" class="form-control" id="file_flightplan-email" name="email" placeholder="E-mail" required>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6 form-group">
-                <label class="control-label" for="file_flightplan-key">Key</label>
-                <div class="">
-                    <input type="text" class="form-control" id="file_flightplan-key" name="privateKey" placeholder="Key" required>
+                <div class="col-md-6 form-group">
+                    <label class="control-label" for="file_flightplan-key">Key</label>
+                    <div class="">
+                        <input type="text" class="form-control" id="file_flightplan-key" name="privateKey" placeholder="Key" required>
+                    </div>
                 </div>
             </div>
 
             <h4>Pilot information</h4>
-            <div class="col-md-12 form-group">
+            <div class="form-group">
                 <label class="control-label" for="file_flightplan-callsign">Callsign</label>
                 <div class="">
                     <input type="text" class="form-control" id="file_flightplan-callsign" name="callsign" placeholder="Callsign" value="<?php echo $Flightplan->callsign;?>" required>
@@ -111,74 +113,59 @@ if (isset($_GET['flightplanId']) AND $_GET['flightplanId'] != NULL)
             </div>
 
             <h4>Flight information</h4>
-            <div class="col-md-12 form-group">
+            <div class="form-group">
                 <label class="control-label" for="file_flightplan-date">Date</label>
                 <div class="">
                     <input type="text" class="form-control" name="date" id="file_flightplan-date" placeholder="Departure date" value="<?php echo $Flightplan->dateDeparture;?>" required>
                 </div>
             </div>
-            <div class="col-xs-6 form-group">
-                <label class="control-label" for="file_flightplan-departureAirport">Departure airport</label>
-                <div class="">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label class="control-label" for="file_flightplan-departureAirport">Departure airport</label>
                     <input type="text" class="form-control" name="departureAirport" id="file_flightplan-departureAirport" placeholder="Departure airport" value="<?php echo $Flightplan->departureAirport;?>" required>
                 </div>
-            </div>
-            <div class="col-xs-6 form-group" for="file_flightplan-arrivalAirport">
-                <label class="control-label">Arrival airport</label>
-                <div class="">
+                <div class="col-md-6 form-group" for="file_flightplan-arrivalAirport">
+                    <label class="control-label">Arrival airport</label>
                     <input type="text" class="form-control" name="arrivalAirport" id="file_flightplan-arrivalAirport" placeholder="Arrival airport" value="<?php echo $Flightplan->arrivalAirport;?>" required>
                 </div>
             </div>
-            <div class="col-xs-6 form-group">
-                <div class="row">
-                    <div class="col-md-12">
-                        <label class="control-label" for="file_flightplan-departureTime">Departure time</label>
-                    </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label class="control-label" for="file_flightplan-departureTime">Departure time</label>
+                    <input type="text" name="departureTime" class="form-control" id="file_flightplan-departureTime" value="<?php echo $Flightplan->departureTime;?>">
                 </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <input type="text" name="departureTime" class="form-control" id="file_flightplan-departureTime" value="<?php echo $Flightplan->departureTime;?>">
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 form-group"><div class="row">
-                    <div class="col-md-12">
-                        <label class="control-label">Arrival time</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <input type="text" name="arrivalTime" class="form-control" id="file_flightplan-arrivalTime" value="<?php echo $Flightplan->arrivalTime;?>">
-                    </div>
+                <div class="col-md-6 form-group">
+                    <label class="control-label">Arrival time</label>
+                    <input type="text" name="arrivalTime" class="form-control" id="file_flightplan-arrivalTime" value="<?php echo $Flightplan->arrivalTime;?>">
                 </div>
             </div>
 
             <h4>Additional information</h4>
-            <div class="col-sm-4 col-xs-6 form-group">
+            <div class="form-group">
                 <label class="control-label">Cruise altitude</label>
                 <div class="">
                     <input type="text" class="form-control" id="file_flightplan-cruiseAltitude" name="cruiseAltitude" placeholder="Cruise altitude" value="<?php echo $Flightplan->cruiseAltitude;?>">
                 </div>
             </div>
-            <div class="col-sm-4 col-xs-6 form-group">
+            <div class="form-group">
                 <label class="control-label">Route</label>
                 <div class="">
                     <input type="text" class="form-control" id="file_flightplan-waypoints" name="waypoints" placeholder="Waypoints" value="<?php echo $Flightplan->waypoints;?>">
                 </div>
             </div>
-            <div class="col-sm-4 col-xs-6 form-group">
+            <div class="form-group">
                 <label class="control-label">Pilot name</label>
                 <div class="">
                     <input type="text" class="form-control" name="pilotName" placeholder="Pilot" value="<?php echo $Flightplan->pilotName;?>">
                 </div>
             </div>
-            <div class="col-sm-4 col-xs-6 form-group">
+            <div class="form-group">
                 <label class="control-label">Airline</label>
                 <div class="">
                     <input type="text" class="form-control" name="airline" placeholder="Airline" value="<?php echo $Flightplan->airline;?>">
                 </div>
             </div>
-            <div class="col-sm-4 col-xs-6 form-group">
+            <div class="form-group">
                 <label class="control-label">Flight number</label>
                 <div class="">
                     <input type="text" class="form-control" name="flightNumber" placeholder="Flight Number" value="<?php echo $Flightplan->flightNumber;?>">
