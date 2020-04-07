@@ -2,7 +2,7 @@
 <?php
 
 $number_days_displayed = 4;
-
+$real_today = date('Y-m-d');
 if (isset($_GET['dateBegin']) && $_GET['dateBegin'] != NULL) {
     $today = $_GET['dateBegin'];
 } else {
@@ -11,19 +11,23 @@ if (isset($_GET['dateBegin']) && $_GET['dateBegin'] != NULL) {
 $today_plus_x_days = date('Y-m-d', strtotime($today." +".$number_days_displayed." days"));
 $today_minus_x_days = date('Y-m-d', strtotime($today." -".$number_days_displayed." days"));
 $style_previous_events = "btn-primary";
-if ($today_minus_x_days < date('Y-m-d')) {
-    $style_previous_events = "btn-outline-secondary disabled";
+if ($today_minus_x_days < date('Y-m-d', strtotime($real_today." - 3 days"))) {
+    $style_previous_events = "btn-outline-primary disabled";
 }
 ?>
 <hr/>
 <div class="my-2" id="next_atc_events">
 
-    <form action="./" class="form form-inline" method="get">
-        <a id="collapse_events" href="#" class="mr-2 btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</a>
-        <a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="mx-2 btn <?=$style_previous_events;?> btn-lg"><span class="oi oi-chevron-left" title="previous days" aria-hidden="true"></span> previous days</a>
-        <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="mx-2 btn btn-primary btn-lg">next days <span class="oi oi-chevron-right" title="next days" aria-hidden="true"></span></a>
-        <input type="hidden" id="datepicker" name="dateBegin" class="mx-2"/><input type="submit" class="mx-2 btn btn-outline-primary" value="Go"/>
-    </form>
+    <div class="collapse mb-2" id="collapseMenuDetails">
+        <form action="./" class="form form-inline" method="get">
+            <a id="collapse_events" href="#" class="mr-2 btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</a>
+            <input type="text" id="datepicker" name="dateBegin" class="mx-2 form-control form-control-sm" placeholder="Select a date"/><input type="submit" class="mx-2 btn btn-outline-primary btn-sm" value="Go"/>
+        </form>
+    </div>
+    <a href="#collapseMenuDetails" class="mr-2 btn btn-lg btn-outline-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMenuDetails"><span class="oi oi-chevron-bottom" title="expand menu" aria-hidden="true"></span></a>
+    <a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="mx-2 btn <?=$style_previous_events;?> btn-lg"><span class="oi oi-chevron-left" title="previous days" aria-hidden="true"></span> previous days</a>
+    <a href="./index.php?dateBegin=<?= $real_today;?>#next_atc_events" class="mx-2 btn btn-outline-primary btn-lg"><span class="oi oi-clock" title="today" aria-hidden="true"></span> today</a>
+    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="mx-2 btn btn-primary btn-lg">next days <span class="oi oi-chevron-right" title="next days" aria-hidden="true"></span></a>
 </div>
 
 <div class="row mt-3">
