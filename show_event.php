@@ -42,7 +42,7 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
                             <h4>Airport</h4>
                             Airport name: <?= $Event->airportName; ?>
                             <br/>
-                            Airport ICAO: <span class="badge badge-success"><?= $Event->airportICAO; ?></span>
+                            Airport ICAO: <span class="badge badge-success" id="airportICAO"><?= $Event->airportICAO; ?></span>
                         </div>
                         <div class="col-md-4">
                             <h4>Event</h4>
@@ -70,7 +70,7 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
                         </div>
                         <div class="col-md-8">
                             <h4>Documentation</h4>
-                            Documents to download: <?= $Event->docsLink; ?>
+                            Documents to download: <a href="<?= $Event->docsLink; ?>" target="_blank"><?= $Event->docsLink; ?></a>
                         </div>
                     </div>
                     <div class="row my-2">
@@ -125,6 +125,30 @@ foreach ($flightplans as $flightplan_id) {
             </div>
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Occurences per days of week <?=$Event->airportICAO;?> is controlled</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyControlled" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Occurences per month <?=$Event->airportICAO;?> is controlled</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlyControlled" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/javascript" src="./include/controller_showEvent.js"></script>
 
 <?php include('./include/footer.php'); ?>

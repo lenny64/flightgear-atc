@@ -473,6 +473,37 @@ class Airport
             $preparedQuery->execute(array(":AirportName" => $AirportName, ":AirportICAO" => $AirportICAO));
         }
     }
+
+    public function getStatsOccurencesControlledPerDayInWeek($AirportICAO)
+    {
+        global $db;
+        $this->stats = Array();
+        if (!isset($AirportICAO) OR $AirportICAO == NULL) {
+            return false;
+        }
+        $this->icao = $AirportICAO;
+        $occurences_query = $db->query("SELECT COUNT(*) as count, date, airportICAO, DAYOFWEEK(date) as dayofweek FROM `events` WHERE airportICAO = '".$this->icao."' AND date > '2018-01-01' GROUP BY dayofweek ORDER BY dayofweek ASC");
+        foreach ($occurences_query as $occurences) {
+            $this->stats[$occurences['dayofweek']] = intval($occurences['count']);
+        }
+        return $this->stats;
+    }
+
+    public function getStatsOccurencesControlledPerMonth($AirportICAO)
+    {
+        global $db;
+        $this->stats = Array();
+        if (!isset($AirportICAO) OR $AirportICAO == NULL) {
+            return false;
+        }
+        $this->icao = $AirportICAO;
+        $occurences_query = $db->query("SELECT COUNT(*) as count, YEAR(date) as y, MONTH(date) as m, airportICAO FROM `events` WHERE airportICAO = '".$this->icao."' AND date > '2018-01-01' GROUP BY YEAR(date), MONTH(date) ORDER BY date ASC");
+        foreach ($occurences_query as $occurences) {
+            $date_obj = date('Y-m-d',mktime(0,0,0,$occurences['m'],1,$occurences['y']));
+            $this->stats[$date_obj] = intval($occurences['count']);
+        }
+        return $this->stats;
+    }
 }
 
 

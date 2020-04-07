@@ -340,6 +340,39 @@ else if (isset($_GET['getATCSessions']))
     generateError('ERR_VAR','getATCSessions requires limitDate');
 }
 
+// GET DETAILS ABOUT AN ATC SESSION
+else if (isset($_GET['getStatsOccurencesControlledPerDayInWeek']) AND isset($_GET['airport']))
+{
+    if ($_GET['airport'] != NULL)
+    {
+        $icao = $_GET['airport'];
+        $Airport = new Airport();
+        $stats = $Airport->getStatsOccurencesControlledPerDayInWeek($icao);
+        header('Content-type: application/json');
+        echo json_encode($stats);
+    }
+}
+else if (isset($_GET['getStatsOccurencesControlledPerDayInWeek']))
+{
+    generateError('ERR_VAR','getStatsOccurencesControlledPerDayInWeek requires airport');
+}
+// GET DETAILS ABOUT AN ATC SESSION
+else if (isset($_GET['getStatsOccurencesControlledPerMonth']) AND isset($_GET['airport']))
+{
+    if ($_GET['airport'] != NULL)
+    {
+        $icao = $_GET['airport'];
+        $Airport = new Airport();
+        $stats = $Airport->getStatsOccurencesControlledPerMonth($icao);
+        header('Content-type: application/json');
+        echo json_encode($stats);
+    }
+}
+else if (isset($_GET['getStatsOccurencesControlledPerMonth']))
+{
+    generateError('ERR_VAR','getStatsOccurencesControlledPerMonth requires airport');
+}
+
 // REQUESTING AUTHORIZATION TO FILE FLIGHTPLANS
 else if (isset($_GET['request_auth']) AND isset($_POST['email']))
 {

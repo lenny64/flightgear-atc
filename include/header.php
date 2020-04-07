@@ -73,6 +73,8 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
     <script type="text/javascript" src="./include/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="./include/jquery-ui-1.12.1.min.js"></script>
     <link rel="stylesheet" href="./include/jquery-ui-1.12.1.min.css">
+    <script type="text/javascript" src="./include/Chart.min.js"></script>
+    <link rel="stylesheet" href="./include/Chart.min.css">
     <script type="text/javascript" src="./include/jquery.validate.min.js"></script>
     <script type="text/javascript" src="./leaflet/leaflet.js"></script>
     <script src="./bootstrap-4.3.1/js/bootstrap.min.js"></script>
