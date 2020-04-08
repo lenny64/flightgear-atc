@@ -439,6 +439,9 @@ class Airport
     public $name;
     public $icao;
     public $id;
+    public $airportCity;
+    public $lat;
+    public $lon;
     private $requestNewAirport = true;
 
     public function create($AirportName, $AirportICAO)
@@ -471,6 +474,20 @@ class Airport
         {
             $preparedQuery = $db->prepare("INSERT INTO `airports` (name, ICAO) VALUES(:AirportName, :AirportICAO);");
             $preparedQuery->execute(array(":AirportName" => $AirportName, ":AirportICAO" => $AirportICAO));
+        }
+    }
+
+    public function selectByICAO($icao)
+    {
+        global $db;
+        $sql_airport = $db->query("SELECT * FROM airports_global WHERE globalAirportICAO = '$icao' LIMIT 1");
+        $airport_info = $sql_airport->fetch(PDO::FETCH_ASSOC);
+        if ($airport_info != 0) {
+            $this->name = $airport_info['globalAirportName'];
+            $this->airportCity = $airport_info['globalAirportCity'];
+            $this->icao = $airport_info['globalAirportICAO'];
+            $this->lat = $airport_info['globalAirportLat'];
+            $this->lon = $airport_info['globalAirportLon'];
         }
     }
 

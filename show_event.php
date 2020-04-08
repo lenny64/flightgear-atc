@@ -16,6 +16,9 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
     $Event->selectById($eventId);
     $flightplans = $Event->getFlightplans();
 
+    $Airport = new Airport();
+    $Airport->selectByICAO($Event->airportICAO);
+
 }
 ?>
 
@@ -150,5 +153,25 @@ foreach ($flightplans as $flightplan_id) {
 </div>
 
 <script type="text/javascript" src="./include/controller_showEvent.js"></script>
+<script type="application/ld+json">
+    {
+        "@context":"http://schema.org",
+        "@type":"PublicationEvent",
+        "name":"Flightgear ATC event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+        "location":{
+            "@type":"Place",
+            "name":"<?= $Event->airportICAO;?> airport <?=$Event->airportCity;?>",
+            "address":"<?= $Event->airportICAO;?> airport <?=$Event->airportCity;?>",
+            "geo":{
+                "@type":"GeoCoordinates",
+                "latitude":<?=$Airport->lat;?>,
+                "longitude":<?=$Airport->lon;?>
+            }
+        },
+        "startDate":"<?=$Event->date;?>T<?=$Event->beginTime;?>",
+        "endDate":"<?=$Event->date;?>T<?=$Event->endTime;?>",
+        "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>"
 
+    }
+</script>
 <?php include('./include/footer.php'); ?>
