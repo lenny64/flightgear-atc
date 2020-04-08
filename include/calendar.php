@@ -1,19 +1,8 @@
 
 <?php
 
-$number_days_displayed = 4;
-$real_today = date('Y-m-d');
-if (isset($_GET['dateBegin']) && $_GET['dateBegin'] != NULL) {
-    $today = $_GET['dateBegin'];
-} else {
-    $today = date('Y-m-d');
-}
-$today_plus_x_days = date('Y-m-d', strtotime($today." +".$number_days_displayed." days"));
-$today_minus_x_days = date('Y-m-d', strtotime($today." -".$number_days_displayed." days"));
-$style_previous_events = "btn-primary";
-if ($today_minus_x_days < date('Y-m-d', strtotime($real_today." - 3 days"))) {
-    $style_previous_events = "btn-outline-primary disabled";
-}
+include_once('./include/calendarController.php');
+
 ?>
 <hr/>
 <div class="my-2" id="next_atc_events">
@@ -35,51 +24,43 @@ if ($today_minus_x_days < date('Y-m-d', strtotime($real_today." - 3 days"))) {
 <?php
 for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 {
-    $additional_card_class = "border-info";
-    $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
-    if ($calendarDay == 0 AND $dayCounter == date('Y-m-d')) {
-        $dayLine = "Today";
-        $additional_card_class = "border-secondary";
-    }
-    else if ($calendarDay == 1 AND $dayCounter == date('Y-m-d', strtotime(date('Y-m-d')." +1 day"))) $dayLine = "Tomorrow";
-    else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));
-    else $dayLine = date('D j M', strtotime($dayCounter));
-
-    if (isset($events))
-    {
-        $filteredEvents = filterEvents('date', $dayCounter, $events);
-    }
+    $Day = new Day($calendarDay);
+    $Day->getDayCounter($today);
+    $Day->getDayDisplayInfo();
+    $Day->getEventsList($events);
+    // $additional_card_class = "border-info";
+    // $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
+    // if ($calendarDay == 0 AND $dayCounter == date('Y-m-d')) {
+    //     $dayLine = "Today";
+    //     $additional_card_class = "border-secondary";
+    // }
+    // else if ($calendarDay == 1 AND $dayCounter == date('Y-m-d', strtotime(date('Y-m-d')." +1 day"))) $dayLine = "Tomorrow";
+    // else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));
+    // else $dayLine = date('D j M', strtotime($dayCounter));
+    //
+    // if (isset($events))
+    // {
+    //     $filteredEvents = filterEvents('date', $dayCounter, $events);
+    // }
     ?>
 
 <div class="col-md-3 col-sm-6">
-    <center><h5><?=$dayLine;?> <a href="./new_event.php?date=<?=$dayCounter;?>" class="btn btn-outline-primary btn-sm float-right"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a></h5></center>
+    <center><h5><?=$Day->day_line;?> <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="btn btn-outline-primary btn-sm float-right"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a></h5></center>
+    <?= $Day->no_events_message; ?>
     <?php
-    if (sizeof($filteredEvents) == 0) {
-        echo "<div class='card'>";
-        echo "<div class='card-header'>";
-        echo "No events yet";
-        echo "</div>";
-        echo "</div>";
-    }
-    foreach ($filteredEvents as $event)
+    // if (sizeof($filteredEvents[$calendarDay]) == 0) {
+    //     echo "<div class='card'>";
+    //     echo "<div class='card-header'>";
+    //     echo "No events yet";
+    //     echo "</div>";
+    //     echo "</div>";
+    // }
+    foreach ($Day->events_list as $event)
     {
         $Event = new Event();
         $Event->selectById($event);
+        $Event->getATCInfo();
 
-        $atcName = getInfo('userName', 'users_names', 'userId', $Event->userId);
-        $atcParams = json_decode(getInfo('userParameters', 'users', 'userId', $Event->userId));
-        $verified = $atcParams->{'verified'};
-        $comments = '';
-        if (isset($Event->remarks) AND $Event->remarks != NULL AND $Event->remarks != "N/A")
-        {
-            $comments = '<div class="row">';
-            $comments .= '<div class="col-xs-12">';
-            $comments .= '<p class="event-comments">';
-            $comments .= htmlspecialchars_decode($Event->remarks);
-            $comments .= '</p>';
-            $comments .= '</div>';
-            $comments .= '</div>';
-        }
         $showFlightplans = false;
         $flightplans = $Event->getFlightplans();
         if (sizeof($flightplans) > 0) {
@@ -107,10 +88,10 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                 <small><a href="<?php echo $Event->docsLink; ?>" target="_blank"><span class="oi oi-document" aria-hidden="true"></span> Airport documentation</a></small>
                 <br/>
                 <?php } ?>
-                <?php if ($verified == "true" && $atcName != "") { ?>
-                    Hosted by <strong><span class="badge badge-success"><span class='oi oi-check' aria-hidden='true'></span> <?php echo $atcName; ?></strong></span>
-                <?php } else if ($atcName != "") { ?>
-                    Hosted by <strong><?php echo $atcName; ?></strong>
+                <?php if ($Event->atcVerified == "true" && $Event->atcName != "") { ?>
+                    Hosted by <strong><span class="badge badge-success"><span class='oi oi-check' aria-hidden='true'></span> <?php echo $Event->atcName; ?></strong></span>
+                <?php } else if ($Event->atcName != "") { ?>
+                    Hosted by <strong><?php echo $Event->atcName; ?></strong>
                 <?php } ?>
                 <hr/>
                 <div class="mt-2">
@@ -121,7 +102,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                     $FP->selectById($flightplan);
                     $printDateDeparture = date('d M', strtotime($FP->dateDeparture));
                     $printDepartureTime = date('H:i', strtotime($FP->departureTime));
-                    $printDateArrival = date('d M', strtotime($FP->dateArrival));;
+                    $printDateArrival = date('d M', strtotime($FP->dateArrival));
                     $printArrivalTime = date('H:i', strtotime($FP->arrivalTime));
 ?>
                     <div class="row mt-2">

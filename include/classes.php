@@ -499,7 +499,7 @@ class Airport
         $this->icao = $AirportICAO;
         $occurences_query = $db->query("SELECT COUNT(*) as count, YEAR(date) as y, MONTH(date) as m, airportICAO FROM `events` WHERE airportICAO = '".$this->icao."' AND date > '2018-01-01' GROUP BY YEAR(date), MONTH(date) ORDER BY date ASC");
         foreach ($occurences_query as $occurences) {
-            $date_obj = date('Y-m-d',mktime(0,0,0,$occurences['m'],1,$occurences['y']));
+            $date_obj = date('Y-m',mktime(0,0,0,$occurences['m'],1,$occurences['y']));
             $this->stats[$date_obj] = intval($occurences['count']);
         }
         return $this->stats;
@@ -531,6 +531,9 @@ class Event
     public $error = 0;
     public $eventCreated = false;
     public $flightplans;
+    public $atcName;
+    public $atcParams;
+    public $atcId;
 
 
     public function create($Year, $Month, $Day, $BeginHour, $BeginMinutes, $EndHour, $EndMinutes, $AirportICAO, $FGCOM, $TeamSpeak, $DocsLink, $Remarks)
@@ -837,6 +840,26 @@ class Event
             }
         }
         return $this->flightplans;
+    }
+
+    public function getATCInfo()
+    {
+        global $db;
+        $this->atcName = "";
+        $this->atcParams = "";
+        $this->atcId = 0;
+        $atc_info_query = $db->query("SELECT e.eventId, e.date, u.userId, n.userName, u.userParameters FROM `users` u
+                                        LEFT JOIN users_names n ON n.userId = u.userId
+                                        LEFT JOIN events e ON e.userId = u.userId
+                                        WHERE e.eventId = $this->id
+                                        ORDER BY n.userNameId DESC LIMIT 1");
+        $atc_info = $atc_info_query->fetch(PDO::FETCH_ASSOC);
+        if ($atc_info != 0) {
+            $this->atcId = $atc_info['userId'];
+            $this->atcName = $atc_info['userName'];
+            $atc_params = json_decode($atc_info['userParameters']);
+            $this->atcVerified = $atc_params->{'verified'};
+        }
     }
 }
 

@@ -129,7 +129,7 @@ foreach ($flightplans as $flightplan_id) {
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h4>Occurences per days of week <?=$Event->airportICAO;?> is controlled</h4>
+                    <h4>Occurences <?=$Event->airportICAO;?> is controlled per days of week</h4>
                 </div>
                 <div class="card-body">
                     <canvas id="weeklyControlled" height="150"></canvas>
@@ -139,7 +139,7 @@ foreach ($flightplans as $flightplan_id) {
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h4>Occurences per month <?=$Event->airportICAO;?> is controlled</h4>
+                    <h4>Occurences <?=$Event->airportICAO;?> is controlled per month</h4>
                 </div>
                 <div class="card-body">
                     <canvas id="monthlyControlled" height="150"></canvas>

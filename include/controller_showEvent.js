@@ -32,13 +32,32 @@ var weeklyControlled = new Chart(weeklyControlled, {
 
 var monthlyControlled = $('#monthlyControlled');
 var monthlyControlled = new Chart(monthlyControlled, {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: [],
         datasets: [{
             label: 'occurences per month since jan. 2018',
-            data: []
+            data: [],
+            backgroundColor: []
         }]
+    },
+    options: {
+        responsive:true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                },
+                gridLines: {
+                    color: "rgba(0,0,0,0)"
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    color: "rgba(0,0,0,0)"
+                }
+            }]
+        }
     }
 });
 
@@ -65,6 +84,7 @@ $.get("./dev2017_04_28.php?getStatsOccurencesControlledPerMonth&airport="+airpor
     $.each(data, function(day,occ) {
         monthlyControlled.data.labels.push(day);
         monthlyControlled.data.datasets[0].data.push(occ);
+        monthlyControlled.data.datasets[0].backgroundColor.push('rgba(99, 132, 255, 1.0)');
     });
     monthlyControlled.update();
 });
