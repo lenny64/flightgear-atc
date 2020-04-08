@@ -14,6 +14,7 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
     $Event = new Event();
     // We pick the event we want
     $Event->selectById($eventId);
+    $Event->getATCInfo();
     $flightplans = $Event->getFlightplans();
 
     $Airport = new Airport();
@@ -156,22 +157,32 @@ foreach ($flightplans as $flightplan_id) {
 <script type="application/ld+json">
     {
         "@context":"http://schema.org",
-        "@type":"PublicationEvent",
+        "@type":"Event",
         "name":"Flightgear ATC event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
         "location":{
-            "@type":"Place",
+            "@type":"VirtualLocation",
             "name":"<?= $Event->airportICAO;?> airport <?=$Event->airportCity;?>",
-            "address":"<?= $Event->airportICAO;?> airport <?=$Event->airportCity;?>",
-            "geo":{
-                "@type":"GeoCoordinates",
-                "latitude":<?=$Airport->lat;?>,
-                "longitude":<?=$Airport->lon;?>
-            }
+            "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>"
         },
-        "startDate":"<?=$Event->date;?>T<?=$Event->beginTime;?>",
-        "endDate":"<?=$Event->date;?>T<?=$Event->endTime;?>",
-        "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>"
-
+        "startDate":"<?=$Event->date;?>T<?=$Event->beginTime;?>-00:00",
+        "endDate":"<?=$Event->date;?>T<?=$Event->endTime;?>-00:00",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>",
+        "description": "Flightgear ATC event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+        "offers": {
+            "@type": "Offer",
+            "url": "http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "validFrom": "<?=$Event->date;?>"
+        },
+        "performer": {
+            "@type": "Person",
+            "name": "<?=$Event->atcName;?>"
+        },
+        "image": ""
     }
 </script>
 <?php include('./include/footer.php'); ?>
