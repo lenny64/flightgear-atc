@@ -2,7 +2,7 @@
 <?php
 
 include_once('./include/calendarController.php');
-
+if (!isset($_GET['revertToV1'])) {
 ?>
 <hr/>
 <div class="my-2" id="next_atc_events">
@@ -11,6 +11,7 @@ include_once('./include/calendarController.php');
         <form action="./" class="form form-inline" method="get">
             <a id="collapse_events" href="#" class="mr-2 btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</a>
             <input type="text" id="datepicker" name="dateBegin" class="mx-2 form-control form-control-sm" placeholder="Select a date"/><input type="submit" class="mx-2 btn btn-outline-primary btn-sm" value="Go"/>
+            <a href="./index.php?revertToV1">Revert to old version</a>
         </form>
     </div>
     <a href="#collapseMenuDetails" class="mr-2 btn btn-lg btn-outline-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMenuDetails"><span class="oi oi-chevron-bottom" title="expand menu" aria-hidden="true"></span></a>
@@ -28,33 +29,12 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     $Day->getDayCounter($today);
     $Day->getDayDisplayInfo();
     $Day->getEventsList($events);
-    // $additional_card_class = "border-info";
-    // $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
-    // if ($calendarDay == 0 AND $dayCounter == date('Y-m-d')) {
-    //     $dayLine = "Today";
-    //     $additional_card_class = "border-secondary";
-    // }
-    // else if ($calendarDay == 1 AND $dayCounter == date('Y-m-d', strtotime(date('Y-m-d')." +1 day"))) $dayLine = "Tomorrow";
-    // else if ($calendarDay > 1 AND $calendarDay < 6) $dayLine = "On ".date('l', strtotime($dayCounter));
-    // else $dayLine = date('D j M', strtotime($dayCounter));
-    //
-    // if (isset($events))
-    // {
-    //     $filteredEvents = filterEvents('date', $dayCounter, $events);
-    // }
     ?>
 
 <div class="col-md-3 col-sm-6">
     <center><h5><?=$Day->day_line;?> <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="btn btn-outline-primary btn-sm float-right"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a></h5></center>
     <?= $Day->no_events_message; ?>
     <?php
-    // if (sizeof($filteredEvents[$calendarDay]) == 0) {
-    //     echo "<div class='card'>";
-    //     echo "<div class='card-header'>";
-    //     echo "No events yet";
-    //     echo "</div>";
-    //     echo "</div>";
-    // }
     foreach ($Day->events_list as $event)
     {
         $Event = new Event();
@@ -140,7 +120,14 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 } ?>
 </div>
 <?php
-/*
+}
+else {
+    ?>
+    <div class='alert alert-warning'>
+        You are using an old version of this website. It may not work properly.<br/>
+        <a href="./index.php" class="btn btn-success">Lead me to the new version</a>
+    </div>
+<?php
     for ($calendarDay = 0 ; $calendarDay < 30 ; $calendarDay++)
     {
         $dayCounter = date('Y-m-d', strtotime($today." +".$calendarDay." days"));
@@ -157,40 +144,40 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         // Printing a visual help
         if ($calendarDay == 0 AND date('l', strtotime($dayCounter)) != "Monday")
         {
-            echo "<div class='well well-calendar'><h4><span class='glyphicon glyphicon-calendar' aria-hidden='true'></span> This week</h4></div>";
+            echo "<div class='card card-header'><h4><span class='oi oi-calendar' aria-hidden='true'></span> This week</h4></div>";
         }
         else if ($calendarDay > 0 AND $calendarDay < 8 AND date('l', strtotime($dayCounter)) == "Monday")
         {
-            echo "<div class='well well-calendar'><h4><span class='glyphicon glyphicon-calendar' aria-hidden='true'></span> Next week</h4></div>";
+            echo "<div class='card card-header'><h4><span class='oi oi-calendar' aria-hidden='true'></span> Next week</h4></div>";
         }
         else if ($calendarDay >= 8 AND date('l', strtotime($dayCounter)) == "Monday")
         {
-            echo "<div class='well well-calendar'><h4><span class='glyphicon glyphicon-calendar' aria-hidden='true'></span> Week ".date('W', strtotime($dayCounter))."</h4></div>";
+            echo "<div class='card card-header'><h4><span class='oi oi-calendar' aria-hidden='true'></span> Week ".date('W', strtotime($dayCounter))."</h4></div>";
         }
         ?>
 
-<div class="panel list-group" id="menucollapse">
+<div class="card bg-light my-3">
     <!-- BELOW THE MAIN LINE IN THE TABLE -->
-    <div class="list-group-item list-group-item-info list-clickable" data-toggle="collapse" data-target="#<?php echo $dayCounter; ?>" data-parent="#menucollapse">
+    <div class="card-header">
         <div class="row">
-            <div class="col-xs-4">
-                <strong><span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?php echo $dayLine;?></strong>
+            <div class="col-sm-4">
+                <strong><span class="oi oi-clock" aria-hidden="true"></span> <?php echo $dayLine;?></strong>
             </div>
             <!-- Event counter indicator -->
-            <div class="col-xs-4">
+            <div class="col-sm-4">
                 <?php
                 if (isset($filteredEvents) AND sizeof($filteredEvents) > 0)
                 {
-                    $airportLabel = 'label-primary';
+                    $airportLabel = 'badge-primary';
                     (sizeof($filteredEvents) > 1) ? $airportText = 'airports' : $airportText = 'airport';
                 }
                 else
                 {
-                    $airportLabel = 'label-default';
+                    $airportLabel = 'badge-default';
                     $airportText = 'airports';
                 }
                 ?>
-                <span class="label <?php echo $airportLabel;?>"><?php echo sizeof($filteredEvents);?> <?php echo $airportText;?></span>
+                <span class="badge <?php echo $airportLabel;?>"><?php echo sizeof($filteredEvents);?> <?php echo $airportText;?></span>
                 <br/>
                 <?php
                 for ($bulletEvent = 0 ; $bulletEvent < sizeof($filteredEvents) ; $bulletEvent++)
@@ -200,7 +187,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                 ?>&nbsp;
             </div>
             <!-- Flightplan counter indicator -->
-            <div class="col-xs-4">
+            <div class="col-sm-4">
                 <?php
                 $Flightplan = new Flightplan();
                 $Flightplan->dateDeparture = $dayCounter;
@@ -209,16 +196,16 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 
                 if (isset($flightplans) AND $flightplans != NULL AND sizeof($flightplans) > 0)
                 {
-                    $flightplanLabel = 'label-success';
+                    $flightplanLabel = 'badge-success';
                     (sizeof($flightplans) > 1) ? $flightplanText = 'flightplans' : $flightplanText = 'flightplan';
                 }
                 else
                 {
-                    $flightplanLabel = 'label-default';
+                    $flightplanLabel = 'badge-default';
                     $flightplanText = 'flightplans';
                 }
                 ?>
-                <span class="label <?php echo $flightplanLabel;?>"><?php echo sizeof($flightplans);?> <?php echo $flightplanText;?></span>
+                <span class="badge <?php echo $flightplanLabel;?>"><?php echo sizeof($flightplans);?> <?php echo $flightplanText;?></span>
                 <br/>
                 <span class="flightplan-bullet-counter">
                 <?php
@@ -242,17 +229,17 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         $collapseBehaviour = "collapse";
     }
     ?>
-    <div class="sublinks <?php echo $collapseBehaviour;?> dayContent" id="<?php echo $dayCounter; ?>">
+    <div class="sublinks dayContent" id="<?php echo $dayCounter; ?>">
         <div class="row">
             <!-- Button to create new event -->
             <div class="col-sm-8 col-xs-6" style="padding-right: 0;">
-                <div class="col-xs-12 createEvent">
+                <div class="col-sm-12 createEvent">
                     <a href="./new_event.php?date=<?php echo $dayCounter; ?>" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus-sign"></span> New ATC event</a>
                 </div>
             </div>
             <!-- Button to create new flightplan -->
             <div class="col-sm-4 col-xs-6" style="padding-left: 0;">
-                <div class="col-xs-12 createFlightplan">
+                <div class="col-sm-12 createFlightplan">
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal" onclick="document.getElementById('file_flightplan-date').value='<?php echo $dayCounter;?>';"><span class="glyphicon glyphicon-plus-sign"></span> New flightplan</button>
                 </div>
             </div>
@@ -313,20 +300,20 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                         </div>
                         <div class="row">
                             <!-- COMMUNICATION -->
-                            <div class="col-xs-12">
+                            <div class="col-sm-12">
                                 <span class="event-communication"><strong>FGCOM</strong> <?php echo $Event->fgcom; ?></span>
                                 <span class="event-communication"><strong>Mumble</strong> <?php echo $Event->teamspeak; ?></span>
                             </div>
                         </div>
                         <div class="row">
                             <!-- DOCUMENTATION LINK -->
-                            <div class="col-xs-12">
+                            <div class="col-sm-12">
                                 <span class="event-documentation"><a href="<?php echo $Event->docsLink; ?>" target="_blank">Airport documentation</a></span>
                             </div>
                         </div>
                         <div class="row">
                             <!-- ATC NAME -->
-                            <div class="col-xs-12">
+                            <div class="col-sm-12">
                                 <?php if ($verified == "true")
                                 {   ?>
                                     <span class="label label-success">Hosted by <strong><?php echo $atcName; ?></strong> <span class='glyphicon glyphicon-ok' aria-hidden='true'></span></span>
@@ -339,8 +326,12 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                                 } ?>
                             </div>
                         </div>
-                        <!-- COMMENTS -->
-                        <?php echo nl2br($comments); ?>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- COMMENTS -->
+                                <?php echo nl2br($comments); ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -370,43 +361,43 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
                 <div class="flightplan">
                     <div class="row">
                         <!-- CALLSIGN -->
-                        <div class="col-xs-6">
-                            <span class="label label-success"><strong><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <?php echo $Flightplan->callsign;?></strong></span>
+                        <div class="col-sm-6">
+                            <span class="badge badge-success"><strong><span class="oi oi-star" aria-hidden="true"></span> <?php echo $Flightplan->callsign;?></strong></span>
                         </div>
                         <!-- AIRPLANE -->
-                        <div class="col-xs-6">
-                            <span class="flightplan-plane"><span class="glyphicon glyphicon-plane"></span> <?php echo $Flightplan->aircraftType;?></span>
+                        <div class="col-sm-6">
+                            <span class="flightplan-plane"><span class="oi oi-plane"></span> <?php echo $Flightplan->aircraftType;?></span>
                         </div>
                         <!-- INFORMATION ABOUT DEPARTURE -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="flightplan-info">Departure</span>
                         </div>
                         <!-- INFORMATION ABOUT ARRIVAL -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="flightplan-info">Arrival</span>
                         </div>
                         <!-- DEPARTURE AIRPORT -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="flightplan-time"><?php echo $Flightplan->departureAirport;?></span>
                         </div>
                         <!-- ARRIVAL AIRPORT -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="flightplan-time"><?php echo $Flightplan->arrivalAirport;?></span>
                         </div>
                         <!-- DEPARTURE TIME -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="label label-primary"><?php echo $printDepartureTime;?></span> <span class="label label-primary"><?php echo $printDateDeparture;?></span>
                         </div>
                         <!-- ARRIVAL TIME -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="label label-primary"><?php echo $printArrivalTime;?></span> <span class="label label-primary"><?php echo $printDateArrival;?></span>
                         </div>
                         <!-- STATUS -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <span class="label label-default">flightplan <?php echo $Flightplan->status;?></span>
                         </div>
                         <!-- EDIT BUTTON -->
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <a href="./edit_flightplan.php?flightplanId=<?php echo $Flightplan->id;?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>
                         </div>
 
@@ -423,7 +414,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 
         <?php
     }
-*/
+}
     ?>
 
     <script type="text/javascript" language="javascript" src="./include/calendar.js"></script>
