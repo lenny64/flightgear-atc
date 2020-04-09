@@ -29,10 +29,19 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     $Day->getDayCounter($today);
     $Day->getDayDisplayInfo();
     $Day->getEventsList($events);
+    $Flightplan = new Flightplan();
+    $Flightplan->dateDeparture = $Day->day_counter;
+    $Flightplan->dateArrival = $Day->day_counter;
+    $total_flightplans = $Flightplan->getFlightplans();
     ?>
 
 <div class="col-md-3 col-sm-6">
-    <center><h5><?=$Day->day_line;?> <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="btn btn-outline-primary btn-sm float-right"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a></h5></center>
+    <center>
+        <h5><?=$Day->day_line;?></h5>
+        <span class="badge badge-info"><?= sizeof($total_flightplans);?> flightplans</span>
+        <span class="badge badge-primary"><?= sizeof($Day->events_list);?> events</span>
+        <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="btn btn-outline-primary btn-sm"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a>
+    </center>
     <?= $Day->no_events_message; ?>
     <?php
     foreach ($Day->events_list as $event)
