@@ -65,6 +65,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                     mymap.panTo(new L.LatLng(airport.lat, airport.lon));
                     map_recenter = true;
                 }
+                $('#liveATClist').append('<span class="badge badge-success">' + airport.callsign + '</span>');
             }
         });
         $.each(overlay, function(i, layer) {

@@ -9,6 +9,9 @@
         <a class="btn btn-info btn-sm" href="#" id="map_toggle"><span class="oi oi-circle-x" title="Hide the map" aria-hidden="true"></span> Hide the map</a>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12" id="liveATClist"></div>
+</div>
 
 
 
