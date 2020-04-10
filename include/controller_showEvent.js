@@ -61,7 +61,39 @@ var monthlyControlled = new Chart(monthlyControlled, {
     }
 });
 
+var atcControlled = $('#atcControlled');
+var atcControlled = new Chart(atcControlled, {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'occurences per month since jan. 2018',
+            data: [],
+            backgroundColor: []
+        }]
+    },
+    options: {
+        responsive:true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                },
+                gridLines: {
+                    color: "rgba(0,0,0,0)"
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    color: "rgba(0,0,0,0)"
+                }
+            }]
+        }
+    }
+});
+
 var airportICAO = $('#airportICAO').html();
+var atcId = $('#atcId').html();
 
 $.get("./dev2017_04_28.php?getStatsOccurencesControlledPerDayInWeek&airport="+airportICAO, function(data) {
     var maxOccurences = -1;
@@ -87,4 +119,14 @@ $.get("./dev2017_04_28.php?getStatsOccurencesControlledPerMonth&airport="+airpor
         monthlyControlled.data.datasets[0].backgroundColor.push('rgba(99, 132, 255, 1.0)');
     });
     monthlyControlled.update();
+});
+
+$.get("./dev2017_04_28.php?getStatsOccurencesAtcPerMonth&atcId="+atcId, function(data) {
+    // We go through the array to look for the highest value
+    $.each(data, function(day,occ) {
+        atcControlled.data.labels.push(day);
+        atcControlled.data.datasets[0].data.push(occ);
+        atcControlled.data.datasets[0].backgroundColor.push('rgba(99, 132, 255, 1.0)');
+    });
+    atcControlled.update();
 });

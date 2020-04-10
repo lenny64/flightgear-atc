@@ -372,6 +372,23 @@ else if (isset($_GET['getStatsOccurencesControlledPerMonth']))
 {
     generateError('ERR_VAR','getStatsOccurencesControlledPerMonth requires airport');
 }
+// GET DETAILS ABOUT AN ATC SESSION
+else if (isset($_GET['getStatsOccurencesAtcPerMonth']) AND isset($_GET['atcId']))
+{
+    if ($_GET['atcId'] != NULL)
+    {
+        $atc_id = $_GET['atcId'];
+        $User = new User();
+        $User->selectById($atc_id);
+        $stats = $User->getStatsOccurencesAtcPerMonth();
+        header('Content-type: application/json');
+        echo json_encode($stats);
+    }
+}
+else if (isset($_GET['getStatsOccurencesControlledPerMonth']))
+{
+    generateError('ERR_VAR','getStatsOccurencesControlledPerMonth requires airport');
+}
 
 // REQUESTING AUTHORIZATION TO FILE FLIGHTPLANS
 else if (isset($_GET['request_auth']) AND isset($_POST['email']))

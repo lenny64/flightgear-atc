@@ -431,6 +431,23 @@ class User
         return false;
     }
 
+    public function getStatsOccurencesAtcPerMonth()
+    {
+        global $db;
+        $this->stats = Array();
+        if (!isset($this->id) OR $this->id == NULL) {
+            return false;
+        }
+        $occurences_query = $db->query("SELECT COUNT(*) as count, YEAR(e.date) as y, MONTH(e.date) as m, e.airportICAO, u.userId
+                                            FROM `events` e LEFT JOIN users u ON u.userId = e.userId
+                                            WHERE u.userId = $this->id AND date > '2018-01-01' GROUP BY YEAR(e.date), MONTH(e.date) ORDER BY e.date ASC");
+        foreach ($occurences_query as $occurences) {
+            $date_obj = date('Y-m',mktime(0,0,0,$occurences['m'],1,$occurences['y']));
+            $this->stats[$date_obj] = intval($occurences['count']);
+        }
+        return $this->stats;
+    }
+
 }
 
 

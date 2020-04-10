@@ -15,6 +15,12 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
     // We pick the event we want
     $Event->selectById($eventId);
     $Event->getATCInfo();
+    $atc_verified_style = "";
+    $atc_verified_text = "No";
+    if ($Event->atcVerified == true) {
+        $atc_verified_style = "badge-success";
+        $atc_verified_text = "Yes";
+    }
     $flightplans = $Event->getFlightplans();
 
     $Airport = new Airport();
@@ -79,9 +85,18 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
                     </div>
                     <div class="row my-2">
                         <div class="col-md-12">
-                            Remarks:
-                            <br/><br/>
+                            <h4>Remarks</h4>
                             <?= nl2br(htmlspecialchars_decode($Event->remarks)); ?>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-md-12">
+                            <h4>Air Traffic Controller information</h4>
+                            Name: <span class="badge <?=$atc_verified_style;?>"><?= $Event->atcName;?></span>
+                            <br/>
+                            Verified: <?= $atc_verified_text; ?>
+                            <br/>
+                            Controller id: <span class="badge badge-info" id="atcId"><?= $Event->atcId;?></span>
                         </div>
                     </div>
                 </div>
@@ -147,6 +162,18 @@ foreach ($flightplans as $flightplan_id) {
                 </div>
                 <div class="card-body">
                     <canvas id="monthlyControlled" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Number of ATC Events controlled by the user <?=$Event->atcName;?></h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="atcControlled" height="150"></canvas>
                 </div>
             </div>
         </div>
