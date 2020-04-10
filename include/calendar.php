@@ -426,4 +426,58 @@ else {
 }
     ?>
 
+
+
+
     <script type="text/javascript" language="javascript" src="./include/calendar.js"></script>
+
+
+
+    <?php
+for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
+{
+    $Day = new Day($calendarDay);
+    $Day->getDayCounter($today);
+    $Day->getDayDisplayInfo();
+    $Day->getEventsList($events);
+
+    foreach ($Day->events_list as $event) {
+        $Event = new Event();
+        $Event->selectById($event);
+        $Event->getATCInfo();
+    ?>
+    <script type="application/ld+json">
+        {
+            "@context":"http://schema.org",
+            "@type":"Event",
+            "name":"ATC Event at <?= $Event->airportCity; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+            "location":{
+                "@type":"VirtualLocation",
+                "name":"<?= $Event->airportICAO;?> airport <?=$Event->airportCity;?>",
+                "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>"
+            },
+            "startDate":"<?=$Event->date;?>T<?=$Event->beginTime;?>-00:00",
+            "endDate":"<?=$Event->date;?>T<?=$Event->endTime;?>-00:00",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>",
+            "description": "Flightgear Air Traffic Control event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+            "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+            "offers": {
+                "@type": "Offer",
+                "url": "http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "<?=$Event->date;?>"
+            },
+            "performer": {
+                "@type": "Person",
+                "name": "<?=$Event->atcName;?>"
+            },
+            "image": ""
+        }
+    </script>
+    <?php
+    }
+}
+     ?>

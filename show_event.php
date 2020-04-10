@@ -185,7 +185,7 @@ foreach ($flightplans as $flightplan_id) {
     {
         "@context":"http://schema.org",
         "@type":"Event",
-        "name":"Flightgear ATC event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+        "name":"ATC Event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
         "location":{
             "@type":"VirtualLocation",
             "name":"<?= $Event->airportICAO;?> airport <?=$Event->airportCity;?>",
@@ -195,7 +195,7 @@ foreach ($flightplans as $flightplan_id) {
         "endDate":"<?=$Event->date;?>T<?=$Event->endTime;?>-00:00",
         "eventStatus": "https://schema.org/EventScheduled",
         "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>",
-        "description": "Flightgear ATC event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+        "description": "Flightgear Air Traffic Control event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "offers": {
             "@type": "Offer",

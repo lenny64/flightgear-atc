@@ -60,6 +60,28 @@ include('./include/sessionController.php');
     <script type="text/javascript" src="./leaflet/leaflet.js"></script>
     <script src="./bootstrap-4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" language="javascript" src="./include/sessionController.js"></script>
+
+	<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "http://flightgear-atc.alwaysdata.net",
+      "logo": "./img/flightgear-atc_logo_shadowless_161x51.png",
+	  "funder": {
+		  "@type": "Person",
+		  "name": "lenny64"
+	  },
+	  "foundingDate": "2015-01-20",
+      "foundingLocation":
+      {
+  		"@type": "Place",
+        "address": {
+        	"@type":"PostalAddress",
+            "name":"Malakoff, France"
+        }
+      }
+    }
+    </script>
 </head>
 
 <body>
