@@ -2,10 +2,11 @@
 <?php include('./include/menu.php'); ?>
 
 <!-- LE CODE COMMENCE ICI -->
+
 <div class="jumbotron">
     <div class="container">
-        <h2>Information</h2>
-        <p>
+        <h1 class="display-3">Information</h1>
+        <p class="lead">
             Important information about the flightgear-atc network and website
         </p>
     </div>
@@ -13,9 +14,36 @@
 
 <div class="container">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">2020-01-26 - <strong>Stronger passwords</strong></div>
-        <div class="panel-body">
+    <div class="card card-default my-2">
+        <div class="card-header">2020-04-10 - <strong>New look</strong></div>
+        <div class="card-body">
+            <p>
+                This is a major upgrade for users:
+            </p>
+            <p>
+                <ul>
+                    <li>Cookie management: cookies are only saved if user consents. All functionalities remain active except the ATC dashboard connection.</li>
+                    <li>Fresh new look: upgrading to Bootstrap v4</li>
+                    <li>Map on the home page: possibility to hide the map (map visibility is remembered if cookies are enabled)</li>
+                    <li>Home page ATC events presentation: new pseudo-calendar format with 4-day presentation</li>
+                    <li>Possibility to move from 4 days to 4 days and select a date by clicking on the <button class="btn btn-sm btn-info"><span class="oi oi-chevron-bottom" aria-hidden="true" title="Expand"></span></button> button and selecting a date manually</li>
+                    <li>On the home page: possibility to hide the events details for a more compact view (details visibility is remembered if cookies are enabled) by clicking on the <button class="btn btn-sm btn-info"><span class="oi oi-chevron-bottom" aria-hidden="true" title="Expand"></span></button> button and then on the <button class="btn btn-info btn-sm"><span class="oi oi-collapse-down" title="collapse" aria-hidden="true"></span> Collapse/expand events</button> button</li>
+                    <li>The number of <span class="badge badge-info">flightplans</span> indicated next to the day represent the total number of flight plans for the day.</li>
+                    <li>The number of <span class="badge badge-info">flightplans</span> indicated next to the ATC event represent the number of flight plans for this specific event (from/to the airport between begin and end time)</li>
+                    <li>Clicking on an event shows more information about the event, flight plans and controller. This page also shows statistics regarding the airport and controller.</li>
+                </ul>
+            </p>
+            <p>
+                API minor changes:
+                <ul>
+                    <li>GET getATCSessions -> response is now ordered by date descending</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+    <div class="card card-default my-2">
+        <div class="card-header">2020-01-26 - <strong>Stronger passwords</strong></div>
+        <div class="card-body">
             <p>
                 This update improves password security.
             </p>
@@ -26,9 +54,9 @@
             </p>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">2019-08-02 - <strong>Password reset feature</strong></div>
-        <div class="panel-body">
+    <div class="card card-default my-2">
+        <div class="card-header">2019-08-02 - <strong>Password reset feature</strong></div>
+        <div class="card-body">
             <p>
                 This update adds a password reset ability for those who forgot their credentials.
             </p>
@@ -43,9 +71,9 @@
             </p>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">2019-03-05 - <strong>Malicious users</strong></div>
-        <div class="panel-body">
+    <div class="card card-default my-2">
+        <div class="card-header">2019-03-05 - <strong>Malicious users</strong></div>
+        <div class="card-body">
             <p>
                 There has been some recents attacks on the flightgear-atc website (and the multiplayer servers of FGFS) that caused harm to some users of the flightgear-atc website.
                 <br/>
@@ -63,9 +91,9 @@
             </p>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">2017-04-28 - <strong>Maintenance operation</strong></div>
-        <div class="panel-body">
+    <div class="card card-default my-2">
+        <div class="card-header">2017-04-28 - <strong>Maintenance operation</strong></div>
+        <div class="card-body">
             <p>
                 Due to an internal migration on alwaysdata host services, a maintenance operation is planned on Thursday may 25th from 19:00 to 21:00 UTC. The main change will occur on webpages extensions. Indeed, the regular ".php5" pages will be renamed in ".php" according to the new PHP5 version hosted by Alwaysdata.
                 <br/>
