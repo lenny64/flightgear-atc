@@ -39,7 +39,19 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
 
 
 <div class="container">
-    <a href="./index.php" class="btn btn-primary btn-lg">« Go back</a>
+    <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Library</li>
+      </ol>
+    </nav> -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="./index.php">Flightgear ATC events</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><?=$Event->airportICAO;?> event at <?=$Event->airportCity;?></li>
+        </ol>
+    </nav>
+
     <div class="row">
         <div class="col-md-8">
             <div class="card my-3">
