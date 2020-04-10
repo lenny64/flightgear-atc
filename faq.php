@@ -33,7 +33,7 @@
     <div class="card mb-3">
         <div class="card-header">Why are there so many airports listed when i create a new event?</div>
         <div class="card-body">
-            When you are not connected as an ATC, if you create a new Event from the main page, every known airport will be shown.
+            When you are not connected as an Air Traffic Controller, if you create a new Event from the main page, every known airport will be shown.
             <br/>
             <ul>
                 <li>If you have never created an event, select the airport in the list or create a new one. The interface will remember your favorite(s) airport(s) when you will connect from "ATC Dashboard" section.</li>
@@ -47,14 +47,14 @@
         <div class="card-body">
             In the real life, IFR (Instrument Flight Rules) pilots file their flight plans.
             <br/>
-            VFR (Visual Flight Rules) pilots are however not requested to file a flight plan. However, ATCs appreciate that.
+            VFR (Visual Flight Rules) pilots are however not requested to file a flight plan. However, Air Traffic Controllers appreciate that.
         </div>
     </div>
 
     <div class="card mb-3">
         <div class="card-header">What is a "Special Event"?</div>
         <div class="card-body">
-            Sometimes several ATCs want to organize a bigger event with many airports. A "Special Event" usually occurs in a focused area and more than 3 or 4 airports are controlled at the same time.
+            Sometimes several Air Traffic Controllers want to organize a bigger event with many airports. A "Special Event" usually occurs in a focused area and more than 3 or 4 airports are controlled at the same time.
         </div>
     </div>
 

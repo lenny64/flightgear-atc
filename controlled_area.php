@@ -14,9 +14,9 @@ $query_airport = $db->query("SELECT * FROM controlled_area ORDER BY airport_icao
         <h1 class="display-3">Regularly controlled area</h1>
 
         <p class="lead">
-            European airports are one of the most controlled places, and provide a great regular ATC service.
+            European airports are one of the most controlled places, and provide a great regular Air Traffic Control service.
             <br/>
-            Here is a quick list of airports being controlled. The list will get longer, and don't hesitate to <a href="./contact.php">contact me</a> if you want to add a new regular ATC session.
+            Here is a quick list of airports being controlled. The list will get longer, and don't hesitate to <a href="./contact.php">contact me</a> if you want to add a new regular Air Traffic Control event.
         </p>
     </div>
 </div>

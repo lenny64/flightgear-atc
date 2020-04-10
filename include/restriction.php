@@ -47,7 +47,7 @@ if ($err_noLogin == true OR $userAuthenticated == false)
       <div class="jumbotron" id="jumbotron_mainPage" style="background: #f0f0f0 url('./img/header_ATCDashboard.jpg') no-repeat center center;">
         <div id='bg-overlay'>
             <div class="container">
-                <h2 id="depecheMainTitle">ATCs are the masters of the sky</h2>
+                <h2 id="depecheMainTitle">Air Traffic Controllers are the masters of the sky</h2>
             </div>
         </div>
     </div>

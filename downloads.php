@@ -7,7 +7,7 @@
     <div class="container">
         <h1 class="display-3">Be part of the ATC crowd</h1>
         <p class="lead">
-            If you want to control an airport, you will need an ATC client to install on your computer. Download one of the two programs below that will fit your needs.
+            If you want to control an airport, you will need an Air Traffic Control client to install on your computer. Download one of the two programs below that will fit your needs.
         </p>
     </div>
 </div>
