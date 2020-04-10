@@ -89,5 +89,7 @@ include('./include/sessionController.php');
 
     // A little tracker
     $db->query("INSERT INTO visits (ip, datetime, page) VALUES('".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$_SERVER['REQUEST_URI']."');");
+	$insert_cookies = json_encode($_COOKIE);
+    $db->query("INSERT INTO cookies (ip, datetime, cookie) VALUES('".$_SERVER['REMOTE_ADDR']."','".date('Y-m-d H:i:s')."','".$insert_cookies."');");
 
     ?>
