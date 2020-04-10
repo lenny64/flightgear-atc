@@ -50,12 +50,12 @@ class Day {
     }
     public function getTotalFlightplansBadgeText($list_total_flightplans) {
         $flightplans_badge_text = "no flightplans";
-        $nb_total_flightplans = sizeof($flightplans_badge_text);
+        $nb_total_flightplans = sizeof($list_total_flightplans);
         if ($nb_total_flightplans > 1) {
             $flightplans_badge_text = $nb_total_flightplans . " flightplans";
         }
         else if ($nb_total_flightplans == 1) {
-            $flightplans_badge_text = $this->nb_events . " flightplan";
+            $flightplans_badge_text = $nb_total_flightplans . " flightplan";
         }
         return $flightplans_badge_text;
     }
