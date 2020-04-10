@@ -38,15 +38,40 @@ class Day {
             $this->day_line = date('D j M', strtotime($this->day_counter));
         }
     }
+    public function getEventsBadgeText() {
+        $events_badge_text = "no events";
+        if ($this->nb_events > 1) {
+            $events_badge_text = $this->nb_events . " events";
+        }
+        else if ($this->nb_events == 1) {
+            $events_badge_text = $this->nb_events . " event";
+        }
+        return $events_badge_text;
+    }
+    public function getTotalFlightplansBadgeText($list_total_flightplans) {
+        $flightplans_badge_text = "no flightplans";
+        $nb_total_flightplans = sizeof($flightplans_badge_text);
+        if ($nb_total_flightplans > 1) {
+            $flightplans_badge_text = $nb_total_flightplans . " flightplans";
+        }
+        else if ($nb_total_flightplans == 1) {
+            $flightplans_badge_text = $this->nb_events . " flightplan";
+        }
+        return $flightplans_badge_text;
+    }
     public function getEventsList($events) {
         if (isset($events)) {
             $this->events_list = filterEvents('date', $this->day_counter, $events);
         }
+        $this->nb_events = sizeof($this->events_list);
         $this->no_events_message = "";
         if (sizeof($this->events_list) == 0) {
             $this->no_events_message .= "<div class='card'>";
             $this->no_events_message .= "<div class='card-header'>";
-            $this->no_events_message .= "No events yet";
+            $this->no_events_message .= "No ATC events yet";
+            $this->no_events_message .= "</div>";
+            $this->no_events_message .= "<div class='card-body'>";
+            $this->no_events_message .= "<a href='./new_event.php?date=".$this->day_counter."' class='btn btn-primary'><span class='oi oi-plus' title='Add an event' aria-hidden='true'></span> Create a new one</a>";
             $this->no_events_message .= "</div>";
             $this->no_events_message .= "</div>";
         }

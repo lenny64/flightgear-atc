@@ -4,7 +4,6 @@
 include_once('./include/calendarController.php');
 if (!isset($_GET['revertToV1'])) {
 ?>
-<hr/>
 <div class="my-2" id="next_atc_events">
 
     <div class="collapse mb-2" id="collapseMenuDetails">
@@ -14,7 +13,7 @@ if (!isset($_GET['revertToV1'])) {
             <a href="./index.php?revertToV1">Revert to old version</a>
         </form>
     </div>
-    <a href="#collapseMenuDetails" class="mr-2 btn btn-lg btn-outline-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMenuDetails"><span class="oi oi-chevron-bottom" title="expand menu" aria-hidden="true"></span></a>
+    <a href="#collapseMenuDetails" class="mr-2 btn btn-sm btn-outline-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMenuDetails"><span class="oi oi-chevron-bottom" title="expand menu" aria-hidden="true"></span></a>
     <a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="mx-2 btn <?=$style_previous_events;?> btn-lg"><span class="oi oi-chevron-left" title="previous days" aria-hidden="true"></span> previous days</a>
     <a href="./index.php?dateBegin=<?= $real_today;?>#next_atc_events" class="mx-2 btn btn-outline-primary btn-lg"><span class="oi oi-clock" title="today" aria-hidden="true"></span> today</a>
     <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="mx-2 btn btn-primary btn-lg">next days <span class="oi oi-chevron-right" title="next days" aria-hidden="true"></span></a>
@@ -29,19 +28,20 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     $Day->getDayCounter($today);
     $Day->getDayDisplayInfo();
     $Day->getEventsList($events);
+    $events_badge_text = $Day->getEventsBadgeText();
     $Flightplan = new Flightplan();
     $Flightplan->dateDeparture = $Day->day_counter;
     $Flightplan->dateArrival = $Day->day_counter;
     $total_flightplans = $Flightplan->getFlightplans();
+    $total_flightplans_badge_text = $Day->getTotalFlightplansBadgeText($total_flightplans);
     ?>
 
 <div class="col-md-3 col-sm-6">
-    <center>
-        <h5><?=$Day->day_line;?></h5>
-        <span class="badge badge-info"><?= sizeof($total_flightplans);?> flightplans</span>
-        <span class="badge badge-primary"><?= sizeof($Day->events_list);?> events</span>
-        <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="btn btn-outline-primary btn-sm"><span class="oi oi-plus" title="add event" aria-hidden="true"></span> event</a>
-    </center>
+    <div class="text-center mb-1">
+        <h5 class="mb-0"><?=$Day->day_line;?></h5>
+        <span class="badge badge-info"><?= $total_flightplans_badge_text ;?></span>
+        <span class="badge badge-primary"><?= $events_badge_text;?></span> <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="badge badge-primary"><span class="oi oi-plus" title="Add an event" aria-hidden="true"></span></a>
+    </div>
     <?= $Day->no_events_message; ?>
     <?php
     foreach ($Day->events_list as $event)
