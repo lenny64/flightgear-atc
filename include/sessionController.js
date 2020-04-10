@@ -32,14 +32,10 @@ function createCookieWithPermission(cname, cvalue, exdays) {
     return false;
 }
 
+var cookieConsentAnswer = getCookie('cookieConsentAnswer');
+
 $(document).ready(function() {
-    var cookieConsentAnswer = getCookie('cookieConsentAnswer');
-    var html = "";
     if (cookieConsentAnswer != "1") {
-        html += "This website uses functional cookies to work properly. Please accept them.";
-        html += "<br/>";
-        html += "<a href='#' id='acceptCookies' class='btn btn-success'>I accept cookies</a>";
-        $('#sessionAlert').html(html);
         $('#sessionAlert').show();
     }
 

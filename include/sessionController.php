@@ -1,7 +1,9 @@
 <?php
 
+$COOKIE_ACCEPT = false;
 if (isset($_COOKIE['cookieConsentAnswer'])) {
     if ($_COOKIE['cookieConsentAnswer'] == "1") {
+        $COOKIE_ACCEPT = true;
         session_start();
     }
 }
