@@ -1,6 +1,12 @@
 <?php include('./include/header.php'); ?>
 <?php include('./include/menu.php'); ?>
-<?php include('./include/restriction.php'); ?>
+<?php
+
+if (!isset($_COOKIE['cookieConsentAnswer']) || $_COOKIE['cookieConsentAnswer'] !== "1") {
+    include('./include/sessionAlert.php');
+}
+
+include('./include/restriction.php'); ?>
 
 <!-- LE CODE COMMENCE ICI -->
 

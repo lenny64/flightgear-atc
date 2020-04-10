@@ -9,9 +9,13 @@
 
     <?php
 
+
+    // C O O K I E   C O N S E N T
+    include('./include/sessionAlert.php');
+
     // FOR SIGNIFICATIVE CHANGES
     include('./include/log.php');
-    
+
     // DEPECHE AFP PART (including abstract picture)
     // NEW : now includes liveATC
     include('./include/depeche.php');
@@ -33,6 +37,7 @@
 
     // M A P
     include('./include/map.php');
+
 
     // C A L E N D A R
     include('./include/calendar.php');

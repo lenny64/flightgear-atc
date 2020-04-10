@@ -13,28 +13,9 @@ $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
 include('./include/classes.php');
 include('./include/functions.php');
 
-/* SESSION MANAGEMENT */
-session_start();
+/* SESSION AND COOKIE MANAGEMENT */
+include('./include/sessionController.php');
 
-if ($_SESSION['mode'] != 'connected' OR !isset($_SESSION['mode']) OR isset($_GET['disconnect'])) {
-    $_SESSION['mode'] = 'guest';
-    unset($_SESSION['id']);
-}
-elseif (isset($_SESSION['mode']) AND $_SESSION['mode'] == 'connected' AND isset($_SESSION['id']) AND $_SESSION['id'] != NULL)
-{
-    $User = new User();
-    $User->selectById($_SESSION['id']);
-    $User->connect($User->id);
-}
-
-/* COOKIE MANAGEMENT */
-if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
-{
-    if ($_POST['createCookie'] != NULL)
-    {
-        setcookie($_POST['createCookie'],$_POST['cookieValue'], time()+3600*24*36);
-    }
-}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -78,6 +59,7 @@ if (isset($_POST['createCookie']) AND isset($_POST['cookieValue']))
     <script type="text/javascript" src="./include/jquery.validate.min.js"></script>
     <script type="text/javascript" src="./leaflet/leaflet.js"></script>
     <script src="./bootstrap-4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="./include/sessionController.js"></script>
 </head>
 
 <body>

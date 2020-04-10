@@ -172,8 +172,41 @@ var showLayer_new = function(el,layer) {
    }
 }
 
+
 var mapToggle = function() {
     $('#mapid').toggle();
 }
 
-$('#mapToggle').click(mapToggle);
+var showMap = function() {
+    $('#mapid').show();
+    $('#map_toggle').html('<span class="oi oi-circle-x" title="Hide the map" aria-hidden="true"></span> Hide the map');
+}
+var hideMap = function() {
+    $('#mapid').hide();
+    $('#map_toggle').html('<span class="oi oi-eye" title="Show the map" aria-hidden="true"></span> Show the map');
+}
+
+var cookie_show_map = getCookie('showMap');
+if (cookie_show_map == "" || cookie_show_map == "1") {
+    var show_map = "1";
+    showMap();
+} else {
+    var show_map = "0";
+    hideMap();
+}
+
+$(document).ready(function() {
+    $('#map_toggle').click(function() {
+        // mapToggle();
+        if (show_map == "1") {
+            show_map = "0";
+            hideMap();
+        }
+        else {
+            show_map = "1";
+            showMap();
+        }
+        createCookieWithPermission('showMap',show_map,365);
+        return false;
+    });
+});
