@@ -460,7 +460,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
             "endDate":"<?=$Event->date;?>T<?=$Event->endTime;?>-00:00",
             "eventStatus": "https://schema.org/EventScheduled",
             "url":"http://flightgear-atc.alwaysdata.net/show_event?eventId=<?=$Event->id;?>",
-            "description": "Flightgear Air Traffic Control event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
+            "description": "Flightgear multiplayer Air Traffic Control event at <?= $Event->airportCity; ?> on <?= $Event->date; ?> between <?= $Event->beginTime; ?> and <?= $Event->endTime; ?>",
             "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
             "offers": {
                 "@type": "Offer",

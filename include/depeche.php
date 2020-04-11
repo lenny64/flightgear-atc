@@ -65,7 +65,7 @@ if ($polls_list > 0) { // If there is a poll
 }
 
 if ($showPoll == FALSE) { // If there is no poll we display the depeche
-    $title = "Next Flightgear ATC Events";
+    $title = "Next Flightgear multiplayer ATC Events";
     // $title = $Depeche->displayDepeche($Depeche->title);
     $content = $Depeche->displayDepeche($Depeche->content);
 }
