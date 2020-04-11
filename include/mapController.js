@@ -1,7 +1,7 @@
 
 // Map initialization
 var mymap = L.map('mapid', {
-    zoom: 3,
+    zoom: 2,
     center: [46.505, -0.09],
     scrollWheelZoom: false,
     layers: []
