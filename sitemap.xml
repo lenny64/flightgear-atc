@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/</loc>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/index.php</loc>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/show_event.php</loc>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/new_event.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/school.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/controlled_area.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/downloads.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/contact.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/faq.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/api.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/dashboard.php</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://flightgear-atc.alwaysdata.net/information.php</loc>
+  <changefreq>weekly</changefreq>
+</url>
+</urlset>
