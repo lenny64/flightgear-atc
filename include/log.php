@@ -4,7 +4,7 @@ if (!isset($_COOKIE['hasSeenNewInfo'])) {
 ?>
 <div class="alert alert-success alert-dismissable mb-1" role="alert" id="log">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Wow... a fresh new look is out there, including:
+    Wow... a fresh new look is out there! You may need to clear your cache. The changes include:
     <ul>
         <li><strong>a new calendar presentation</strong></li>
         <li>possibility to <strong>show/hide the map</strong></li>
