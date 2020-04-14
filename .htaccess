@@ -1,2 +1,3 @@
 RewriteEngine On
 RewriteRule ^(.*)\.php5$ $1.php [L]
+#RewriteRule ^sitemap\.xml$ sitemap.php [L]
