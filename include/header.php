@@ -65,6 +65,8 @@ include('./include/sessionController.php');
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+	  "name": "Flightgear ATC",
+	  "description": "Flightgear Air Traffic Controller events",
       "url": "http://flightgear-atc.alwaysdata.net",
       "logo": "./img/flightgear-atc_logo_shadowless_161x51.png",
 	  "funder": {

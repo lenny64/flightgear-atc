@@ -211,6 +211,13 @@ foreach ($flightplans as $flightplan_id) {
             "availability": "https://schema.org/InStock",
             "validFrom": "<?=$Event->date;?>"
         },
+        "isAccessibleForFree": 1,
+        "organizer": {
+            "@type": "Organization",
+            "url": "http://flightgear-atc.alwaysdata.net",
+            "name": "Flightgear ATC",
+            "description": "Flightgear Air Traffic Controller events"
+        },
         "performer": {
             "@type": "Person",
             "name": "<?=$Event->atcName;?>"
