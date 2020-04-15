@@ -568,6 +568,7 @@ class Event
     public $atcName;
     public $atcParams;
     public $atcId;
+    public $datetime;
 
 
     public function create($Year, $Month, $Day, $BeginHour, $BeginMinutes, $EndHour, $EndMinutes, $AirportICAO, $FGCOM, $TeamSpeak, $DocsLink, $Remarks)
@@ -767,6 +768,8 @@ class Event
                 $this->airportName = $event['airportName'];
                 $this->airportCity = $event['airportCity'];
                 $this->airportCountry = $event['airportCountry'];
+
+                $this->datetime = $event['datetime'];
             }
         }
     }
@@ -789,6 +792,7 @@ class Event
             $this->ils = purgeInputs($this->ils);
             $this->docsLink = purgeInputs($this->docsLink);
             $this->remarks = purgeInputs($this->remarks);
+            $this->datetime = date('Y-m-d H:i:s');
 
             $query = "UPDATE `events` SET
                 `airportICAO` = :airportICAO,
@@ -801,7 +805,8 @@ class Event
                 `runways` = :runways,
                 `ILS` = :ils,
                 `docsLink` = :docsLink,
-                `remarks` = :remarks
+                `remarks` = :remarks,
+                `datetime`= :datetime
                 WHERE `eventId` = :eventId ;";
 
             $preparedQuery = $db->prepare($query);
@@ -817,6 +822,7 @@ class Event
             $preparedQuery->bindValue(":ils",$this->ils);
             $preparedQuery->bindValue(":docsLink",$this->docsLink);
             $preparedQuery->bindValue(":remarks",$this->remarks);
+            $preparedQuery->bindValue(":datetime",$this->datetime);
             $preparedQuery->bindValue(":eventId",$this->id);
 
             if ($preparedQuery->execute())
