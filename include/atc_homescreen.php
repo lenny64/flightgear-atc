@@ -21,11 +21,11 @@ if (isset($events)) {
 if (isset($selectedEvent)) {
 ?>
 
-<div class="panel panel-primary">
-    <div class="panel-heading">
+<div class="card card-primary my-2">
+    <div class="card-header">
         Your event at <?php echo $selectedEvent->airportICAO;?> today from <?php echo $selectedEvent->beginTime." to ".$selectedEvent->endTime;?>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <?php
         if (isset($Flightplans) AND sizeof($Flightplans) > 0) {
             foreach ($Flightplans as $flightplan) {
@@ -43,7 +43,7 @@ if (isset($selectedEvent)) {
         }
         ?>
         <div class="col-sm-6">
-            <h4>DEPARTURES</h4>
+            <h5>DEPARTURES</h5>
             <?php
             if (isset($departureFlightplans) AND sizeof($departureFlightplans) > 0) {
                 foreach ($departureFlightplans as $departureFlightplan) {
@@ -55,7 +55,7 @@ if (isset($selectedEvent)) {
             ?>
         </div>
         <div class="col-sm-6">
-            <h4>ARRIVALS</h4>
+            <h5>ARRIVALS</h5>
             <?php
             if (isset($arrivalFlightplans) AND sizeof($arrivalFlightplans) > 0) {
                 foreach ($arrivalFlightplans as $arrivalFlightplan) {
