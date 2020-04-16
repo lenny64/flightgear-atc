@@ -37,34 +37,41 @@ $today = date('Y-m-d');
 $today_plus_21_days = date('Y-m-d', strtotime($today." + 21 days"));
 $Event = new Event();
 $events_list = $Event->getATCSessions($today,$today_plus_21_days);
+$latest_event_edited_id = $Event->getLatestEventEdited();
+$LatestEvent = new Event();
+$LatestEvent->selectById($latest_event_edited_id);
+
+function generateNewUrl($urlset, $loc, $changefreq, $lastmod, $priority) {
+    $url = $urlset->addChild('url');
+    $url->addChild('loc','http://flightgear-atc.alwaysdata.net'.$loc);
+    $url->addChild('changefreq',$changefreq);
+    $url->addChild('lastmod',$lastmod);
+    $url->addChild('priority',$priority);
+}
 
 foreach ($pages_list as $page) {
-    $url = $urlset->addChild('url');
+    // $url = $urlset->addChild('url');
 
     // TWO EXCEPTIONS : index and show_event
     if ($page == "/" || $page == "/index.php") {
-        $url->addChild('loc','http://flightgear-atc.alwaysdata.net'.$page);
-        $url->addChild('changefreq','hourly');
-        $lastmod = date('Y-m-d\TH:i:s+00:00', filemtime('.'.$page));
-        $url->addChild('lastmod',$lastmod);
-        $url->addChild('priority','1.0');
+        generateNewUrl($urlset, $page, 'hourly', date('Y-m-d\TH:i:s+00:00',strtotime($LatestEvent->datetime)), '1.0');
+        for ($i = 1; $i <= 4; $i++) {
+            $i_4_days = $i*4;
+            $calculated_date = date('Y-m-d', strtotime($today." +".$i_4_days." days"));
+            $loc = $page.'?dateBegin='.$calculated_date;
+            generateNewUrl($urlset, $loc, 'hourly', date('Y-m-d\TH:i:s+00:00',strtotime($LatestEvent->datetime)), '0.8');
+        }
     }
     else if ($page == "/show_event.php") {
         foreach ($events_list as $event_id) {
             $Event->selectById($event_id);
-            $url->addChild('loc','http://flightgear-atc.alwaysdata.net'.$page.'?eventId='.$event_id);
-            $url->addChild('changefreq','hourly');
             $lastmod = date('Y-m-d\TH:i:s+00:00', strtotime($Event->datetime));
-            $url->addChild('lastmod',$lastmod);
-            $url->addChild('priority','0.7');
+            generateNewUrl($urlset, $page.'?eventId='.$event_id, 'hourly', $lastmod, '0.7');
         }
     }
     else { // OTHERWISE
-        $url->addChild('loc','http://flightgear-atc.alwaysdata.net'.$page);
-        $url->addChild('changefreq','weekly');
         $lastmod = date('Y-m-d\TH:i:s+00:00', filemtime('.'.$page));
-        $url->addChild('lastmod',$lastmod);
-        $url->addChild('priority','0.5');
+        generateNewUrl($urlset, $page, 'weekly', $lastmod, '0.5');
     }
 
 }

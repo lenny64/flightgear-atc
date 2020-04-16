@@ -901,6 +901,14 @@ class Event
             $this->atcVerified = $atc_params->{'verified'};
         }
     }
+
+    public function getLatestEventEdited()
+    {
+        global $db;
+        $infos_latest_event_edited = $db->query("SELECT eventId FROM events ORDER BY datetime DESC LIMIT 1;");
+        $latest_event_edited = $infos_latest_event_edited->fetch(PDO::FETCH_ASSOC);
+        return $latest_event_edited['eventId'];
+    }
 }
 
 class SpecialEvent
