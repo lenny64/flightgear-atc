@@ -68,7 +68,7 @@ include('./include/sessionController.php');
 	  "name": "Flightgear ATC",
 	  "description": "Flightgear Air Traffic Controller events",
       "url": "http://flightgear-atc.alwaysdata.net",
-      "logo": "./img/flightgear-atc_logo_shadowless_161x51.png",
+      "logo": "http://flightgear-atc.alwaysdata.net/img/flightgear-atc_logo_shadowless_161x51.png",
 	  "funder": {
 		  "@type": "Person",
 		  "name": "lenny64"
