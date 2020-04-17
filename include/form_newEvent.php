@@ -4,7 +4,7 @@ include './include/controller_newEvent.php';
 
 // We define global variable to prevent "undefined variable" error
 global $getDate;
-
+$getDate = date('Y-m-d');
 // Information to print the new session form
 if (isset($_GET['form_newSession']) AND isset($_GET['date']))
 {
@@ -35,7 +35,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
     // Otherwise, by default we don't show the form
     else
     {
-        echo '<div id="div_newSession'.$getDate.'" style="display: none;">';
+        echo '<div id="div_newSession'.$getDate.'">';
     }
     ?>
         <?php
@@ -180,7 +180,7 @@ if (isset($_GET['form_newSession']) AND isset($_GET['date']))
                                 <div class="col">
                                     <select name="<?php echo $requiredFields[2];?>" id="newEvent-dateYear" class="form-control">
                                         <option value="<?php echo date('Y');?>" <?php if(isset($getYear) AND $getYear == date('Y')) echo "selected";?>><?php echo date('Y');?></option>
-                                        <option value="<?php echo date('Y',strtotime(date()." + 1 year"));?>" <?php if(isset($getYear) AND $getYear != date('Y')) echo "selected";?>><?php echo date('Y',strtotime(date()." + 1 year"));?></option>
+                                        <option value="<?php echo date('Y',strtotime(date('Y')." + 1 year"));?>" <?php if(isset($getYear) AND $getYear != date('Y')) echo "selected";?>><?php echo date('Y',strtotime(date('Y')." + 1 year"));?></option>
                                     </select>
                                 </div>
                                 <div class="col">

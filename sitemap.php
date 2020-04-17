@@ -13,7 +13,7 @@ $xml = new SimpleXMLElement('<xml/>');
 $xml->addAttribute('version', '1.0');
 $xml->addAttribute('encoding','UTF-8');
 
-$urlset = $xml->addChild('urlset');
+$urlset = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><urlset/>');
 $urlset->addAttribute('xmlns','http://www.sitemaps.org/schemas/sitemap/0.9');
 $urlset->addAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 $urlset->addAttribute('xsi:schemaLocation','http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd');
@@ -79,6 +79,6 @@ foreach ($pages_list as $page) {
 
 
 header('Content-type: text/xml');
-print($xml->asXML());
+print($urlset->asXML());
 
 ?>
