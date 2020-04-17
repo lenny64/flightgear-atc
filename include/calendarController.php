@@ -71,7 +71,9 @@ class Day {
             $this->no_events_message .= "No ATC events yet";
             $this->no_events_message .= "</div>";
             $this->no_events_message .= "<div class='card-body'>";
-            $this->no_events_message .= "<a href='./new_event.php?date=".$this->day_counter."' class='btn btn-primary'><span class='oi oi-plus' title='Add an event' aria-hidden='true'></span> Create a new one</a>";
+            $this->no_events_message .= "<a href='./new_event.php?date=".$this->day_counter."' class='btn btn-primary'><span class='oi oi-plus' title='Add an event' aria-hidden='true'></span> Create a new event</a>";
+            $this->no_events_message .= "<br/><br/>";
+            $this->no_events_message .= "<a href='#' class='btn btn-info' data-toggle='modal' data-target='#myModal' onclick='document.getElementById('file_flightplan-date').value='<?php echo $dayCounter;?>';'><span class='oi oi-plus' aria-hidden='true'></span> Create a flight plan</a>";
             $this->no_events_message .= "</div>";
             $this->no_events_message .= "</div>";
         }
