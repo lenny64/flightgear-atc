@@ -26,6 +26,11 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
     $Airport = new Airport();
     $Airport->selectByICAO($Event->airportICAO);
 
+    $Event->image = "";
+    if (file_exists("./img/".$Event->airportLogo)) {
+        $Event->image = "http://flightgear-atc.alwaysdata.net/img/".$Event->airportLogo;
+    }
+
 }
 ?>
 
@@ -45,6 +50,12 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
             <li class="breadcrumb-item active" aria-current="page"><?=$Event->airportICAO;?> event at <?=$Event->airportCity;?></li>
         </ol>
     </nav>
+
+    <div class="row">
+        <div class="col-md-12">
+            <img src="<?=$Event->image;?>" class="img-fluid">
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-8">
@@ -222,7 +233,7 @@ foreach ($flightplans as $flightplan_id) {
             "@type": "Person",
             "name": "<?=$Event->atcName;?>"
         },
-        "image": ""
+        "image": "<?=$Event->image;?>"
     }
 </script>
 <?php include('./include/footer.php'); ?>

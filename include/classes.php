@@ -569,6 +569,7 @@ class Event
     public $atcParams;
     public $atcId;
     public $datetime;
+    public $airportLogo;
 
 
     public function create($Year, $Month, $Day, $BeginHour, $BeginMinutes, $EndHour, $EndMinutes, $AirportICAO, $FGCOM, $TeamSpeak, $DocsLink, $Remarks)
@@ -686,6 +687,7 @@ class Event
         // If we receive the signal to create a new session (by default)
         if ($this->requestNewEvent == true)
         {
+            $this->airportLogo = 'airport_'.purgeInputs($this->airportICAO).'.jpg';
             $statement = $db->prepare("INSERT INTO events (airportICAO, userId, date, beginTime, endTime, fgcom, teamspeak, transitionLevel, runways, ILS, docsLink, remarks, contactRange, chartAero, chartGround, chartParking, airportLogo)
                 VALUES(
                 :airportICAO,
@@ -704,7 +706,7 @@ class Event
                 '',
                 '',
                 '',
-                '');");
+                :airportLogo);");
 
             $statement->execute(array(
                 ':airportICAO'      =>  purgeInputs($this->airportICAO),
@@ -715,7 +717,8 @@ class Event
                 ':fgcom'            =>  purgeInputs($this->fgcom),
                 ':teamspeak'        =>  purgeInputs($this->teamspeak),
                 ':docsLink'         =>  purgeInputs($this->docsLink),
-                ':remarks'          =>  purgeInputs($this->remarks)));
+                ':remarks'          =>  purgeInputs($this->remarks),
+                ':airportLogo'      =>  $this->airportLogo));
 
             $this->id = $db->lastInsertId();
             $this->eventCreated = true;
@@ -768,6 +771,7 @@ class Event
                 $this->airportName = $event['airportName'];
                 $this->airportCity = $event['airportCity'];
                 $this->airportCountry = $event['airportCountry'];
+                $this->airportLogo = $event['airportLogo'];
 
                 $this->datetime = $event['datetime'];
             }
