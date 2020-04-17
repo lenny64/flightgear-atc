@@ -3,6 +3,7 @@
 
 <!-- LE CODE COMMENCE ICI -->
 
+<?php include('./include/file_flightplan_v3.php'); ?>
 
 <?php
 
@@ -156,7 +157,7 @@ foreach ($flightplans as $flightplan_id) {
 <?php
 }
 ?>
-                    <a href="#" class="btn btn-sm btn-outline-info"><span class="oi oi-plus" aria-hidden="true"></span> flight plan</a>
+                    <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#myModal" onclick="document.getElementById('file_flightplan-date').value='<?php echo $dayCounter;?>';"><span class="oi oi-plus" aria-hidden="true"></span> flight plan</a>
                 </div>
             </div>
         </div>
