@@ -1131,7 +1131,7 @@ class Flightplan
             {
                 $this->error[] = "arrival time can't be the same than departure time";
             }
-            if ($this->dateDeparture == NULL)
+            if ($this->dateDeparture == NULL || !preg_match("#^([0-9]{4})\-([0-9]{2})\-([0-9]{2})$#", $this->dateDeparture))
             {
                 $this->error[] = 'invalid departure date';
             }

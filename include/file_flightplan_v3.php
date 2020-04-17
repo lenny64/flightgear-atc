@@ -85,7 +85,7 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
             <div class="form-group">
                 <label class="control-label">Date</label>
                 <div class="">
-                    <input type="text" class="form-control" name="date" id="file_flightplan-date" placeholder="Departure date" value="" required>
+                    <input type="text" class="form-control" name="date" id="file_flightplan-date" placeholder="Departure date (YYYY-MM-DD)" value="" required>
                 </div>
             </div>
             <div class="row">
@@ -238,6 +238,9 @@ if (isset($_POST['date']) AND isset($_POST['callsign']) AND isset($_POST['depart
        $(".showall").click(function(){
            $(".flightplanHidden").removeClass("flightplanHidden");
            $(".showall").addClass("flightplanHidden");
+       });
+       $("#file_flightplan-date").datepicker({
+           dateFormat: 'yy-mm-dd'
        });
     });
 </script>
