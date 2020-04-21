@@ -135,7 +135,7 @@ foreach ($flightplans as $flightplan_id) {
     $FP = new Flightplan();
     $FP->selectById($flightplan_id);
 ?>
-                    <h5><?= $FP->callsign;?> <small class="text-muted"><?= $FP->aircraftType;?></small></h5>
+                    <h5><?= $FP->callsign;?> <small class="text-muted"><?= $FP->aircraftType;?> (<?=$FP->airline;?>)</small></h5>
                     <div class="row">
                         <div class="col mb-2">
                             From
@@ -148,6 +148,21 @@ foreach ($flightplans as $flightplan_id) {
                             <br/>
                             <span class="badge badge-success"><?= $FP->arrivalAirport;?></span>
                             <span class="badge badge-info"><?= $FP->arrivalTime;?></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-2">
+                            Pilot: <?= $FP->pilotName;?>
+                            <br/>
+                            Flight rules: <span class="badge badge-secondary"><?= $FP->category;?></span>
+                            <br/>
+                            Altitude: <span class="badge badge-secondary"><?= $FP->cruiseAltitude;?></span> / Airspeed: <span class="badge badge-secondary"><?= $FP->trueAirspeed;?></span>
+                            <br/>
+                            Flight nr: <span class="badge badge-secondary"><?= $FP->flightNumber;?></span> / Souls on board: <span class="badge badge-secondary"><?= $FP->soulsOnBoard;?></span>
+                            <br/>
+                            Fuel time: <?=$FP->fuelTime;?>
+                            <br/>
+                            Waypoints:<br/> <?= $FP->waypoints;?>
                         </div>
                     </div>
                     <p>

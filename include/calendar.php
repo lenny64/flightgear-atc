@@ -39,17 +39,66 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 <div class="col-md-3 col-sm-6">
     <div class="text-center mb-1">
         <h5 class="mb-0"><?=$Day->day_line;?></h5>
-        <span class="badge badge-info"><?= $total_flightplans_badge_text ;?></span>
+        <?= $total_flightplans_badge_text ;?>
         <span class="badge badge-primary"><?= $events_badge_text;?></span> <a href="./new_event.php?date=<?=$Day->day_counter;?>" class="badge badge-primary"><span class="oi oi-plus" title="Add an event" aria-hidden="true"></span></a>
     </div>
+    <?php
+    // FLIGHTPLANS LOOP
+    foreach ($total_flightplans as $fp) {
+        $FP = new Flightplan();
+        $FP->selectById($fp['flightplanId']);
+        ?>
+        <div class="card border-secondary mb-2 flightplans-day-list" style="display: none;">
+            <div class="card-header">
+                <?= $FP->callsign;?> <small><?= $FP->aircraftType;?></small>
+            </div>
+            <div class="card-body text-secondary">
+                <div class="row">
+                    <div class="col mb-2">
+                        From
+                        <br/>
+                        <span class="badge badge-success"><?= $FP->departureAirport;?></span>
+                        <span class="badge badge-info"><?= $FP->departureTime;?></span>
+                    </div>
+                    <div class="col mb-2">
+                        To
+                        <br/>
+                        <span class="badge badge-success"><?= $FP->arrivalAirport;?></span>
+                        <span class="badge badge-info"><?= $FP->arrivalTime;?></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-2">
+                        Pilot: <?= $FP->pilotName;?>
+                        <br/>
+                        Flight rules: <span class="badge badge-secondary"><?= $FP->category;?></span>
+                        <br/>
+                        Altitude: <span class="badge badge-secondary"><?= $FP->cruiseAltitude;?></span>
+                        <br/>
+                        Flight nr: <span class="badge badge-secondary"><?= $FP->flightNumber;?></span>
+                        <br/>
+                        Waypoints:<br/> <?= $FP->waypoints;?>
+                    </div>
+                </div>
+                <p>
+                    Flightplan <?= $FP->status;?> <a href="./edit_flightplan.php?flightplanId=<?php echo $FP->id;?>" class="btn btn-outline-secondary btn-sm"><span class="oi oi-pencil" title="Edit flightplan" aria-hidden="true"></span></a>
+                </p>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+    <?php // WHEN THERE ARE NO EVENTS ?>
     <?= $Day->no_events_message; ?>
     <?php
+    // EVENTS LOOP
     foreach ($Day->events_list as $event)
     {
         $Event = new Event();
         $Event->selectById($event);
         $Event->getATCInfo();
 
+        // We indicate if there are flightplans to show
         $showFlightplans = false;
         $flightplans = $Event->getFlightplans();
         if (sizeof($flightplans) > 0) {

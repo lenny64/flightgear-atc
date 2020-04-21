@@ -18,6 +18,10 @@ var collapseEvents = function() {
 }
 
 $(document).ready(function(){
+    $('.btn-show-flightplans').click(function() {
+        console.log('ok');
+        $('.flightplans-day-list').toggle();
+    });
     var cookie_collapse_events = getCookie('collapseEvents');
     if (cookie_collapse_events == "") {
         var collapse_events = "0";

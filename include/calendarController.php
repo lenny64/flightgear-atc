@@ -49,13 +49,13 @@ class Day {
         return $events_badge_text;
     }
     public function getTotalFlightplansBadgeText($list_total_flightplans) {
-        $flightplans_badge_text = "no flightplans";
+        $flightplans_badge_text = "<span class='badge badge-light'>no flightplans</span>";
         $nb_total_flightplans = sizeof($list_total_flightplans);
         if ($nb_total_flightplans > 1) {
-            $flightplans_badge_text = $nb_total_flightplans . " flightplans";
+            $flightplans_badge_text = "<a class='badge badge-info btn-show-flightplans' href='#' data-toggle='modal' data-target='#showFlightplansModal'>" . $nb_total_flightplans . " flightplans <span class='oi oi-chevron-bottom' title='Show/hide flightplans' aria-hidden='true'></span></a>";
         }
         else if ($nb_total_flightplans == 1) {
-            $flightplans_badge_text = $nb_total_flightplans . " flightplan";
+            $flightplans_badge_text = "<a class='badge badge-info btn-show-flightplans' href='#' data-toggle='modal' data-target='#showFlightplansModal'>" . $nb_total_flightplans . " flightplan <span class='oi oi-chevron-bottom' title='Show/hide flightplans' aria-hidden='true'></span></a>";
         }
         return $flightplans_badge_text;
     }
