@@ -5,6 +5,7 @@
 date_default_timezone_set('UTC');
 
 require_once './include/config.php';
+require_once './include/config_env.php';
 
 // Let's open the DB
 $db = new PDO("mysql:host=".SQL_SERVER.";dbname=".SQL_DB, SQL_LOGIN, SQL_PWD);
@@ -43,6 +44,9 @@ include('./include/sessionController.php');
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= $PAGE_DESCRIPTION; ?>">
+	<?php if ($PAGE_CANONICAL != "") { ?>
+	<link rel="canonical" href="<?=$PAGE_CANONICAL;?>"/>
+	<?php } ?>
 
     <!-- SOCIAL -->
     <meta property="twitter:title" content="<?= $PAGE_TITLE; ?>">

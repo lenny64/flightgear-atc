@@ -69,36 +69,3 @@ else if ($PAGE_NAME == "dashboard.php") {
     </div>
   </div>
 </nav>
-
-<!-- <nav class="navbar navbar-inverse navbar-static-top">
-    <div class="container" id="navfluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#"><img src="./img/flightgear-atc_logo_shadowless_161x51.png" alt="Flightgear ATC events" height="25"/></a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="./index.php">Flightgear ATC Events</a></li>
-          <li><a href="./school.php">School</a></li>
-          <li><a href="controlled_area.php">Controlled area</a></li>
-          <li><a href="downloads.php">Downloads</a></li>
-          <li><a href="contact.php">Contact</a></li>
-          <li><a href="faq.php">FAQ</a></li>
-          <li><a href="api.php">API</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="./dashboard.php">ATC Dashboard</a></li>
-          <?php
-          if ($_SESSION['mode'] == 'connected') {
-            echo '<li><a href="./dashboard.php?disconnect">Disconnect</a></li>';
-          }
-          ?>
-        </ul>
-      </div>
-    </div>
-</nav> -->
