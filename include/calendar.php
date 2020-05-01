@@ -107,8 +107,8 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 
         ?>
         <div class="card mb-2 <?= $additional_card_class;?>">
-            <?php if (file_exists("./img/".$Event->airportLogo)) { ?>
-            <img class="card-img-top img-fluid" src="./img/<?= $Event->airportLogo;?>" alt="<?=$Event->airportICAO;?> ATC event image">
+            <?php if (file_exists("./img/airport_".$Event->airportICAO.".jpg")) { ?>
+            <img class="card-img-top img-fluid" src="./img/airport_<?= $Event->airportICAO;?>.jpg" alt="<?=$Event->airportICAO;?> ATC event image">
             <?php } ?>
             <div class="card-header event-title" data-eventid="<?= $Event->id; ?>">
                 <h6><img src="./img/menu_controlled.png"/> <a href="./show_event.php?eventId=<?=$Event->id;?>"><?= $Event->airportICAO; ?> <?= $Event->airportName; ?></a></h6>
@@ -498,8 +498,8 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         $Event->selectById($event);
         $Event->getATCInfo();
         $Event->image = "";
-        if (file_exists("./img/".$Event->airportLogo)) {
-            $Event->image = "http://flightgear-atc.alwaysdata.net/img/".$Event->airportLogo;
+        if (file_exists("./img/airport_".$Event->airportICAO.".jpg")) {
+            $Event->image = "http://flightgear-atc.alwaysdata.net/img/airport_".$Event->airportICAO.".jpg";
         }
     ?>
     <script type="application/ld+json">

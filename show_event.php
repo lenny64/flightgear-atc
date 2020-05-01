@@ -10,6 +10,7 @@
 // If the event is correct
 if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
 {
+    $realEvent = true;
     // We get the eventId
     $eventId = $_GET['eventId'];
     $Event = new Event();
@@ -28,10 +29,33 @@ if (isset($_GET['eventId']) AND $_GET['eventId'] != NULL)
     $Airport->selectByICAO($Event->airportICAO);
 
     $Event->image = "";
-    if (file_exists("./img/".$Event->airportLogo)) {
-        $Event->image = "http://flightgear-atc.alwaysdata.net/img/".$Event->airportLogo;
+    if (file_exists("./img/airport_".$Event->airportICAO.".jpg")) {
+        $Event->image = "http://flightgear-atc.alwaysdata.net/img/airport_".$Event->airportICAO.".jpg";
     }
 
+}
+// If the event is not correct
+else {
+    $realEvent = false;
+    $Event = new Event();
+    $Event->airportName = "Showing an ATC event";
+    $Event->airportICAO = "for an airport";
+    $Event->airportCity = "a city";
+    $Event->date = "a date";
+    $Event->beginTime = "begin";
+    $Event->endTime = "end time";
+    $Event->image = "";
+    $Event->FGCOM = "";
+    $Event->teamspeak = "";
+    $Event->transitionLevel = "";
+    $Event->ils = "";
+    $Event->runways = "";
+    $Event->docsLink = "";
+    $Event->remarks = "";
+    $atc_verified_text = "no";
+    $atc_verified_style = "";
+    $Event->atcId = "";
+    $flightplans = Array();
 }
 ?>
 
@@ -177,6 +201,7 @@ foreach ($flightplans as $flightplan_id) {
             </div>
         </div>
     </div>
+<?php if ($realEvent == true) { ?>
     <div class="row my-3">
         <div class="col-md-6">
             <div class="card">
@@ -211,9 +236,11 @@ foreach ($flightplans as $flightplan_id) {
             </div>
         </div>
     </div>
+<?php } ?>
 </div>
 
 <script type="text/javascript" src="./include/controller_showEvent.js"></script>
+<?php if ($realEvent == true) { ?>
 <script type="application/ld+json">
     {
         "@context":"http://schema.org",
@@ -252,4 +279,5 @@ foreach ($flightplans as $flightplan_id) {
         "image": "<?=$Event->image;?>"
     }
 </script>
+<?php } ?>
 <?php include('./include/footer.php'); ?>
