@@ -497,9 +497,12 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         $Event = new Event();
         $Event->selectById($event);
         $Event->getATCInfo();
-        $Event->image = "";
+        $Event->image = "http://flightgear-atc.alwaysdata.net/img/airport_EHAM.jpg";
         if (file_exists("./img/airport_".$Event->airportICAO.".jpg")) {
             $Event->image = "http://flightgear-atc.alwaysdata.net/img/airport_".$Event->airportICAO.".jpg";
+        }
+        if ($Event->atcName == "" OR $Event->atcName != TRUE) {
+            $Event->atcName = "Unknown ATC";
         }
     ?>
     <script type="application/ld+json">
