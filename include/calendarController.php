@@ -9,9 +9,9 @@ if (isset($_GET['dateBegin']) && $_GET['dateBegin'] != NULL) {
 }
 $today_plus_x_days = date('Y-m-d', strtotime($today." +".$number_days_displayed." days"));
 $today_minus_x_days = date('Y-m-d', strtotime($today." -".$number_days_displayed." days"));
-$style_previous_events = "btn-primary";
+$style_previous_events = "btn-secondary";
 if ($today_minus_x_days < date('Y-m-d', strtotime($real_today." - 3 days"))) {
-    $style_previous_events = "btn-outline-primary disabled";
+    $style_previous_events = "btn-outline-secondary disabled";
 }
 
 class Day {

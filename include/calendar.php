@@ -13,13 +13,14 @@ if (!isset($_GET['revertToV1'])) {
             <a href="./index.php?revertToV1">Revert to old version</a>
         </form>
     </div>
-    <a href="#collapseMenuDetails" class="mr-2 btn btn-sm btn-outline-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMenuDetails"><span class="oi oi-chevron-bottom" title="expand menu" aria-hidden="true"></span></a>
-    <a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="mx-2 btn <?=$style_previous_events;?> btn-lg"><span class="oi oi-chevron-left" title="previous days" aria-hidden="true"></span> previous days</a>
-    <a href="./index.php?dateBegin=<?= $real_today;?>#next_atc_events" class="mx-2 btn btn-outline-primary btn-lg"><span class="oi oi-clock" title="today" aria-hidden="true"></span> today</a>
-    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="mx-2 btn btn-primary btn-lg">next days <span class="oi oi-chevron-right" title="next days" aria-hidden="true"></span></a>
+    <a href="#collapseMenuDetails" class="mr-2 btn btn-sm btn-outline-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMenuDetails"><span class="oi oi-cog" title="expand menu" aria-hidden="true"></span></a>
+
 </div>
 
-<div class="row mt-3">
+<div class="row mt-3 calendar">
+    <a href="./index.php?dateBegin=<?= $today_minus_x_days;?>#next_atc_events" class="btn btn-lg btn-day btn-previous-days <?=$style_previous_events;?>"><span class="oi oi-chevron-left" title="previous days" aria-hidden="true"></span></a>
+    <a href="./index.php?dateBegin=<?= $real_today;?>#next_atc_events" class="btn btn-lg btn-day btn-today <?=$style_previous_events;?>"><span class="oi oi-home" title="today" aria-hidden="true"></span></a>
+    <a href="./index.php?dateBegin=<?= $today_plus_x_days;?>#next_atc_events" class="btn btn-secondary btn-lg btn-day btn-next-days"><span class="oi oi-chevron-right" title="next days" aria-hidden="true"></span></a>
 
 <?php
 for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)

@@ -32,23 +32,18 @@ var collapseEvents = function(state) {
         hideEvent();
         hideImage();
     }
-    // $.each($('.event-details'), function(i, el) {
-    //     if (state == "0") {
-    //         $(el).show();
-    //     }
-    //     else {
-    //         $(el).hide();
-    //     }
-    // });
-    // $.each($('.card-img-top'), function(i, el) {
-    //     if (state == "0") {
-    //         $(el).show();
-    //     }
-    //     else {
-    //         $(el).hide();
-    //     }
-    // });
 }
+
+let offsetContent = $('#jumbotron_mainPage').offset().top;
+
+$(document).scroll(function() {
+  let y = $(this).scrollTop();
+  if (y > offsetContent) {
+    $('.btn-day').fadeIn();
+  } else {
+    $('.btn-day').fadeOut();
+  }
+});
 
 $(document).ready(function(){
     $('.btn-show-flightplans').click(function() {
