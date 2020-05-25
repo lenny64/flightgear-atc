@@ -38,7 +38,8 @@ let offsetContent = $('#jumbotron_mainPage').offset().top;
 
 $(document).scroll(function() {
   let y = $(this).scrollTop();
-  if (y > offsetContent) {
+  var calendar_percent_top = $('.calendar').position().top/$(window).height() *100;
+  if (y > offsetContent || calendar_percent_top < 40) {
     $('.btn-day').fadeIn();
   } else {
     $('.btn-day').fadeOut();
