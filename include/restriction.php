@@ -9,7 +9,6 @@ $err_noLogin = true;
 if (isset($_POST['email']) AND isset($_POST['password']) AND $_POST['email'] != NULL AND $_POST['password'] != NULL)
 {
     $err_noLogin = false;
-
     // Are the information correct ?
     if ($_POST['email'] == getInfo('mail', 'users', 'mail', $_POST['email']) AND $_POST['password'] == getInfo('password', 'users', 'mail', $_POST['email']))
     {
@@ -20,6 +19,14 @@ if (isset($_POST['email']) AND isset($_POST['password']) AND $_POST['email'] != 
         $User->TEMPORARYUpdatePassword($_POST['password']);
     }
     else if ($_POST['email'] == getInfo('mail', 'users', 'mail', $_POST['email']) AND password_verify($_POST['password'], getInfo('password_hash','users','mail', $_POST['email'])))
+    {
+        $userAuthenticated = true;
+        $User = new User();
+        $User->selectById(getInfo('userId', 'users', 'mail', $_POST['email']));
+        $User->connect($User->id);
+        $User->TEMPORARYUpdatePassword($_POST['password']);
+    }
+    else if ($_POST['email'] == getInfo('mail', 'users', 'mail', $_POST['email']) AND md5($_POST['password']) == getInfo('password_md5','users','mail', $_POST['email']) )
     {
         $userAuthenticated = true;
         $User = new User();
