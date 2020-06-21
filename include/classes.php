@@ -285,7 +285,7 @@ class User
             $db_password = $userInfo['password'];
             $db_password_md5 = $userInfo['password_md5'];
             $db_password_hash = $userInfo['password_hash'];
-            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR md5($inputPassword) == $db_password_md5 OR password_verify($inputPassword, $db_password_hash))
+            if ($db_password == $inputPassword OR $inputPassword == md5($db_password) OR strtolower($inputPassword) == strtolower($db_password_md5) OR md5($inputPassword) == $db_password_md5 OR password_verify($inputPassword, $db_password_hash))
             {
               $wrong_login = false;
               $this->selectById($userInfo['userId']);
