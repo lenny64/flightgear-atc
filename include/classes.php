@@ -912,6 +912,22 @@ class Event
         $latest_event_edited = $infos_latest_event_edited->fetch(PDO::FETCH_ASSOC);
         return $latest_event_edited['eventId'];
     }
+
+    public function getControlledAreaEvents($date) {
+        global $db;
+        $list_controlled_area_events = Array();
+        if ($date && $date != NULL) {
+            $index_date = date('w', strtotime($date));
+            $query = $db->query("SELECT * FROM `controlled_area` WHERE days_control_array LIKE '%".$index_date."%'");
+            $controlled_area_events = $query->fetchAll(PDO::FETCH_ASSOC);
+            if ($controlled_area_events) {
+                foreach ($controlled_area_events as $event) {
+                    $list_controlled_area_events[] = $event;
+                }
+            }
+        }
+        return $list_controlled_area_events;
+    }
 }
 
 class SpecialEvent

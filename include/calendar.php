@@ -29,6 +29,8 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     $Day->getDayCounter($today);
     $Day->getDayDisplayInfo();
     $Day->getEventsList($events);
+    $controlled_area_events = new Event();
+    $list_controlled_area_events = $controlled_area_events->getControlledAreaEvents($Day->day_counter);
     $events_badge_text = $Day->getEventsBadgeText();
     $Flightplan = new Flightplan();
     $Flightplan->dateDeparture = $Day->day_counter;
@@ -175,7 +177,25 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 
         <?php
     }
+    if (sizeof($list_controlled_area_events) > 0) {
     ?>
+    <div class="card mt-4">
+        <div class="card-header py-1">
+            Usually controlled airports
+        </div>
+        <div class="card-body py-1">
+    <?php foreach ($list_controlled_area_events as $event) { ?>
+            <p class="card-text" style="color: #888">
+                <a href="./controlled_area.php"><?= $event['airport_icao']; ?></a> <span class="badge"><?= $event['time_start']; ?></span> &rarr; <span class="badge"><?= $event['time_end']; ?></span><br/>
+                <small><?= $event['airport_name']; ?></small>
+                <!-- <br/>
+                <button type="button" class="btn btn-sm py-0 text-success"><span class="oi oi-thumb-up"></span> +36</button></span>
+                <button type="button" class="btn btn-sm py-0 text-danger"><span class="oi oi-thumb-down"></span> -24</button></span> -->
+            </p>
+    <?php } ?>
+        </div>
+    </div>
+    <?php } ?>
 </div>
 
     <?php

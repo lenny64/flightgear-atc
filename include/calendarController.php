@@ -66,7 +66,7 @@ class Day {
         $this->nb_events = sizeof($this->events_list);
         $this->no_events_message = "";
         if (sizeof($this->events_list) == 0) {
-            $this->no_events_message .= "<div class='card'>";
+            $this->no_events_message .= "<div class='card mb-2'>";
             $this->no_events_message .= "<div class='card-header'>";
             $this->no_events_message .= "No ATC events yet";
             $this->no_events_message .= "</div>";
