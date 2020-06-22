@@ -987,6 +987,18 @@ else if (isset($_GET['setVar']))
     generateError('ERR_VAR','setVar requires email, password, flightplanId, variable and value');
 }
 
+else if (isset($_GET['putAirportObservation'])) {
+    if (isset($_POST['lat']) && isset($_POST['lon'])) {
+        $lat = $_POST['lat'];
+        $lon = $_POST['lon'];
+        $Airport = new Airport();
+        $Airport->lat = $lat;
+        $Airport->lon = $lon;
+        $Airport->callsign = $_POST['callsign'];
+        return $Airport->putAirportObservation();
+    }
+}
+
 
 // IF THERE IS AN UNKNOWN COMMAND
 else if (isset($_GET) AND $_GET != NULL)

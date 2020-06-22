@@ -66,6 +66,9 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                     map_recenter = true;
                 }
                 $('#liveATClist').append('<span class="badge badge-success py-1 px-2 mr-2"><span class="oi oi-bolt" title="now" aria-hidden="true"></span> ' + airport.callsign + '</span>');
+                $.post('./dev2017_04_28.php?putAirportObservation', airport, function(data) {
+                    console.log(data);
+                });
             }
         });
         $.each(overlay, function(i, layer) {

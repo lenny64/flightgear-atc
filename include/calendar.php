@@ -29,8 +29,16 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     $Day->getDayCounter($today);
     $Day->getDayDisplayInfo();
     $Day->getEventsList($events);
+    // Based on the controlled area
     $controlled_area_events = new Event();
     $list_controlled_area_events = $controlled_area_events->getControlledAreaEvents($Day->day_counter);
+    foreach ($list_controlled_area_events as $event) {
+        $Airport = new Airport();
+        // I collect lat and lon
+        $Airport->selectByICAO($event['airport_icao']);
+        $event['was_really_controlled_last_week'] = $Airport->wasReallyControlledLastWeek($Day->day_counter);
+    }
+
     $events_badge_text = $Day->getEventsBadgeText();
     $Flightplan = new Flightplan();
     $Flightplan->dateDeparture = $Day->day_counter;
@@ -188,6 +196,7 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
             <p class="card-text" style="color: #888">
                 <a href="./controlled_area.php"><?= $event['airport_icao']; ?></a> <span class="badge"><?= $event['time_start']; ?></span> &rarr; <span class="badge"><?= $event['time_end']; ?></span><br/>
                 <small><?= $event['airport_name']; ?></small>
+                <?= var_dump($event['was_really_controlled_last_week']); ?>
                 <!-- <br/>
                 <button type="button" class="btn btn-sm py-0 text-success"><span class="oi oi-thumb-up"></span> +36</button></span>
                 <button type="button" class="btn btn-sm py-0 text-danger"><span class="oi oi-thumb-down"></span> -24</button></span> -->

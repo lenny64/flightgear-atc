@@ -537,6 +537,25 @@ class Airport
         }
         return $this->stats;
     }
+
+    public function putAirportObservation() {
+        global $db;
+        $query = $db->prepare("INSERT INTO airports_observation (icao, lat, lon, callsign) VALUES (:icao, :lat, :lon, :callsign)");
+        $exec = $query->execute(Array(':icao' => $this->icao, ':lat' => $this->lat, ':lon' => $this->lon, ':callsign' => $this->callsign));
+        return $exec;
+    }
+
+    public function wasReallyControlledLastWeek($date) {
+        global $db;
+        $date_minus_7_days = date('Y-M-D', strtotime($date.' -7 days'));
+        $query = $db->query("SELECT icao, lat, lon, callsign FROM airports_observation WHERE DATE(datetime) = '$date_minus_7_days' LIMIT 1");
+        if (sizeof($query->fetchAll(PDO::FETCH_ASSOC)) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 
@@ -918,7 +937,7 @@ class Event
         $list_controlled_area_events = Array();
         if ($date && $date != NULL) {
             $index_date = date('w', strtotime($date));
-            $query = $db->query("SELECT * FROM `controlled_area` WHERE days_control_array LIKE '%".$index_date."%'");
+            $query = $db->query("SELECT airport_icao, airport_name, time_start, time_end, additional_info, link FROM `controlled_area` WHERE days_control_array LIKE '%".$index_date."%'");
             $controlled_area_events = $query->fetchAll(PDO::FETCH_ASSOC);
             if ($controlled_area_events) {
                 foreach ($controlled_area_events as $event) {
