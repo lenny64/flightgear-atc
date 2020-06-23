@@ -540,6 +540,7 @@ class Airport
 
     public function putAirportObservation() {
         global $db;
+        $this->getICAOwithCoordinates($this->lat, $this->lon);
         $query = $db->prepare("INSERT INTO airports_observation (icao, lat, lon, callsign) VALUES (:icao, :lat, :lon, :callsign)");
         $exec = $query->execute(Array(':icao' => $this->icao, ':lat' => $this->lat, ':lon' => $this->lon, ':callsign' => $this->callsign));
         return $exec;
@@ -554,6 +555,18 @@ class Airport
         }
         else {
             return false;
+        }
+    }
+
+    public function getICAOwithCoordinates($lat, $lon) {
+        global $db;
+        $query = $db->query("SELECT globalAirportName, globalAirportICAO, globalAirportLat, globalAirportLon,
+                            	ABS(globalAirportLat - $lat) AS abs_lat,
+                                ABS(globalAirportLon - $lon) AS abs_lon
+                                FROM `airports_global` ORDER BY abs_lon+abs_lat LIMIT 1");
+        foreach ($query as $info) {
+            $this->icao = $info['globalAirportICAO'];
+            $this->name = $infos['globalAirportName'];
         }
     }
 }
