@@ -1,22 +1,18 @@
 <?php //*
-if (!isset($_COOKIE['hasSeenNewInfo'])) {
-    if ($_COOKIE['hasSeenNewInfo'] != "calendar") {
+if (!isset($_COOKIE['hasSeen'])) {
+    if ($_COOKIE['hasSeen'] != "new_mumble") {
 ?>
-<div class="alert alert-success alert-dismissable mb-1" role="alert" id="log">
+<div class="alert alert-warning alert-dismissable mb-1" role="alert" id="log">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Wow... a fresh new look is out there! You may need to clear your cache. The changes include:
-    <ul>
-        <li><strong>a new calendar presentation</strong></li>
-        <li>possibility to <strong>show/hide the map</strong></li>
-        <li>possibility to collapse/expand event details</li>
-        <li>... <a href="./information.php" class="btn btn-success">All changes are summarized here</a></li>
-    </ul>
+    Mumble information: please use <strong>radio-mumble.flightgear.fr</strong> instead of flightgear-radio.autosoft.fr.
+    <a href="https://forum.flightgear.org/viewtopic.php?f=10&t=33344&p=370076#p370042" target="_blank">More info</a>
 </div>
 
 <script type="text/javascript">
 
 if (cookieConsentAnswer == "1") {
     setCookie('hasSeenNewInfo','calendar',365);
+    setCookie('hasSeen', 'new_mumble', 365);
 }
 $(".close_button").click(function()
 {
