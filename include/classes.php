@@ -564,9 +564,10 @@ class Airport
                             	ABS(globalAirportLat - $lat) AS abs_lat,
                                 ABS(globalAirportLon - $lon) AS abs_lon
                                 FROM `airports_global` ORDER BY abs_lon+abs_lat LIMIT 1");
-        foreach ($query as $info) {
-            $this->icao = $info['globalAirportICAO'];
-            $this->name = $infos['globalAirportName'];
+        $airport_info = $query->fetch(PDO::FETCH_ASSOC);
+        if ($airport_info != 0) {
+            $this->icao = $airport_info['globalAirportICAO'];
+            $this->name = $airport_info['globalAirportName'];
         }
     }
 }
