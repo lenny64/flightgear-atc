@@ -546,6 +546,24 @@ class Airport
         return $exec;
     }
 
+    public function getAirportObservationStats($date = FALSE) {
+        global $db;
+        $stats = Array();
+        if ($date !== FALSE) {
+            $query = $db->query("SELECT icao, DATE(datetime) as date, MIN(TIME(datetime)) AS min_time, MAX(TIME(datetime)) AS max_time FROM airports_observation WHERE icao = '$this->icao' AND DATE(datetime) = '$date' LIMIT 1");
+        }
+        else {
+            $query = $db->query("SELECT icao, DATE(datetime) as date, MIN(TIME(datetime)) AS min_time, MAX(TIME(datetime)) AS max_time FROM airports_observation GROUP BY icao ORDER BY date");
+        }
+        $airport_info = $query->fetchAll(PDO::FETCH_ASSOC);
+        if ($airport_info != 0) {
+            foreach ($airport_info as $info) {
+                $stats[] = Array('airportICAO' => $info['icao'], 'date' => $info['date'], 'min_time' => $info['min_time'], 'max_time' => $info['max_time']);    // code...
+            }
+        }
+        return $stats;
+    }
+
     public function wasReallyControlledLastWeek($date) {
         global $db;
         $date_minus_7_days = date('Y-M-D', strtotime($date.' -7 days'));

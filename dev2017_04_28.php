@@ -999,6 +999,23 @@ else if (isset($_GET['putAirportObservation'])) {
     }
 }
 
+else if (isset($_GET['getAirportObservationStats'])) {
+    if (isset($_GET['airportICAO']) && $_GET['airportICAO'] != NULL) {
+        header('Content-Type: application/json');
+        $Airport = new Airport();
+        $Airport->icao = $_GET['airportICAO'];
+        $date = FALSE;
+        if (isset($_GET['date']) && $_GET['date'] != NULL) {
+            $date = $_GET['date'];
+        }
+        $stats = $Airport->getAirportObservationStats($date);
+        echo json_encode($stats);
+    }
+    else {
+        generateError('ERR_VAR', 'getAirportObservationStats requires airportICAO and date');
+    }
+}
+
 
 // IF THERE IS AN UNKNOWN COMMAND
 else if (isset($_GET) AND $_GET != NULL)
