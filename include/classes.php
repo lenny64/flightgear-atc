@@ -550,15 +550,54 @@ class Airport
         global $db;
         $stats = Array();
         if ($date !== FALSE) {
-            $query = $db->query("SELECT icao, DATE(datetime) as date, MIN(TIME(datetime)) AS min_time, MAX(TIME(datetime)) AS max_time FROM airports_observation WHERE icao = '$this->icao' AND DATE(datetime) = '$date' LIMIT 1");
+            // $where_stmt = "WHERE DATE(datetime) = '$date'";
+            $where_stmt = "WHERE WEEKDAY(datetime) = WEEKDAY('$date')";
+            $group_stmt = "GROUP BY icao, date, hour";
         }
         else {
-            $query = $db->query("SELECT icao, DATE(datetime) as date, MIN(TIME(datetime)) AS min_time, MAX(TIME(datetime)) AS max_time FROM airports_observation GROUP BY icao ORDER BY date");
+            $where_stmt = "";
+            $group_stmt = "GROUP BY icao, date, hour ORDER BY date DESC";
         }
-        $airport_info = $query->fetchAll(PDO::FETCH_ASSOC);
-        if ($airport_info != 0) {
-            foreach ($airport_info as $info) {
-                $stats[] = Array('airportICAO' => $info['icao'], 'date' => $info['date'], 'min_time' => $info['min_time'], 'max_time' => $info['max_time']);    // code...
+        $query = $db->query("SELECT icao,
+            DATE(datetime) as date,
+            HOUR(datetime) as hour,
+            datetime,
+            COUNT(HOUR(datetime)) as nb_records_hourly
+            FROM airports_observation
+            ".$where_stmt."
+            ".$group_stmt);
+        $airport_stats = $query->fetchAll(PDO::FETCH_ASSOC);
+        if ($airport_stats != 0) {
+            foreach ($airport_stats as $stat) {
+                $stat_date = $stat['date'];
+                $stat_icao = $stat['icao'];
+                $stat_hour = $stat['hour'];
+                $stat_nb_hours = $stat['nb_records_hourly'];
+                // I record the hours and the number of times the hour has been seen
+                $stats[$stat_date][$stat_icao]['hours'][] = Array('hour' => $stat_hour, 'count' => $stat_nb_hours);
+                // The global count of hours recorded
+                $nb_hours_recorded = sizeof($stats[$stat_date][$stat_icao]['hours']);
+                // If the event is more than 4 hours i consider it is too long
+                $event_too_long = false;
+                if ($nb_hours_recorded > 4) {
+                    $event_too_long = true;
+                }
+                ////////////////////////////
+                // OCCURENCES
+                ////////////////////////////
+                if (!$icao_occurences[$stat_icao])
+                {
+                    $icao_occurences[$stat_icao] = 1;
+                } else {
+                    $icao_occurences[$stat_icao] += 1;
+                }
+                $stats[$stat_date][$stat_icao]['occurences'] = $icao_occurences[$stat_icao];
+                $stats[$stat_date][$stat_icao]['fiability'] = sizeof($stats) / sizeof($stats[$stat_date][$stat_icao]);
+                ///////////////////////////
+                // STATS
+                ///////////////////////////
+                $stats[$stat_date][$stat_icao]['nb_hours_recorded'] = $nb_hours_recorded;
+                $stats[$stat_date][$stat_icao]['event_too_long'] = $event_too_long;
             }
         }
         return $stats;
