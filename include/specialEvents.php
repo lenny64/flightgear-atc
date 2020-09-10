@@ -16,7 +16,7 @@ if (isset($_POST['specialEventId']) AND isset($_POST['specialEventParticipate'])
         $callsign = $_POST['participationCallsign'];
         $SpecialEvent->selectById($specialEventId);
         $SpecialEvent->addPilot($callsign, $participation);
-        echo "<div class='information'>";
+        echo "<div class='alert alert-info'>";
         echo "Your choice has been taken in account !";
         echo "</div>";
     }
@@ -59,13 +59,10 @@ foreach ($specialEvents_list as $specialEvents)
 
             ?>
 
-            <div class="specialEvent mini">
-                <div class="specialEventContent">
-                    <h4>Special Flightgear ATC Event - <?php echo $SpecialEvent->title." on ".date('D M jS', strtotime($SpecialEvent->dateEvent)); ?></h4>
-                    <span class="participants">You and <?php echo $nbParticipants[$SpecialEvent->id]; ?> other people are going</span>
-                </div>
+            <div class="alert alert-success mt-2">
+                <p class="lead"><span class="oi oi-badge"></span> Special Flightgear ATC Event - <?php echo $SpecialEvent->title." on ".date('D M jS', strtotime($SpecialEvent->dateEvent)); ?></p>
+                You and <?php echo $nbParticipants[$SpecialEvent->id]; ?> other people are going
             </div>
-            <br style="clear: both;"/>
 
             <?php
             }
@@ -78,62 +75,56 @@ foreach ($specialEvents_list as $specialEvents)
         else
         {
         ?>
-        <div class="specialEvent">
-            <img src="./img/SpecialEventImage.png" alt="flightgear ATC events" class="specialEventImg"/>
-            <div class="specialEventContent">
-                <h1>Special flightgear ATC event</h1>
-                <h4><?php echo $SpecialEvent->title; ?></h4>
-                <p>
-                    <?php echo $SpecialEvent->description; ?>
-                    <br/>
-                    For more info please refer to <a href="<?php echo $SpecialEvent->url; ?>" target="_blank">this link</a>.
-                </p>
-                <div class="specialEventDate">
-                    <h5>Date</h5>
-                    <?php foreach($SpecialEvent->eventsList as $specialEventId)
-                    {
-                        $Event = new Event();
-                        $Event->selectById($specialEventId);
-                        echo $Event->date."<br/>";
-                    } ?>
+        <div class="jumbotron py-4 mb-0">
+            <!-- <img src="./img/SpecialEventImage.png" alt="flightgear ATC events" class="specialEventImg"/> -->
+            <h1 class="display-5"><span class="oi oi-badge"></span> <?php echo $SpecialEvent->title; ?></h1>
+            <div class="row">
+                <div class="col-6">
+                    <p class="lead">
+                        <?php echo $SpecialEvent->description; ?> - <a href="<?php echo $SpecialEvent->url; ?>" target="_blank">more info</a>
+                    </p>
+                    <ul class="list-group">
+                        <?php foreach($SpecialEvent->eventsList as $specialEventId) {
+                            $Event = new Event();
+                            $Event->selectById($specialEventId); ?>
+                            <li class="list-group-item">
+                                <span class="badge badge-info"><?= $Event->date ;?></span> -
+                                <span class="badge badge-primary"><?= $Event->airportICAO ;?></span>
+                                <span class="badge badge-success"><?= $Event->beginTime ;?></span> &rarr; <span class="badge badge-success"><?= $Event->endTime ;?></span>
+                            </li>
+                        <?php } ?>
+                    </ul>
                 </div>
-                <div class="specialEventAirport">
-                    <h5>Airport</h5>
-                    <?php foreach($SpecialEvent->eventsList as $specialEventId)
-                    {
-                        $Event = new Event();
-                        $Event->selectById($specialEventId);
-                        echo $Event->airportICAO."<br/>";
-                    } ?>
+                <div class="col-6">
+                    <?php echo $nbParticipants[$SpecialEvent->id] ;?> people will participate
+                    <form action="index.php" method="post" name="specialEventParticipate">
+                        <!-- Cookie part (in header) -->
+                        <input type="hidden" name="createCookie" value="<?php echo md5('specialEvent'.$SpecialEvent->id);?>"/>
+                        <input type="hidden" name="cookieValue" id="cookieValue<?php echo $SpecialEvent->id ;?>" value="no"/>
+                        <!-- Normal form part (see above) -->
+                        <input type="hidden" name="specialEventId" value="<?php echo $SpecialEvent->id;?>"/>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="specialEventParticipate" value="yes" class="specialEventButton" onchange="getInput('yes', <?=$SpecialEvent->id;?>)" required/>
+                            <label class="form-check-label" onclick="document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').style.display = 'inline'; document.getElementById('cookieValue<?php echo $SpecialEvent->id ;?>').value='yes'; document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').required='required';">
+                                I will participate
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="specialEventParticipate" value="maybe" class="specialEventButton" onchange="getInput('maybe', <?=$SpecialEvent->id;?>)"/>
+                            <label class="form-check-label" onclick="document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').style.display = 'inline'; document.getElementById('cookieValue<?php echo $SpecialEvent->id ;?>').value='maybe'; document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').required='required';">
+                                I will probably participate
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="specialEventParticipate" value="no" class="specialEventButton" onchange="getInput('no', <?=$SpecialEvent->id;?>)"/>
+                            <label class="form-check-label" onclick="document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').style.display = 'none'; document.getElementById('cookieValue<?php echo $SpecialEvent->id ;?>').value='no'; document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').removeAttribute('required');">
+                                I won't participate
+                            </label>
+                        </div>
+                        <input type="text" name="participationCallsign" class="form-control form-control-sm" id="participationCallsign<?php echo $SpecialEvent->id ;?>" placeholder="Callsign"/>
+                        <input type="submit" value="Submit" class="btn btn-success btn-sm my-2"/> <a href="./faq.php"/>What's this ?</a>
+                    </form>
                 </div>
-                <div class="specialEventTime">
-                    <h5>Time</h5>
-                    <?php foreach($SpecialEvent->eventsList as $specialEventId)
-                    {
-                        $Event = new Event();
-                        $Event->selectById($specialEventId);
-                        echo "From ".$Event->beginTime." to ".$Event->endTime."<br/>";
-                    } ?>
-                </div>
-                <br style="clear: both;"/>
-                <h5>Will you participate ? (<?php echo $nbParticipants[$SpecialEvent->id] ;?> people will !)</h5>
-                <form action="index.php" method="post" name="specialEventParticipate">
-                    <!-- Cookie part (in header) -->
-                    <input type="hidden" name="createCookie" value="<?php echo md5('specialEvent'.$SpecialEvent->id);?>"/>
-                    <input type="hidden" name="cookieValue" id="cookieValue<?php echo $SpecialEvent->id ;?>" value="no"/>
-                    <!-- Normal form part (see above) -->
-                    <input type="hidden" name="specialEventId" value="<?php echo $SpecialEvent->id;?>"/>
-                    <label class="buttonYes" onclick="document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').style.display = 'inline'; document.getElementById('cookieValue<?php echo $SpecialEvent->id ;?>').value='yes'; document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').required='required';"><input type="radio" name="specialEventParticipate" value="yes" class="specialEventButton" required/>Yes</label>
-                    <label class="buttonMaybe" onclick="document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').style.display = 'inline'; document.getElementById('cookieValue<?php echo $SpecialEvent->id ;?>').value='maybe'; document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').required='required';"><input type="radio" name="specialEventParticipate" value="maybe" class="specialEventButton"/>Maybe</label>
-                    <label class="buttonNo" onclick="document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').style.display = 'none'; document.getElementById('cookieValue<?php echo $SpecialEvent->id ;?>').value='no'; document.getElementById('participationCallsign<?php echo $SpecialEvent->id ;?>').removeAttribute('required');"><input type="radio" name="specialEventParticipate" value="no" class="specialEventButton"/>No</label>
-                    <br/>
-                    <input type="text" name="participationCallsign" class="participationCallsign" id="participationCallsign<?php echo $SpecialEvent->id ;?>" size="7" placeholder="Callsign"/>
-                    <br/>
-                    <input type="submit" value="OK" class="buttonValidate"/>
-                </form>
-                <p>
-                    <a href="./faq.php"/>What's this ?</a>
-                </p>
             </div>
         </div>
         <br style="clear: both;"/>
@@ -145,3 +136,19 @@ foreach ($specialEvents_list as $specialEvents)
     {}
 }
 ?>
+
+<script type="text/javascript">
+    var getInput = function(status, special_event_id) {
+        $('#cookieValue'+special_event_id).val(status);
+        if (status == 'no') {
+            $('#participationCallsign'+special_event_id).hide();
+            $('#participationCallsign'+special_event_id).removeAttr("required");
+            // $('#participationCallsign'+special_event_id).removeAttr('required');
+        } else {
+            $('#participationCallsign'+special_event_id).show();
+            $('#participationCallsign'+special_event_id).prop("required", true);
+            // $('#participationCallsign'+special_event_id).attr('required') = 'required';
+        }
+        console.log($('#cookieValue'+special_event_id).val());
+    }
+</script>
