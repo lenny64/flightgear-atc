@@ -49,6 +49,7 @@ var map_recenter = false;
 $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
     var data = JSON.parse(data);
     var atc_models = ["atc", "atc2", "atc-ml", "atc-fs", "openradar", "atc-tower", "atc-tower2", "atc-pie", "atc-pie"];
+    var nb_points = 0;
     if (data != null) {
         $.each(data.flights, function(i, airport) {
             if (atc_models.indexOf(airport.model.toLowerCase()) != -1) {
@@ -61,7 +62,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                 });
                 overlay['Live ATC'].push(marker);
                 // I put the center of the map on first marker
-                if (i == 0) {
+                if (nb_points == 0) {
                     mymap.panTo(new L.LatLng(airport.lat, airport.lon));
                     map_recenter = true;
                 }
@@ -69,6 +70,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                 $.post('./dev2017_04_28.php?putAirportObservation', airport, function(data) {
                     console.log(data);
                 });
+                nb_points += 1;
             }
         });
         $.each(overlay, function(i, layer) {
@@ -85,7 +87,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
     // I look for airports controlled
     $.get("./dev2017_04_28.php?getATCSessions&limitDate="+readable_date_7days+"&format=json", function(data) {
         if (data != null) {
-            $.each(data, function(i,airport) {
+            $.each(data, function(j,airport) {
                 var marker = L.marker([airport.lat, airport.lon], {icon: myIcon}).bindPopup(airport.airportICAO+" "+airport.date+"<br/>"+airport.beginTime+" "+airport.endTime);
                 marker.on('mouseover',function(ev) {
                   ev.target.openPopup();
@@ -94,7 +96,7 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                   ev.target.closePopup();
                 });
                 // I put the center of the map on first marker
-                if (i == 0 && map_recenter == false) {
+                if (nb_points == 0 && map_recenter != true) {
                     mymap.panTo(new L.LatLng(airport.lat, airport.lon));
                 }
 
@@ -106,10 +108,11 @@ $.get("http://crossfeed.freeflightsim.org/flights.json", function(data) {
                     overlay[airport.date] = Array(marker);
                     addButton(airport.date);
                 }
+                nb_points += 1;
             });
             // For each date we create a layer
-            $.each(overlay, function(i, layer) {
-                overlayMaps[i] = L.layerGroup(layer);
+            $.each(overlay, function(j, layer) {
+                overlayMaps[j] = L.layerGroup(layer);
             });
             // // We add a control layer
             // if (!addControlLayers) {
