@@ -161,22 +161,20 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
 ?>
                     <div class="row mt-2">
                         <div class="col-md-12">
-                            <b><?= $FP->callsign; ?></b> <small><span class="text-muted"><?=$FP->aircraftType;?></span></small>
+                            <b><?= $FP->callsign; ?></b> <small><span class="text-muted"><?=$FP->aircraftType;?></span> <a class="" href="./edit_flightplan.php?flightplanId=<?=$FP->id;?>" target="_blank"><span class="oi oi-pencil" aria-hidden="true"></span> Edit</a></small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <span class="badge badge-info"><?= $FP->departureAirport; ?></span>
-                            <br/>
                             <span class="badge badge-success"><?= $printDepartureTime; ?></span>
                         </div>
                         <div class="col-sm-6">
                             <span class="badge badge-info"><?= $FP->arrivalAirport; ?></span>
-                            <br/>
                             <span class="badge badge-success"><?= $printArrivalTime; ?></span>
                         </div>
                     </div>
-                        <a class="" href="./edit_flightplan.php?flightplanId=<?=$FP->id;?>" target="_blank"><span class="oi oi-pencil" aria-hidden="true"></span> Edit flightplan</a>
+
 
 <?php
                 }
