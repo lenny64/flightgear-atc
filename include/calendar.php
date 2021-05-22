@@ -30,14 +30,16 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
     $Day->getDayDisplayInfo();
     $Day->getEventsList($events);
     // Based on the controlled area
-    $controlled_area_events = new Event();
-    $list_controlled_area_events = $controlled_area_events->getControlledAreaEvents($Day->day_counter);
-    foreach ($list_controlled_area_events as $event) {
-        $Airport = new Airport();
-        // I collect lat and lon
-        $Airport->selectByICAO($event['airport_icao']);
-        $event['was_really_controlled_last_week'] = $Airport->wasReallyControlledLastWeek($Day->day_counter);
-    }
+    // $controlled_area_events = new Event();
+    // $list_controlled_area_events = $controlled_area_events->getControlledAreaEvents($Day->day_counter);
+    // foreach ($list_controlled_area_events as $event) {
+    //     $Airport = new Airport();
+    //     // I collect lat and lon
+    //     $Airport->selectByICAO($event['airport_icao']);
+    //     $event['was_really_controlled_last_week'] = $Airport->wasReallyControlledLastWeek($Day->day_counter);
+    // }
+    $airport_observations = new Airport();
+    $airport_observations_summary = $airport_observations->getAirportObservationSummary($Day->day_counter);
 
     $events_badge_text = $Day->getEventsBadgeText();
     $Flightplan = new Flightplan();
@@ -184,26 +186,74 @@ for ($calendarDay = 0 ; $calendarDay < $number_days_displayed ; $calendarDay++)
         </div>
 
         <?php
+    } ?>
+    <?php
+    // ARTIFICIAL EVENTS LOOP
+    if (sizeof($airport_observations_summary) > 0) { ?>
+    <hr/>
+    <h6 class="text-muted py-2 text-center"><span class="oi oi-pulse"></span> Based on stats <span class="small"><a href="faq.php#basedonstatsevents" target="_blank">learn more</a></span></h6>
+    <?php
+        $text_multiple_airports = (sizeof($airport_observations_summary) > 1) ? 'these airports' : 'this airport';
+        foreach ($airport_observations_summary as $icao => $information) {
+            $nb_weeks = $information['nb_weeks'];
+            $style = "info";
+            if ($information['accuracy'] >= 75) {
+                $style = "success";
+            }
+            else if ($information['accuracy'] <= 50) {
+                $style = "dark";
+            }
+
+            if ($information['nb_hours'] > 1) {
+                $information['nb_hours'] = $information['nb_hours'] . " hours";
+            }
+            else {
+                $information['nb_hours'] = $information['nb_hours'] . " hour";
+            }
+            ?>
+            <div class="card mb-1 border-<?=$style;?>">
+                <div class="card-body py-2">
+                    <h6 class="text-<?= $style; ?>"><img src="./img/menu_controlled.png"/> <?= $icao; ?> * <span class="badge badge-success"><?= $information['begin']; ?></span> &rarr; <span class="badge badge-success"><?= $information['end']; ?></span> <span class="small">UTC</span></h6>
+                    <p class="text-<?=$style;?> my-1">
+                        <span class="badge badge-<?=$style;?>"><?= $information['accuracy']; ?> %</span> of chances that this airport will be controlled ~ <?=$information['nb_hours'];?>.
+                        <br/>
+                        <span class="small text-muted">(controlled <b><?= $information['nb_days_recorded']; ?> <?= $Day->day_in_week; ?>s</b> / <?= $nb_weeks; ?>)</span>
+                    </p>
+                    <?php if ($information['user_name'] != NULL && $information['user_name'] != '') { ?>
+                    <p class="text-success my-1">
+                        <b>Regularly controlled by </b><span class="badge badge-success"><?= $information['user_name']; ?></span>
+                    </p>
+                    <?php } ?>
+                    <?php if ($information['user_name'] != NULL && $information['user_name'] != '' && $information['accuracy'] >= 75) { ?>
+                    <div class="alert alert-info p-1 text-success small font-weight-bold">
+                        <?php if ($information['accuracy'] >= 90) { ?>
+                            Incredibly regular control at <?= $icao; ?>! Get ready to fly!
+                        <?php } else if ($information['accuracy'] >= 80) { ?>
+                            <?= $icao; ?> is a good spot! Let's fly!
+                        <?php } else if ($information['accuracy'] >= 75) { ?>
+                            You should give <?= $icao; ?> a try ;)
+                        <?php } ?>
+                    </div>
+                    <?php } ?>
+                    <?php // Warning message
+                    if (isset($information['warning']) && $information['warning'] != NULL) { ?>
+                        <p class="text-warning small my-1">
+                            <span class="oi oi-warning"></span> <?= $information['warning']; ?>
+                        </p>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+        <p class="mb-2 text-center">
+            <span class="text-muted small">* Based on control activity of <?= $text_multiple_airports; ?> during last <?= $nb_weeks; ?> weeks. Please take this information carefully.
+            <br/>
+            <a href="faq.php#basedonstatsevents" target="_blank">learn more</a></span>
+        </p>
+    <?php
     }
-    if (sizeof($list_controlled_area_events) > 0) {
     ?>
-    <div class="card mt-4">
-        <div class="card-header py-1">
-            Usually controlled airports
-        </div>
-        <div class="card-body py-1">
-    <?php foreach ($list_controlled_area_events as $event) { ?>
-            <p class="card-text" style="color: #888">
-                <a href="./controlled_area.php"><?= $event['airport_icao']; ?></a> <span class="badge"><?= $event['time_start']; ?></span> &rarr; <span class="badge"><?= $event['time_end']; ?></span><br/>
-                <small><?= $event['airport_name']; ?></small>
-                <!-- <br/>
-                <button type="button" class="btn btn-sm py-0 text-success"><span class="oi oi-thumb-up"></span> +36</button></span>
-                <button type="button" class="btn btn-sm py-0 text-danger"><span class="oi oi-thumb-down"></span> -24</button></span> -->
-            </p>
-    <?php } ?>
-        </div>
-    </div>
-    <?php } ?>
 </div>
 
     <?php

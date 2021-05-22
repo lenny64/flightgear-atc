@@ -58,6 +58,83 @@
         </div>
     </div>
 
+    <div class="card my-1" id="basedonstatsevents">
+        <div class="card-header">What are "Based on stats" events appearing below regular events?</div>
+        <div class="card-body">
+            <p>
+                <span class="oi oi-pulse"></span> <b>Based on stats</b>
+            </p>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <div class="card my-2 border-success">
+                        <div class="card-body py-2">
+                            <h6 class="text-success"><img src="./img/menu_controlled.png"/> ICAO <span class="text-muted small">of the controlled airport</span> <span class="badge badge-success">begin time</span> &rarr; <span class="badge badge-success">end time</span></h6>
+                            <p class="text-success my-1">
+                                <span class="badge badge-success">91 %</span> of chances that this airport will be controlled ~ 2 hours. *
+                                <br/>
+                                <span class="text-muted">(controlled <b>6 Mondays</b> / 6 weeks) **</span>
+                                <br/>
+                                <span class="text-success"><b>Regularly controller by </b></span><span class="badge badge-success">a super ATC</span>
+                            </p>
+                            <p class="text-muted small">
+                                * Depends on how often the airport is controlled, and the data accuracy (basically if there is enough data)
+                                <br/>
+                                ** Indicates how many mondays it has been controlled since the last 6 weeks
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>
+                Air traffic network is regularly checked (several times per hour). This data analysed allows us to see when some airports are regularly controlled.
+            </p>
+            <p>
+                Some algorithms are running to show you where there might be controlled airports every day, based on the number of times the airport has been controlled each hour and other statistics data. It is based on airports real activity in game, and also based on whether an ATC published an event on the website or not (an ATC who publish his events on the website will be better ranked).
+            </p>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Airport ATC is ranked like this:</th>
+                        <th>Explanations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>The airport is controlled regularly</td>
+                        <td>The algorithm determines how many similar weekdays the airport has been controlled since the last 6 weeks, and also at which hours. The more consistent it has been controlled, higher the rank will be. Ie: if an airport is controlled every Monday from 20:00 to 22:00 it will be better ranked than one Monday every two weeks.</td>
+                    </tr>
+                    <tr>
+                        <td>The airport is controlled approximately the same amount of time</td>
+                        <td>The algorithm also checks the regularity in duration: the more the duration will be consistent the higher the rank will be.</td>
+                    </tr>
+                    <tr>
+                        <td>The ATC has published his events on the website</td>
+                        <td>The algorithm checks whether a published event for a given airport at a given date and time is effectively controlled. If an event exists on the website and the airport is controlled as planned, its rank will be higher.</td>
+                    </tr>
+                    <tr>
+                        <td>The airport is controlled at least 1 hour</td>
+                        <td>If the airport is controlled less than 1 hour its ranking will be downgraded. However, if the airport is controlled more than 5 hours by the same controller a warning message will appear and the event will be a bit downrated.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                Not all airports appear in the list, because they are filtered on some factors such as recurrency, number of days controlled, number of consecutive hours controlled, if the event has been published on the website, and other data. This is why the airport you control may not appear in the "Based on stats" events.
+            </p>
+            <p>
+                <b>I'm an ATC. Why the airport i regularly control at is not listed?</b>
+                Here are some reasons:
+                <ul>
+                    <li>you were not controlling it at least 6 weeks ago <br/>&rarr; continue to control it <b>the days you are accustomed to, and the times you are accustomed to</b> (ie on Mondays from 18:00 to 20:00)</li>
+                    <li>you were not publishing your events on the website <br/>&rarr; you would probably want to make your events visible on the website by creating an event from <a href="dashboard.php">your dashboard</a></li>
+                    <li>you are controlling it at different days in week: some weeks on mondays, other on tuesdays etc... <br/>&rarr; algorithms check the <b>recurrency of days in week</b>, try to control it every day through the weeks (for instance only mondays and wednesdays or only saturdays) at <b>regular hours</b></li>
+                    <li>there is no enough data <br/>&rarr; try controlling your airport more than one hour to make sure there is enough relevant data</li>
+                    <li>your event is too long <br/>&rarr; if you control an airport for more than 5 hours in a row it may be downrated</li>
+                    <li>algorithms problems <br/>&rarr; if you followed all the above guidelines feel free to <a href="contact.php" target="_blank">contact me</a></li>
+                </ul>
+            </p>
+        </div>
+    </div>
+
     <div class="card mb-3">
         <div class="card-header">What are "cookies" and why do we use them?</div>
         <div class="card-body">

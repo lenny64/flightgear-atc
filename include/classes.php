@@ -552,7 +552,7 @@ class Airport
         if ($date !== FALSE) {
             // $where_stmt = "WHERE DATE(datetime) = '$date'";
             $where_stmt = "WHERE WEEKDAY(datetime) = WEEKDAY('$date')";
-            $group_stmt = "GROUP BY icao, date, hour";
+            $group_stmt = "GROUP BY icao, date, hour ORDER BY date DESC";
         }
         else {
             $where_stmt = "";
@@ -598,6 +598,144 @@ class Airport
                 ///////////////////////////
                 $stats[$stat_date][$stat_icao]['nb_hours_recorded'] = $nb_hours_recorded;
                 $stats[$stat_date][$stat_icao]['event_too_long'] = $event_too_long;
+            }
+        }
+        return $stats;
+    }
+
+    public function getAirportObservationSummary($date = FALSE) {
+        global $db;
+        $stats = Array();
+        $nb_weeks = 6;
+        if ($date !== FALSE) {
+            // $where_stmt = "WHERE DATE(datetime) = '$date'";
+            $where_stmt = "WHERE WEEKDAY(CONVERT_TZ(obs.datetime, 'CET', 'UTC')) = WEEKDAY('$date') AND DATE(CONVERT_TZ(obs.datetime, 'CET', 'UTC')) > DATE_SUB('$date', INTERVAL $nb_weeks WEEK)";
+            // $group_stmt = "GROUP BY icao, hour HAVING score > 20 AND nb_days_recorded > 2 ORDER BY hour ASC";
+            $group_stmt = "GROUP BY obs.icao, hour HAVING score > 20 AND nb_days_recorded > 2 ORDER BY hour ASC, obs.icao, nb_days_recorded DESC";
+        }
+        else {
+            $where_stmt = "";
+            $group_stmt = "GROUP BY icao, date, hour ORDER BY date DESC";
+        }
+
+        // $query = $db->query("SELECT icao, HOUR(datetime) as hour, COUNT(HOUR(datetime)) as nb_records_hourly, COUNT(DISTINCT DATE(datetime)) as nb_days_recorded,
+        //     COUNT(HOUR(datetime))*COUNT(DISTINCT DATE(datetime)) as score,
+        //     COUNT(DISTINCT DATE(datetime)) as accuracy
+        //     FROM airports_observation
+        //     ".$where_stmt."
+        //     ".$group_stmt);
+        $query = $db->query("SELECT obs.icao, HOUR(CONVERT_TZ(obs.datetime, 'CET', 'UTC')) as hour, COUNT(HOUR(CONVERT_TZ(obs.datetime, 'CET', 'UTC'))) as nb_records_hourly, COUNT(DISTINCT DATE(CONVERT_TZ(obs.datetime, 'CET', 'UTC'))) as nb_days_recorded,
+            COUNT(HOUR(CONVERT_TZ(obs.datetime, 'CET', 'UTC')))*COUNT(DISTINCT DATE(CONVERT_TZ(obs.datetime, 'CET', 'UTC'))) as score,
+            COUNT(DISTINCT DATE(CONVERT_TZ(obs.datetime, 'CET', 'UTC'))) as accuracy,
+            ( SELECT users_names.userName FROM users_names WHERE users_names.userId = events.userId ORDER BY users_names.userNameId DESC LIMIT 1 ) as user_name
+            FROM airports_observation obs
+            LEFT JOIN events ON events.airportICAO = obs.icao AND events.date = DATE(CONVERT_TZ(obs.datetime, 'CET', 'UTC'))
+            ".$where_stmt."
+            ".$group_stmt);
+        $airport_stats = $query->fetchAll(PDO::FETCH_ASSOC);
+        if ($airport_stats != 0) {
+            // for each stat
+            foreach ($airport_stats as $stat) {
+                $stat_icao = $stat['icao'];
+                $stat_hour = $stat['hour'] + 0;
+                $stat_nb_days = $stat['nb_days_recorded'] + 0;
+                $stat_score = $stat['score'] + 0;
+                $stat_user_name = $stat['user_name'];
+
+                // we store all candidates with result of the query
+                $candidates[$stat_icao][$stat_hour] = Array('score' => $stat_score, 'nb_days' => $stat_nb_days, 'user_name' => $stat_user_name);
+                // we store the number of days the airport has been controlled
+                $nb_days_recorded[$stat_icao] = $stat_nb_days;
+                // average number of days for events that last longer than one hour
+                $avg_nb_days_recorded[$stat_icao][] = $stat_nb_days;
+            }
+            // i go through processed stats (score > 20)
+            if ($candidates) {
+                foreach ($candidates as $airport_icao => $time_interval) {
+                    // I don't know why it could arrive...
+                    if (sizeof($time_interval) < 1) {
+                        $nb_hours = 0;
+                    }
+                    // if there is only one hour where control is suspected...
+                    else if (sizeof($time_interval) == 1) {
+                        $min_time = min(array_keys($time_interval));
+                        $max_time = $min_time + 1;
+                        $nb_hours = 1;
+                        if ($time_interval['user_name'][$min_time] != NULL && $time_interval['user_name'][$min_time] != '') {
+                            $user_name[$airport_icao] = $time_interval['user_name'][$min_time];
+                        }
+                    }
+                    // if there are more than one hour where control is suspected...
+                    else {
+                        // i need to see the consecutive control hours
+                        // i put consecutive control range
+                        $consecutive = array();
+                        $previous = null;
+                        // for maximum number of days
+                        $nb_days_recorded[$airport_icao] = 0;
+                        // i go through the time interval to see if it's consecutive
+                        foreach ($time_interval as $time => $occurences) {
+                            if ($occurences['user_name'] != NULL && $occurences['user_name'] != '') {
+                                $user_name[$airport_icao] = $occurences['user_name'];
+                            }
+                            // if it is consecutive and not first occurence
+                            if ($previous != null && $time == $previous + 1) {
+                                $consecutive[] = $time;
+                            }
+                            // for the first occurence
+                            else {
+                                $consecutive = array($time);
+                                $found = 1;
+                            }
+                            $previous = $time;
+                            $found++;
+                            // i try to find the max number of days where there has been control
+                            if ($occurences['nb_days'] > $nb_days_recorded[$airport_icao]) {
+                                $nb_days_recorded[$airport_icao] = $occurences['nb_days'];
+                            }
+                        }
+                        if (sizeof($consecutive) > 1) {
+                            $min_time = min($consecutive);
+                            $max_time = max($consecutive);
+                        }
+                        else {
+                            $min_time = array_keys($time_interval, max($time_interval))[0];
+                            $max_time = $min_time + 1;
+                        }
+                        $nb_hours = sizeof($consecutive);
+
+                    }
+
+                    // the average number of days recorded (useful if more than one hour)
+                    $avg_nb_days_recorded[$airport_icao] = array_sum($avg_nb_days_recorded[$airport_icao]) / (count($avg_nb_days_recorded[$airport_icao]));
+
+                    $stats[$airport_icao]['icao'] = $airport_icao;
+                    $stats[$airport_icao]['begin'] = sprintf('%02d',$min_time) . ":00";
+                    $stats[$airport_icao]['end'] = sprintf('%02d',$max_time) . ":00";
+                    $stats[$airport_icao]['nb_hours'] = $nb_hours;
+                    $stats[$airport_icao]['nb_days_recorded'] = $nb_days_recorded[$airport_icao];
+                    $stats[$airport_icao]['avg_nb_days_recorded'] = $avg_nb_days_recorded[$airport_icao];
+                    $stats[$airport_icao]['accuracy'] = round($avg_nb_days_recorded[$airport_icao] / ($nb_weeks - 1) * 100, 0) ;
+                    if ($stats[$airport_icao]['accuracy'] > 100) {
+                        $stats[$airport_icao]['accuracy'] = 100;
+                    }
+                    $stats[$airport_icao]['nb_weeks'] = $nb_weeks;
+                    $stats[$airport_icao]['user_name'] = $user_name[$airport_icao];
+                    if ($nb_hours > 4) {
+                        $stats[$airport_icao]['warning'] = "This event is very long and may not probably last " . $nb_hours . " hours";
+                    }
+
+
+                    $debug[$airport_icao]['begin'] = $min_time;
+                    $debug[$airport_icao]['end'] = $max_time;
+                    $debug[$airport_icao]['nb_hours'] = $nb_hours;
+                    $debug[$airport_icao]['nb_days_recorded'] = $nb_days_recorded[$airport_icao];
+                    $debug[$airport_icao]['avg_nb_days_recorded'] = $avg_nb_days_recorded[$airport_icao];
+                    $debug[$airport_icao]['accuracy'] = round($nb_days_recorded[$airport_icao] / ($nb_weeks) * 100, 0) ;
+                    $debug[$airport_icao]['all'] = $time_interval;
+                    $debug[$airport_icao]['user_name'] = $user_name[$airport_icao];
+                    $debug[$airport_icao]['detected'] = $consecutive;
+                }
             }
         }
         return $stats;

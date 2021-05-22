@@ -1010,7 +1010,21 @@ else if (isset($_GET['getAirportObservationStats'])) {
         $date = $_GET['date'];
     }
     $stats = $Airport->getAirportObservationStats($date);
-    echo json_encode($stats);
+    echo json_encode($stats, JSON_PRETTY_PRINT);
+}
+
+else if (isset($_GET['getAirportObservationSummary'])) {
+    header('Content-Type: application/json');
+    $Airport = new Airport();
+    if (isset($_GET['airportICAO']) && $_GET['airportICAO'] != NULL) {
+        $Airport->icao = $_GET['airportICAO'];
+    }
+    $date = FALSE;
+    if (isset($_GET['date']) && $_GET['date'] != NULL) {
+        $date = $_GET['date'];
+    }
+    $stats = $Airport->getAirportObservationSummary($date);
+    echo json_encode($stats, JSON_PRETTY_PRINT);
 }
 
 

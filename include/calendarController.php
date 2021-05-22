@@ -37,6 +37,7 @@ class Day {
         else {
             $this->day_line = date('D j M', strtotime($this->day_counter));
         }
+        $this->day_in_week = date('l', strtotime($this->day_counter));
     }
     public function getEventsBadgeText() {
         $events_badge_text = "no events";
