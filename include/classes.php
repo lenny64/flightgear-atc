@@ -702,7 +702,7 @@ class Airport
                             $min_time = array_keys($time_interval, max($time_interval))[0];
                             $max_time = $min_time + 1;
                         }
-                        $nb_hours = sizeof($consecutive);
+                        $nb_hours = sizeof($consecutive) - 1;
 
                     }
 
